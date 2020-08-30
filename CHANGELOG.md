@@ -1,3 +1,7 @@
+## [0.0.3] - Update
+
+- Allow overriding file names with FirebaseImage.names
+
 ## [0.0.1] - Init
 
 - FirebasePhoto - Document field value of a photo

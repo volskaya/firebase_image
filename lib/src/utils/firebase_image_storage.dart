@@ -15,13 +15,11 @@ class FirebaseImageStorage {
 
   static const _kPhotoMaxSize = 5000000; // bytes
 
-  static final CachedNetworkFile _defaultCache =
-      CachedNetworkFile(key: 'storage/firebase_images');
+  static final CachedNetworkFile _defaultCache = CachedNetworkFile(key: 'storage/firebase_images');
 
   /// Single instance of [FirebaseImageStorage].
   static FirebaseImageStorage instance = const FirebaseImageStorage._();
-  static FirebaseStorage get _bucket =>
-      FirebaseStorage(storageBucket: FirebaseImage.storageBucket);
+  static FirebaseStorage get _bucket => FirebaseStorage(storageBucket: FirebaseImage.storageBucket);
 
   /// Caches and gets the file
   Future<io.File> _getFile({
@@ -98,7 +96,7 @@ class FirebaseImageStorage {
     final ref = _bucket.ref().child(adjusted);
     final fullRef = _bucket.ref().child(path);
 
-    assert(split.last == 'lg' || split.last == 'reg');
+    assert(split.last == FirebaseImage.names.large || split.last == FirebaseImage.names.regular);
     developer.log(
       'Downloading firebase photo from ${ref.path}',
       name: 'firebase_image',

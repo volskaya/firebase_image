@@ -47,7 +47,8 @@ class FirebasePhoto {
   /// Function assumes the model is a top level document in Firestore
   /// and that photos, used in these documents, share the same collection
   /// names.
-  String getFirestorePath(covariant FirestoreModel parent) => join(parent.reference.path, 'photo', id, hash);
+  String getFirestorePath(covariant FirestoreModel parent) =>
+      join(parent.reference.path, FirebaseImage.names.photoFolder, id, hash);
 }
 
 /// Firebase photo reference that points to the photo file in Firebase storage.

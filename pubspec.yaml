@@ -1,6 +1,6 @@
 name: firebase_image
 description: Firebase storage photo image provider for images, gifs and videos.
-version: 0.0.1
+version: 0.0.3
 author: Roland Volskaya
 homepage: github.com/volskaya/firebase_image
 

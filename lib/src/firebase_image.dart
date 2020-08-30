@@ -12,6 +12,29 @@ import 'package:quiver/strings.dart';
 
 const _kLargeDpiBreakPoint = 2;
 
+/// Filenames for firebase image sizes.
+class FirebaseImageNames {
+  /// Creates [FirebaseImageNames].
+  const FirebaseImageNames({
+    this.thumbnail = 'thumbnail',
+    this.regular = 'reg',
+    this.large = 'lg',
+    this.photoFolder = 'photo',
+  });
+
+  /// Filename of the thumbnail image.
+  final String thumbnail;
+
+  /// Filename of the regular image.
+  final String regular;
+
+  /// Filename of the large image.
+  final String large;
+
+  /// Filename of the photo folder, where the images are placed.
+  final String photoFolder;
+}
+
 /// [FirebaseImage] provider type.
 enum FirebaseImageType {
   /// Enum of a thumbnail firebase image.
@@ -89,6 +112,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Whether to automatically attempt to fetch large images before regular.
   final bool size;
 
+  /// Filenames for firebase image sizes.
+  static FirebaseImageNames names = const FirebaseImageNames();
+
   /// Thumbnail [FirebaseImage] from this providers path.
   FirebaseImage get thumbnail {
     assert(type != FirebaseImageType.thumbnail);
@@ -103,9 +129,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     final shouldScale = scale >= _kLargeDpiBreakPoint && !disableScaling;
     switch (type) {
       case FirebaseImageType.thumbnail:
-        return join(path, 'thumbnail');
+        return join(path, FirebaseImage.names.thumbnail);
       case FirebaseImageType.regular:
-        return shouldScale ? join(path, 'lg') : join(path, 'reg');
+        return shouldScale ? join(path, FirebaseImage.names.large) : join(path, FirebaseImage.names.regular);
       default:
         throw UnimplementedError();
     }
