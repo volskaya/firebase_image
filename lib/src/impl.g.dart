@@ -41,6 +41,20 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
     });
   }
 
+  final _$_FirestorePhotoModelActionController =
+      ActionController(name: '_FirestorePhotoModel');
+
+  @override
+  void onSnapshot(T x) {
+    final _$actionInfo = _$_FirestorePhotoModelActionController.startAction(
+        name: '_FirestorePhotoModel.onSnapshot');
+    try {
+      return super.onSnapshot(x);
+    } finally {
+      _$_FirestorePhotoModelActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

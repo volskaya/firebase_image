@@ -21,15 +21,11 @@ dependencies:
   json_annotation: ^3.0.1
 
   await_route:
-    git:
-      url: git@github.com:volskaya/flutter_helpers.git
-      path: await_route
+    path: /home/projects/packages/flutter_helpers/await_route
   fancy_switcher:
-    git:
-      url: git@github.com:volskaya/fancy_switcher.git
+    path: /home/projects/packages/fancy_switcher
   firestore_model:
-    git:
-      url: git@github.com:volskaya/firestore_model.git
+    path: /home/projects/packages/firestore_model
 
 dev_dependencies:
   flutter_test:

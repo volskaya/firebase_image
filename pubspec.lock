@@ -32,11 +32,9 @@ packages:
   await_route:
     dependency: "direct main"
     description:
-      path: await_route
-      ref: HEAD
-      resolved-ref: cdf02155a0278f4b8ae7303aede0362937f580c1
-      url: "git@github.com:volskaya/flutter_helpers.git"
-    source: git
+      path: "/home/projects/packages/flutter_helpers/await_route"
+      relative: false
+    source: path
     version: "1.0.0"
   boolean_selector:
     dependency: transitive
@@ -199,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
+  delayed_progress_indicator:
+    dependency: transitive
+    description:
+      path: "/home/projects/packages/flutter_helpers/delayed_progress_indicator"
+      relative: false
+    source: path
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -209,11 +214,9 @@ packages:
   fancy_switcher:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "8acaf5e0f9fbf37d44baceb46fb6ea63b97fa7eb"
-      url: "git@github.com:volskaya/fancy_switcher.git"
-    source: git
+      path: "/home/projects/packages/fancy_switcher"
+      relative: false
+    source: path
     version: "0.0.1"
   file:
     dependency: transitive
@@ -260,12 +263,10 @@ packages:
   firestore_model:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "0122ad417e53515523b2fdd80de0c19893a9c5d2"
-      url: "git@github.com:volskaya/firestore_model.git"
-    source: git
-    version: "0.0.1"
+      path: "/home/projects/packages/firestore_model"
+      relative: false
+    source: path
+    version: "0.0.2"
   fixnum:
     dependency: transitive
     description:
@@ -550,11 +551,9 @@ packages:
   refresh_storage:
     dependency: transitive
     description:
-      path: refresh_storage
-      ref: HEAD
-      resolved-ref: cdf02155a0278f4b8ae7303aede0362937f580c1
-      url: "git@github.com:volskaya/flutter_helpers.git"
-    source: git
+      path: "/home/projects/packages/flutter_helpers/refresh_storage"
+      relative: false
+    source: path
     version: "0.0.1"
   rxdart:
     dependency: transitive

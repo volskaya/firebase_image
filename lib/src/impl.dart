@@ -41,6 +41,7 @@ abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with Store {
   @computed
   FirebasePhotoReference get photo => media?.isNotEmpty == true ? media.values.first : null;
 
+  @action
   @override
   @mustCallSuper
   void onSnapshot(T x) {
