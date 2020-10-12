@@ -42,13 +42,12 @@ class FirebasePhoto {
   final Size size;
 
   /// Get the full Firebase storage path of this photo, relative to its
-  /// [FirestoreModel parent].
+  /// [FirebaseModel] parent.
   ///
-  /// Function assumes the model is a top level document in Firestore
+  /// Function assumes the model is a top level document in Firestore / Realtime database
   /// and that photos, used in these documents, share the same collection
   /// names.
-  String getFirestorePath(covariant FirestoreModel parent) =>
-      join(parent.reference.path, FirebaseImage.names.photoFolder, id, hash);
+  String getStoragePath(covariant FirebaseModel parent) => join(parent.path, FirebaseImage.names.photoFolder, id, hash);
 }
 
 /// Firebase photo reference that points to the photo file in Firebase storage.
@@ -64,11 +63,8 @@ class FirebasePhotoReference {
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
-  static FirebasePhotoReference fromFirestore(
-    FirestoreModel model,
-    FirebasePhoto photo,
-  ) =>
-      FirebasePhotoReference(photo.getFirestorePath(model), photo.type, photo.size);
+  static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) =>
+      FirebasePhotoReference(photo.getStoragePath(model), photo.type, photo.size);
 
   /// Path to the photo file in Firebase storage.
   final String path;
