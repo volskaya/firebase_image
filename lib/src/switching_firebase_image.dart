@@ -16,21 +16,43 @@ class SwitchingFirebaseImage extends StatefulWidget {
     Key key,
     @required this.imageProvider,
     this.idleChild,
+    this.layoutChildren = const <Widget>[],
     this.shape,
+    this.duration = const Duration(milliseconds: 300),
+    this.filterQuality = FilterQuality.low,
+    this.fit = BoxFit.cover,
     this.opacity,
+    this.alignment = AlignmentDirectional.topStart,
   }) : super(key: key);
 
-  /// Image provider to animate to.
+  /// [FirebaseImage] to switch to.
   final FirebaseImage imageProvider;
 
-  /// Idle child to pass to the [SwitchingImage] widget.
+  /// While [SwitchingImage.imageProvider] is not loaded an optional
+  /// [idleChild] will be built instead.
   final Widget idleChild;
 
-  /// [ShapeBorder] to pass to the [SwitchingImage] widget.
+  /// Children [Widget]'s on top of the [Material], in the switcher's layout builder.
+  final Iterable<Widget> layoutChildren;
+
+  /// Clip shape of the animated switcher box.
   final ShapeBorder shape;
 
-  /// Opacity override to pass to the [SwitchingImage] widget.
+  /// Duration of the switch transition.
+  final Duration duration;
+
+  /// Filter quality of the image.
+  final FilterQuality filterQuality;
+
+  /// Box fit of the image.
+  final BoxFit fit;
+
+  /// Opacity override when you wish to animate the image without having to overlap
+  /// multiple opacity shaders.
   final ValueListenable<double> opacity;
+
+  /// Alignment of the children in the switchers.
+  final AlignmentGeometry alignment;
 
   /// Convenience copy method.
   SwitchingFirebaseImage copyWith({
@@ -121,5 +143,11 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
         idleChild: widget.idleChild,
         shape: widget.shape,
         opacity: widget.opacity,
+        duration: widget.duration,
+        alignment: widget.alignment,
+        filterQuality: widget.filterQuality,
+        fit: widget.fit,
+        layoutChildren: widget.layoutChildren,
+        type: SwitchingImageType.fade,
       );
 }
