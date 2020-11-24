@@ -151,7 +151,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   Future<ui.Codec> _loadAsync(
     FirebaseImage key,
-    StreamController<ImageChunkEvent> chunkEvents, // NOTE: Not used yet.
     DecoderCallback decode,
   ) async {
     try {
@@ -177,27 +176,19 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     } catch (e) {
       scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
       rethrow;
-    } finally {
-      chunkEvents.close();
     }
   }
 
   @override
-  ImageStreamCompleter load(FirebaseImage key, DecoderCallback decode) {
-    // NOTE: Close the stream in [_loadAsync].
-    final chunkEvents = StreamController<ImageChunkEvent>();
-
-    return MultiFrameImageStreamCompleter(
-      provider: this,
-      loop: true,
-      codec: _loadAsync(key, chunkEvents, decode),
-      chunkEvents: chunkEvents.stream,
-      scale: key.scale,
-      informationCollector: () sync* {
-        yield ErrorDescription('Path: $path');
-      },
-    );
-  }
+  ImageStreamCompleter load(FirebaseImage key, DecoderCallback decode) => MultiFrameImageStreamCompleter(
+        provider: this,
+        loop: true,
+        codec: _loadAsync(key, decode),
+        scale: key.scale,
+        informationCollector: () sync* {
+          yield ErrorDescription('Path: $path');
+        },
+      );
 
   @override
   Future<FirebaseImage> obtainKey(ImageConfiguration configuration) {
