@@ -148,41 +148,62 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
-  Future<ui.Codec> _loadAsync(FirebaseImage key, DecoderCallback decode) async {
-    assert(_configuration != null);
-    assert(key == this);
-    if (isEmpty(this.path)) return null;
+  Future<ui.Codec> _loadAsync(
+    FirebaseImage key,
+    StreamController<ImageChunkEvent> chunkEvents, // NOTE: Not used yet.
+    DecoderCallback decode,
+  ) async {
+    try {
+      assert(_configuration != null);
+      assert(key == this);
+      if (isEmpty(this.path)) return null;
 
-    final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
-    developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
-    var image = await _getPhoto(path);
+      final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
+      developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
 
-    // Attempt to fetch regular size image
-    if (size && _pixelRatio > _kLargeDpiBreakPoint && image == null) {
-      final path = _buildPathWithScale(1);
-      developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
-      image = await _getPhoto(path);
+      // First attempt to fetch the largest size.
+      var image = await _getPhoto(path);
+
+      // Attempt to fetch regular size image.
+      if (size && _pixelRatio > _kLargeDpiBreakPoint && image == null) {
+        final path = _buildPathWithScale(1);
+        developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
+        image = await _getPhoto(path);
+      }
+
+      // If image needs to be downloaded from Firebase,
+      // it will be first downloaded as bytes -> bytes written to disk -> file returned from disk
+      // -> file redundantly read as bytes here.
+      //
+      // FIXME: Remove the redundant disk roundtrip.
+      final bytes = await image?.readAsBytes();
+      if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');
+
+      return decode(bytes);
+    } catch (e) {
+      scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
+      rethrow;
+    } finally {
+      chunkEvents.close();
     }
-
-    if (image != null) {
-      final bytes = await image.readAsBytes();
-      if (bytes.lengthInBytes > 0) return decode(bytes);
-    }
-
-    PaintingBinding.instance.imageCache.evict(key);
-    return null;
   }
 
   @override
-  ImageStreamCompleter load(FirebaseImage key, DecoderCallback decode) => MultiFrameImageStreamCompleter(
-        provider: this,
-        loop: true,
-        codec: _loadAsync(key, decode),
-        scale: key.scale,
-        informationCollector: () sync* {
-          yield ErrorDescription('Path: $path');
-        },
-      );
+  ImageStreamCompleter load(FirebaseImage key, DecoderCallback decode) {
+    // NOTE: Close the stream in [_loadAsync].
+    final chunkEvents = StreamController<ImageChunkEvent>();
+
+    return MultiFrameImageStreamCompleter(
+      provider: this,
+      loop: true,
+      codec: _loadAsync(key, chunkEvents, decode),
+      chunkEvents: chunkEvents.stream,
+      scale: key.scale,
+      informationCollector: () sync* {
+        yield ErrorDescription('Path: $path');
+      },
+    );
+  }
 
   @override
   Future<FirebaseImage> obtainKey(ImageConfiguration configuration) {

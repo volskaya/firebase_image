@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io' as io;
+import 'dart:io';
 
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_image/src/utils/cached_network_file.dart';
@@ -14,18 +16,98 @@ class FirebaseImageStorage {
   const FirebaseImageStorage._();
 
   static const _kPhotoMaxSize = 5000000; // bytes
-
-  static final CachedNetworkFile _defaultCache = CachedNetworkFile(key: 'storage/firebase_images');
+  static final _defaultCache = CachedNetworkFile(key: 'storage/firebase_images');
 
   /// Single instance of [FirebaseImageStorage].
-  static FirebaseImageStorage instance = const FirebaseImageStorage._();
+  static const instance = FirebaseImageStorage._();
   static FirebaseStorage get _bucket => FirebaseStorage(storageBucket: FirebaseImage.storageBucket);
 
-  /// Caches and gets the file
-  Future<io.File> _getFile({
+  // Do not access this field directly; use [_httpClient] instead.
+  // We set `autoUncompress` to false to ensure that we can trust the value of
+  // the `Content-Length` HTTP header. We automatically uncompress the content
+  // in our call to [consolidateHttpClientResponseBytes].
+  //
+  // NOTE: Copy pasted from flutters [NetworkImage] code.
+  static final _sharedHttpClient = HttpClient()..autoUncompress = false;
+
+  static HttpClient get _httpClient {
+    HttpClient client = _sharedHttpClient;
+    assert(() {
+      if (debugNetworkImageHttpClientProvider != null) client = debugNetworkImageHttpClientProvider();
+      return true;
+    }());
+    return client;
+  }
+
+  /// Attempts to download and cache a file from the `url`.
+  Future<io.File> downloadNetworkFile({
+    @required String url,
+    StreamController<ImageChunkEvent> chunkEvents,
+    Map<String, String> headers,
+    CachedNetworkFile cache,
+  }) async {
+    assert(url != null);
+
+    final selectedCache = cache ?? _defaultCache;
+    final resolved = Uri.base.resolve(url);
+    final cachedFile = await selectedCache.getFileFromCache(url);
+    final isOld = cachedFile?.validTill?.isBefore(DateTime.now());
+
+    if (isOld != false) {
+      try {
+        final request = await _httpClient.getUrl(resolved);
+
+        headers?.forEach((name, value) => request.headers.add(name, value));
+        final response = await request.close();
+
+        if (response.statusCode != HttpStatus.ok) {
+          // The network may be only temporarily unavailable, or the file will be
+          // added on the server later. Avoid having future calls to resolve
+          // fail to check the network again.
+          throw NetworkImageLoadException(statusCode: response.statusCode, uri: resolved);
+        }
+
+        final bytes = await consolidateHttpClientResponseBytes(
+          response,
+          onBytesReceived: (cumulative, total) => chunkEvents?.add(ImageChunkEvent(
+            cumulativeBytesLoaded: cumulative,
+            expectedTotalBytes: total,
+          )),
+        );
+
+        if (bytes.lengthInBytes > 0) {
+          // FIXME: Allow decoding the image, before this write.
+          return await selectedCache.putFile(url, bytes);
+        }
+      } catch (e) {
+        developer.log(
+          'Coudn\'t retrieve a cached network file from $url',
+          name: 'firebase_image',
+          error: e,
+        );
+      }
+    }
+
+    developer.log(
+      cachedFile?.file != null
+          ? 'Returning a cached network file at $url'
+              ', valid till ${cachedFile?.validTill}'
+          : 'No cached/new file available at $url',
+      name: 'firebase_image',
+    );
+
+    return cachedFile?.file;
+  }
+
+  /// Caches and gets the file from Firebase storage.
+  Future<io.File> _getFirebaseFile({
     @required StorageReference ref,
     @required int maxBytes,
     CachedNetworkFile cache,
+
+    /// If this is defined, `ref` is only used for the actual "getData" call.
+    /// Cache conditionals will be evalued against `optionalComparableRef`.
+    StorageReference optionalComparableRef,
   }) async {
     assert(ref != null);
     assert(maxBytes >= 0);
@@ -35,35 +117,39 @@ class FirebaseImageStorage {
       name: 'firebase_image',
     );
 
+    final comparableRef = optionalComparableRef ?? ref;
     final selectedCache = cache ?? _defaultCache;
-    final cachedFile = await selectedCache.getFileFromCache(ref.path);
+    final cachedFile = await selectedCache.getFileFromCache(comparableRef.path);
     final isOld = cachedFile?.validTill?.isBefore(DateTime.now());
 
-    if (isOld == null || isOld == true) {
+    if (isOld != false) {
       try {
         developer.log(
-          'Cache outdated or doesn\'t exist, fetching ${ref.path}…',
+          'Cache outdated or doesn\'t exist, fetching ${comparableRef.path}…',
           name: 'firebase_image',
         );
 
+        // Getting data from the `ref`, instead of `comparableRef`.
         final bytes = await ref.getData(_kPhotoMaxSize);
 
         if (bytes.lengthInBytes > 0) {
           developer.log(
-            'Fetched and cached a new file at ${ref.path}',
+            'Fetched and cached a new file at ${comparableRef.path}',
             name: 'firebase_image',
           );
-          return await selectedCache.putFile(ref.path, bytes);
+
+          // FIXME: Allow decoding the image, before this write.
+          return await selectedCache.putFile(comparableRef.path, bytes);
         }
       } on PlatformException catch (e) {
         developer.log(
-          'Failed to getData for ${ref.path}, ${e.message}'
+          'Failed to getData for ${comparableRef.path}, ${e.message}'
           ', bucket: - $_bucket',
           name: 'firebase_image',
         );
       } catch (e) {
         developer.log(
-          'Coudn\'t retrieve a cahced file at ${ref.path}',
+          'Coudn\'t retrieve a cached file at ${comparableRef.path}',
           name: 'firebase_image',
           error: e,
         );
@@ -72,9 +158,9 @@ class FirebaseImageStorage {
 
     developer.log(
       cachedFile?.file != null
-          ? 'Returning a cached file at ${ref.path}'
+          ? 'Returning a cached file at ${comparableRef.path}'
               ', valid till ${cachedFile?.validTill}'
-          : 'No cached/new file available at ${ref.path}',
+          : 'No cached/new file available at ${comparableRef.path}',
       name: 'firebase_image',
     );
 
@@ -97,53 +183,13 @@ class FirebaseImageStorage {
     final fullRef = _bucket.ref().child(path);
 
     assert(split.last == FirebaseImage.names.large || split.last == FirebaseImage.names.regular);
-    developer.log(
-      'Downloading firebase photo from ${ref.path}',
-      name: 'firebase_image',
+
+    return _getFirebaseFile(
+      ref: fullRef,
+      optionalComparableRef: ref,
+      maxBytes: _kPhotoMaxSize,
+      cache: _defaultCache,
     );
-
-    final cachedFile = await _defaultCache.getFileFromCache(ref.path);
-    final isOld = cachedFile?.validTill?.isBefore(DateTime.now());
-
-    if (isOld == null || isOld == true) {
-      try {
-        developer.log(
-          'Cache outdated or doesn\'t exist, fetching ${ref.path}…',
-          name: 'firebase_image',
-        );
-        final bytes = await fullRef.getData(_kPhotoMaxSize);
-
-        if (bytes.lengthInBytes > 0) {
-          developer.log(
-            'Fetched and cached a new photo at ${ref.path}',
-            name: 'firebase_image',
-          );
-          return _defaultCache.putFile(ref.path, bytes);
-        }
-      } on PlatformException catch (e) {
-        developer.log(
-          'Couldn\t download firebase photo from ${ref.path}, ${e.message}',
-          name: 'firebase_image',
-          error: e,
-        );
-      } catch (e) {
-        developer.log(
-          'Couldn\'t download firebase photo from ${ref.path}',
-          name: 'firebase_image',
-          error: e,
-        );
-      }
-    }
-
-    developer.log(
-      cachedFile?.file != null
-          ? 'Returning a cached photo at ${ref.path}'
-              ', valid till ${cachedFile?.validTill}'
-          : 'No cached/network photo available at ${ref.path}',
-      name: 'firebase_image',
-    );
-
-    return cachedFile?.file;
   }
 
   /// Downloads a cached file from `path` in [_bucket].
@@ -158,7 +204,7 @@ class FirebaseImageStorage {
       name: 'firebase_image',
     );
 
-    return _getFile(
+    return _getFirebaseFile(
       ref: _bucket.ref().child(path),
       maxBytes: _kPhotoMaxSize,
       cache: cache ?? _defaultCache,

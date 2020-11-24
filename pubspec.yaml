@@ -33,7 +33,4 @@ dev_dependencies:
   build_runner:
   json_serializable:
 
-dependency_overrides:
-  analyzer: '0.39.14'
-
 flutter:
