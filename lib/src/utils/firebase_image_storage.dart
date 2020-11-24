@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:io' as io;
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -40,7 +40,7 @@ class FirebaseImageStorage {
   }
 
   /// Attempts to download and cache a file from the `url`.
-  Future<io.File> downloadNetworkFile({
+  Future<Uint8List> downloadNetworkFile({
     @required String url,
     StreamController<ImageChunkEvent> chunkEvents,
     Map<String, String> headers,
@@ -76,8 +76,8 @@ class FirebaseImageStorage {
         );
 
         if (bytes.lengthInBytes > 0) {
-          // FIXME: Allow decoding the image, before this write.
-          return await selectedCache.putFile(url, bytes);
+          selectedCache.putFile(url, bytes);
+          return bytes;
         }
       } catch (e) {
         developer.log(
@@ -96,11 +96,11 @@ class FirebaseImageStorage {
       name: 'firebase_image',
     );
 
-    return cachedFile?.file;
+    return cachedFile?.file?.readAsBytes();
   }
 
   /// Caches and gets the file from Firebase storage.
-  Future<io.File> _getFirebaseFile({
+  Future<Uint8List> _getFirebaseFile({
     @required StorageReference ref,
     @required int maxBytes,
     CachedNetworkFile cache,
@@ -139,7 +139,8 @@ class FirebaseImageStorage {
           );
 
           // FIXME: Allow decoding the image, before this write.
-          return await selectedCache.putFile(comparableRef.path, bytes);
+          selectedCache.putFile(comparableRef.path, bytes);
+          return bytes;
         }
       } on PlatformException catch (e) {
         developer.log(
@@ -164,7 +165,7 @@ class FirebaseImageStorage {
       name: 'firebase_image',
     );
 
-    return cachedFile?.file;
+    return cachedFile?.file?.readAsBytes();
   }
 
   /// Cache large photos without type postfix, to avoid
@@ -174,7 +175,7 @@ class FirebaseImageStorage {
   /// entry is ceated.
   ///
   /// Only use for regular/large photos, this is not intended for thumbnails.
-  Future<io.File> downloadFirebasePhoto(String path) async {
+  Future<Uint8List> downloadFirebasePhoto(String path) async {
     assert(path.isNotEmpty);
 
     final split = path.split('/');
@@ -193,7 +194,7 @@ class FirebaseImageStorage {
   }
 
   /// Downloads a cached file from `path` in [_bucket].
-  Future<io.File> downloadFile({
+  Future<Uint8List> downloadFile({
     @required String path,
     CachedNetworkFile cache,
   }) async {

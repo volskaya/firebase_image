@@ -57,15 +57,13 @@ class CachedNetworkImage extends ImageProvider<CachedNetworkImage> {
     try {
       assert(key == this);
 
-      final image = await FirebaseImageStorage.instance.downloadNetworkFile(
+      final bytes = await FirebaseImageStorage.instance.downloadNetworkFile(
         url: key.url,
         chunkEvents: chunkEvents,
         headers: headers,
       );
 
-      final bytes = await image?.readAsBytes();
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('CachedNetworkImage is an empty file: $url');
-
       return decode(bytes);
     } catch (e) {
       // Depending on where the exception was thrown, the image cache may not

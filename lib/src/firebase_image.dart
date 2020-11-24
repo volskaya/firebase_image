@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io' as io;
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -137,7 +138,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
-  Future<io.File> _getPhoto(String path) async {
+  Future<Uint8List> _getPhoto(String path) async {
     switch (type) {
       case FirebaseImageType.thumbnail:
         return FirebaseImageStorage.instance.downloadFile(path: path);
@@ -162,23 +163,16 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
 
       // First attempt to fetch the largest size.
-      var image = await _getPhoto(path);
+      var bytes = await _getPhoto(path);
 
       // Attempt to fetch regular size image.
-      if (size && _pixelRatio > _kLargeDpiBreakPoint && image == null) {
+      if (size && _pixelRatio > _kLargeDpiBreakPoint && bytes == null) {
         final path = _buildPathWithScale(1);
         developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
-        image = await _getPhoto(path);
+        bytes = await _getPhoto(path);
       }
 
-      // If image needs to be downloaded from Firebase,
-      // it will be first downloaded as bytes -> bytes written to disk -> file returned from disk
-      // -> file redundantly read as bytes here.
-      //
-      // FIXME: Remove the redundant disk roundtrip.
-      final bytes = await image?.readAsBytes();
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');
-
       return decode(bytes);
     } catch (e) {
       scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
