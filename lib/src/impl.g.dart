@@ -3,6 +3,27 @@
 part of 'impl.dart';
 
 // **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$_FirebasePhotoBlurData _$_$_FirebasePhotoBlurDataFromJson(
+    Map<String, dynamic> json) {
+  return _$_FirebasePhotoBlurData(
+    hash: json['hash'] as String,
+    width: json['width'] as num,
+    height: json['height'] as num,
+  );
+}
+
+Map<String, dynamic> _$_$_FirebasePhotoBlurDataToJson(
+        _$_FirebasePhotoBlurData instance) =>
+    <String, dynamic>{
+      'hash': instance.hash,
+      'width': instance.width,
+      'height': instance.height,
+    };
+
+// **************************************************************************
 // StoreGenerator
 // **************************************************************************
 
@@ -13,13 +34,15 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
 
   @override
   Map<String, FirebasePhotoReference> get media => (_$mediaComputed ??=
-          Computed<Map<String, FirebasePhotoReference>>(() => super.media, name: '_FirestorePhotoModel.media'))
+          Computed<Map<String, FirebasePhotoReference>>(() => super.media,
+              name: '_FirestorePhotoModel.media'))
       .value;
   Computed<FirebasePhotoReference> _$photoComputed;
 
   @override
   FirebasePhotoReference get photo =>
-      (_$photoComputed ??= Computed<FirebasePhotoReference>(() => super.photo, name: '_FirestorePhotoModel.photo'))
+      (_$photoComputed ??= Computed<FirebasePhotoReference>(() => super.photo,
+              name: '_FirestorePhotoModel.photo'))
           .value;
 
   final _$photosAtom = Atom(name: '_FirestorePhotoModel.photos');
@@ -41,11 +64,13 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
     });
   }
 
-  final _$_FirestorePhotoModelActionController = ActionController(name: '_FirestorePhotoModel');
+  final _$_FirestorePhotoModelActionController =
+      ActionController(name: '_FirestorePhotoModel');
 
   @override
   void onSnapshot(T x) {
-    final _$actionInfo = _$_FirestorePhotoModelActionController.startAction(name: '_FirestorePhotoModel.onSnapshot');
+    final _$actionInfo = _$_FirestorePhotoModelActionController.startAction(
+        name: '_FirestorePhotoModel.onSnapshot');
     try {
       return super.onSnapshot(x);
     } finally {
@@ -68,13 +93,15 @@ mixin _$RealtimePhotoModel<T> on _RealtimePhotoModel<T>, Store {
 
   @override
   Map<String, FirebasePhotoReference> get media => (_$mediaComputed ??=
-          Computed<Map<String, FirebasePhotoReference>>(() => super.media, name: '_RealtimePhotoModel.media'))
+          Computed<Map<String, FirebasePhotoReference>>(() => super.media,
+              name: '_RealtimePhotoModel.media'))
       .value;
   Computed<FirebasePhotoReference> _$photoComputed;
 
   @override
   FirebasePhotoReference get photo =>
-      (_$photoComputed ??= Computed<FirebasePhotoReference>(() => super.photo, name: '_RealtimePhotoModel.photo'))
+      (_$photoComputed ??= Computed<FirebasePhotoReference>(() => super.photo,
+              name: '_RealtimePhotoModel.photo'))
           .value;
 
   final _$photosAtom = Atom(name: '_RealtimePhotoModel.photos');
@@ -96,11 +123,13 @@ mixin _$RealtimePhotoModel<T> on _RealtimePhotoModel<T>, Store {
     });
   }
 
-  final _$_RealtimePhotoModelActionController = ActionController(name: '_RealtimePhotoModel');
+  final _$_RealtimePhotoModelActionController =
+      ActionController(name: '_RealtimePhotoModel');
 
   @override
   void onSnapshot(T x) {
-    final _$actionInfo = _$_RealtimePhotoModelActionController.startAction(name: '_RealtimePhotoModel.onSnapshot');
+    final _$actionInfo = _$_RealtimePhotoModelActionController.startAction(
+        name: '_RealtimePhotoModel.onSnapshot');
     try {
       return super.onSnapshot(x);
     } finally {

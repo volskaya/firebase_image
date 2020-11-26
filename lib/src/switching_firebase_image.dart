@@ -4,6 +4,7 @@ import 'package:await_route/await_route.dart';
 import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,7 +24,27 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
-  }) : super(key: key);
+  })  : colorBlendMode = null,
+        color = null,
+        filter = false,
+        super(key: key);
+
+  /// Creates filter variant of [SwitchingFirebaseImage].
+  const SwitchingFirebaseImage.filter({
+    Key key,
+    @required this.imageProvider,
+    @required this.color,
+    this.colorBlendMode = BlendMode.saturation,
+    this.idleChild,
+    this.layoutChildren = const <Widget>[],
+    this.shape,
+    this.duration = const Duration(milliseconds: 300),
+    this.filterQuality = FilterQuality.low,
+    this.fit = BoxFit.cover,
+    this.opacity,
+    this.alignment = AlignmentDirectional.topStart,
+  })  : filter = true,
+        super(key: key);
 
   /// [FirebaseImage] to switch to.
   final FirebaseImage imageProvider;
@@ -54,6 +75,15 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Alignment of the children in the switchers.
   final AlignmentGeometry alignment;
 
+  /// Blend mode of the internal [ColorFiltered] filter.
+  final BlendMode colorBlendMode;
+
+  /// Color of the internal [ColorFiltered] filter.
+  final Color color;
+
+  /// Whether to wrap images in a [ColorFiltered] widget.
+  final bool filter;
+
   /// Convenience copy method.
   SwitchingFirebaseImage copyWith({
     FirebaseImage imageProvider,
@@ -67,6 +97,11 @@ class SwitchingFirebaseImage extends StatefulWidget {
         idleChild: idleChild ?? this.idleChild,
         shape: shape ?? this.shape,
         opacity: opacity ?? this.opacity,
+        alignment: alignment,
+        duration: duration,
+        filterQuality: filterQuality,
+        fit: fit,
+        layoutChildren: layoutChildren,
       );
 
   @override
@@ -93,7 +128,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
         break;
       case FirebaseImageType.regular:
         final path = widget.imageProvider.path.toString();
-        final thumbnail = FirebaseImage.thumbnail(path, scale: widget.imageProvider.scale);
+        final thumbnail = widget.imageProvider.thumbnail;
         final containsImage = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider);
         final containsThumbnail = PaintingBinding.instance.imageCache.containsKey(thumbnail);
 
@@ -138,16 +173,30 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   }
 
   @override
-  Widget build(BuildContext context) => SwitchingImage(
-        imageProvider: _provider,
-        idleChild: widget.idleChild,
-        shape: widget.shape,
-        opacity: widget.opacity,
-        duration: widget.duration,
-        alignment: widget.alignment,
-        filterQuality: widget.filterQuality,
-        fit: widget.fit,
-        layoutChildren: widget.layoutChildren,
-        type: SwitchingImageType.fade,
-      );
+  Widget build(BuildContext context) => widget.filter
+      ? SwitchingImage.filter(
+          imageProvider: _provider,
+          idleChild: widget.idleChild,
+          shape: widget.shape,
+          opacity: widget.opacity,
+          duration: widget.duration,
+          alignment: widget.alignment,
+          filterQuality: widget.filterQuality,
+          fit: widget.fit,
+          layoutChildren: widget.layoutChildren,
+          color: widget.color,
+          colorBlendMode: widget.colorBlendMode,
+        )
+      : SwitchingImage(
+          imageProvider: _provider,
+          idleChild: widget.idleChild,
+          shape: widget.shape,
+          opacity: widget.opacity,
+          duration: widget.duration,
+          alignment: widget.alignment,
+          filterQuality: widget.filterQuality,
+          fit: widget.fit,
+          layoutChildren: widget.layoutChildren,
+          type: SwitchingImageType.fade,
+        );
 }

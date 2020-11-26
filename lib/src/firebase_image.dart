@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:io' as io;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:firebase_image/src/blur_hash_image.dart';
+import 'package:firebase_image/src/impl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' show join;
@@ -59,12 +60,14 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     this.path, {
     this.scale = 1,
     this.size = true,
+    this.blur,
   }) : type = FirebaseImageType.regular;
 
   /// Creates [FirebaseImage] of type [FirebaseImageType.thumbnail].
   FirebaseImage.thumbnail(
     this.path, {
     this.scale = 1,
+    this.blur,
   })  : type = FirebaseImageType.thumbnail,
         size = true;
 
@@ -72,9 +75,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   factory FirebaseImage.from(FirebasePhotoReference photo) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage(photo.path);
+        return FirebaseImage(photo.path, blur: photo.blur);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, size: false);
+        return FirebaseImage(photo.path, size: false, blur: photo.blur);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
       default:
@@ -86,9 +89,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   factory FirebaseImage.thumbnailFrom(FirebasePhotoReference photo) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage.thumbnail(photo.path);
+        return FirebaseImage.thumbnail(photo.path, blur: photo.blur);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, size: false);
+        return FirebaseImage(photo.path, size: false, blur: photo.blur);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
       default:
@@ -107,6 +110,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
 
+  /// Blurhash of the image.
+  final FirebasePhotoBlurData blur;
+
   /// Type of this [FirebaseImageProvider]
   final FirebaseImageType type;
 
@@ -116,11 +122,14 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Filenames for firebase image sizes.
   static FirebaseImageNames names = const FirebaseImageNames();
 
-  /// Thumbnail [FirebaseImage] from this providers path.
+  /// Thumbnail [FirebaseImage] from the copy of this provider.
   FirebaseImage get thumbnail {
     assert(type != FirebaseImageType.thumbnail);
-    return FirebaseImage.thumbnail(path, scale: scale);
+    return FirebaseImage.thumbnail(path, scale: scale, blur: blur);
   }
+
+  /// [BlurHashImage] from this provider, if the photo had blur.
+  BlurHashImage get blurImage => blur != null ? BlurHashImage(blur.hash, blur.size, scale: scale) : null;
 
   ImageConfiguration _configuration = ImageConfiguration.empty;
   double get _pixelRatio => scale != 1 ? scale : _configuration.devicePixelRatio ?? scale;

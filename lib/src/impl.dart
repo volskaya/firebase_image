@@ -1,9 +1,12 @@
 import 'package:firebase_image/firebase_image.dart';
 import 'package:firestore_model/firestore_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
 
+part 'impl.freezed.dart';
 part 'impl.g.dart';
 
 /// Mixin for a [FirebaseModel].
@@ -79,4 +82,27 @@ abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhot
   void onSnapshot(T x) {
     photos = (x as RealtimePhotoModel<T>).photos;
   }
+}
+
+/// Blurhash data of [FirebasePhoto].
+@freezed
+abstract class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
+  /// Construct [FirebasePhotoBlurData].
+  factory FirebasePhotoBlurData({
+    /// Blurhash.
+    @required @JsonKey() String hash,
+
+    /// Width of the blurhash.
+    @required @JsonKey() num width,
+
+    /// Height of the blurhash.
+    @required @JsonKey() num height,
+  }) = _FirebasePhotoBlurData;
+
+  /// Deserialie [FirebasePhotoBlurData] from json.
+  factory FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoBlurDataFromJson(json);
+
+  /// Get the [Size] of this blur hash.
+  @late
+  Size get size => Size(width.toDouble(), height.toDouble());
 }
