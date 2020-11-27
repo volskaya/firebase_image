@@ -19,5 +19,5 @@ class FirebasePhotoMapConverter implements JsonConverter<Map<String, FirebasePho
 
   @override
   Map<String, Map<String, dynamic>> toJson(Map<String, FirebasePhoto> object) =>
-      throw UnsupportedError('You\'re not supposed to serialize [FirebasePhoto]s');
+      {for (final entry in object.entries) entry.key: entry.value.toJson()};
 }

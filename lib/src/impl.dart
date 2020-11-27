@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobx/mobx.dart';
+import 'package:quiver/collection.dart';
 
 part 'impl.freezed.dart';
 part 'impl.g.dart';
@@ -50,7 +51,8 @@ abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with FirebasePh
   @override
   @mustCallSuper
   void onSnapshot(T x) {
-    photos = (x as FirestorePhotoModel<T>).photos;
+    final newPhotos = (x as FirestorePhotoModel).photos;
+    if (!mapsEqual(photos, newPhotos)) photos = newPhotos;
   }
 }
 
@@ -80,7 +82,8 @@ abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhot
   @override
   @mustCallSuper
   void onSnapshot(T x) {
-    photos = (x as RealtimePhotoModel<T>).photos;
+    final newPhotos = (x as RealtimePhotoModel).photos;
+    if (!mapsEqual(photos, newPhotos)) photos = newPhotos;
   }
 }
 
