@@ -1,5 +1,5 @@
+import 'package:firebase_image/src/converters.dart';
 import 'package:firebase_image/src/firebase_image.dart';
-import 'package:firebase_image/src/impl.dart';
 import 'package:firestore_model/firestore_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -25,6 +25,58 @@ enum FirebasePhotoType {
   video,
 }
 
+/// Blurhash data of [FirebasePhoto].
+@freezed
+abstract class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
+  /// Creates [FirebasePhotoBlurData].
+  factory FirebasePhotoBlurData({
+    /// Blurhash.
+    @required @JsonKey() String hash,
+
+    /// Width of the blurhash.
+    @required @JsonKey() num width,
+
+    /// Height of the blurhash.
+    @required @JsonKey() num height,
+  }) = _FirebasePhotoBlurData;
+
+  /// Deserialie [FirebasePhotoBlurData] from json.
+  factory FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoBlurDataFromJson(json);
+
+  /// Get the [Size] of this blur hash.
+  @late
+  Size get size => Size(width.toDouble(), height.toDouble());
+}
+
+/// Palette colors of [FirebasePhoto].
+@freezed
+abstract class FirebasePhotoPalette with _$FirebasePhotoPalette {
+  /// Creates [FirebasePhotoPalette].
+  factory FirebasePhotoPalette({
+    @JsonKey() @HexStringColorConverter() Color vibrant,
+    @JsonKey() @HexStringColorConverter() Color muted,
+    @JsonKey() @HexStringColorConverter() Color lightMuted,
+    @JsonKey() @HexStringColorConverter() Color darkMuted,
+    @JsonKey() @HexStringColorConverter() Color lightVibrant,
+    @JsonKey() @HexStringColorConverter() Color darkVibrant,
+  }) = _FirebasePhotoPalette;
+
+  /// Deserialize [FirebasePhotoPalette] from json.
+  factory FirebasePhotoPalette.fromJson(Map<String, dynamic> json) => _$FirebasePhotoPaletteFromJson(json);
+
+  /// Get the first available color prioritizing vibrant.
+  @late
+  Color get dominant => vibrant ?? muted ?? lightVibrant ?? lightMuted ?? darkVibrant ?? darkMuted;
+
+  /// Get the first available vibrant color prioritizing light.
+  @late
+  Color get firstVibrant => vibrant ?? lightVibrant ?? darkVibrant;
+
+  /// Get the first available muted color prioritizing light.
+  @late
+  Color get firstMuted => muted ?? lightMuted ?? darkMuted;
+}
+
 /// Document photos map entry value that describes photo type, id, hash, size
 /// and its public download URLs.
 @freezed
@@ -42,6 +94,9 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
 
     /// Blurhash of the photo.
     @JsonKey() FirebasePhotoBlurData blur,
+
+    /// Color palette of the photo.
+    @JsonKey() FirebasePhotoPalette palette,
 
     /// Width of the photo.
     @required @JsonKey() num width,
@@ -73,7 +128,7 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.type, this.size, [this.blur]);
+  const FirebasePhotoReference(this.path, this.type, this.size, [this.blur, this.palette]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
   static FirebasePhotoReference from(String path, FirebasePhoto photo) =>
@@ -82,7 +137,7 @@ class FirebasePhotoReference {
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
   static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) =>
-      FirebasePhotoReference(photo.getStoragePath(model), photo.type, photo.size, photo.blur);
+      FirebasePhotoReference(photo.getStoragePath(model), photo.type, photo.size, photo.blur, photo.palette);
 
   /// Path to the photo file in Firebase storage.
   final String path;
@@ -95,6 +150,9 @@ class FirebasePhotoReference {
 
   /// Blurhash of the photo.
   final FirebasePhotoBlurData blur;
+
+  /// Color palette of the photo.
+  final FirebasePhotoPalette palette;
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
   FirebaseImage get thumbnail => FirebaseImage.thumbnailFrom(this);

@@ -3,27 +3,6 @@
 part of 'impl.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-_$_FirebasePhotoBlurData _$_$_FirebasePhotoBlurDataFromJson(
-    Map<String, dynamic> json) {
-  return _$_FirebasePhotoBlurData(
-    hash: json['hash'] as String,
-    width: json['width'] as num,
-    height: json['height'] as num,
-  );
-}
-
-Map<String, dynamic> _$_$_FirebasePhotoBlurDataToJson(
-        _$_FirebasePhotoBlurData instance) =>
-    <String, dynamic>{
-      'hash': instance.hash,
-      'width': instance.width,
-      'height': instance.height,
-    };
-
-// **************************************************************************
 // StoreGenerator
 // **************************************************************************
 
