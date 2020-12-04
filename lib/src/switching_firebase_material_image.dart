@@ -17,6 +17,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.elevation = 0,
+    this.color,
     this.shadowColor,
   }) : super(key: key);
 
@@ -45,8 +46,11 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// Children [Widget]'s on top of the [Material], in the switcher's layout builder.
   final Iterable<Widget> layoutChildren;
 
-  /// [Material] elevation.
+  /// [Material]'s elevation. Must define [color] to draw elevation.
   final double elevation;
+
+  /// [Material]'s color. Must be defined to draw elevation.
+  final Color color;
 
   /// [Material]'s shadow color.
   final Color shadowColor;
@@ -60,12 +64,15 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         filterQuality: filterQuality,
         fit: fit,
         layoutChildren: [
-          Material(
-            type: MaterialType.transparency,
-            shape: shape,
-            child: child,
-            elevation: elevation,
-            shadowColor: shadowColor,
+          RepaintBoundary(
+            child: Material(
+              type: color != null ? MaterialType.canvas : MaterialType.transparency,
+              color: color,
+              elevation: elevation,
+              shape: shape,
+              child: child,
+              shadowColor: shadowColor,
+            ),
           ),
           ...layoutChildren,
         ],

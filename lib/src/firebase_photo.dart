@@ -161,10 +161,17 @@ class FirebasePhotoReference {
   FirebaseImage get image => FirebaseImage.from(this);
 
   /// Scroll aware thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
-  AwareFirebaseImage awareThumbnail(State state) => AwareFirebaseImage.thumbnailFrom(state, this);
+  AwareFirebaseImage awareThumbnail(State state, [Size cacheSize]) =>
+      AwareFirebaseImage.thumbnailFrom(state, this, cacheSize);
 
   /// Scroll aware regular [FirebaseImage] provider of this [FirebasePhotoReference].
-  AwareFirebaseImage awareImage(State state) => AwareFirebaseImage.from(state, this);
+  AwareFirebaseImage awareImage(State state, [Size cacheSize]) => AwareFirebaseImage.from(state, this, cacheSize);
+
+  /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
+  FirebaseImage getThumbnail([Size cacheSize]) => FirebaseImage.thumbnailFrom(this, cacheSize);
+
+  /// Regular [FirebaseImage] provider of this [FirebasePhotoReference].
+  FirebaseImage getImage([Size cacheSize]) => FirebaseImage.from(this, cacheSize);
 
   @override
   bool operator ==(Object other) {

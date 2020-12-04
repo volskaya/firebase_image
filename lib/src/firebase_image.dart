@@ -56,27 +56,31 @@ enum FirebaseImageType {
 class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Creates [FirebaseImage] of type [FirebaseImageType.regular].
   FirebaseImage(
-    this.path, {
+    this.path,
+    this.size, {
     this.scale = 1,
-    this.size = true,
+    this.showLarge = true,
     this.blur,
+    this.cacheSize,
   }) : type = FirebaseImageType.regular;
 
   /// Creates [FirebaseImage] of type [FirebaseImageType.thumbnail].
   FirebaseImage.thumbnail(
-    this.path, {
+    this.path,
+    this.size, {
     this.scale = 1,
     this.blur,
+    this.cacheSize,
   })  : type = FirebaseImageType.thumbnail,
-        size = true;
+        showLarge = false;
 
   /// Creates a regular [FirebaseImage] from the path of [FirebasePhotoReference].
-  factory FirebaseImage.from(FirebasePhotoReference photo) {
+  factory FirebaseImage.from(FirebasePhotoReference photo, [Size cacheSize]) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage(photo.path, blur: photo.blur);
+        return FirebaseImage(photo.path, photo.size, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, size: false, blur: photo.blur);
+        return FirebaseImage(photo.path, photo.size, showLarge: false, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
       default:
@@ -85,12 +89,12 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   }
 
   /// Creates a thumbnail [FirebaseImage] from the path of [FirebasePhotoReference].
-  factory FirebaseImage.thumbnailFrom(FirebasePhotoReference photo) {
+  factory FirebaseImage.thumbnailFrom(FirebasePhotoReference photo, [Size cacheSize]) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage.thumbnail(photo.path, blur: photo.blur);
+        return FirebaseImage.thumbnail(photo.path, photo.size, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, size: false, blur: photo.blur);
+        return FirebaseImage(photo.path, photo.size, showLarge: false, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
       default:
@@ -116,15 +120,40 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   final FirebaseImageType type;
 
   /// Whether to automatically attempt to fetch large images before regular.
-  final bool size;
+  final bool showLarge;
+
+  /// Size of the [FirebasePhoto] that the [path] points to.
+  final Size size;
+
+  /// Cache size to decode the images at.
+  ///
+  /// NOTE: Don't apply pixel density ratio to this,
+  /// [FirebaseImage] does it automatically, [ResizeImage] does not.
+  final Size cacheSize;
 
   /// Filenames for firebase image sizes.
   static FirebaseImageNames names = const FirebaseImageNames();
 
-  /// Thumbnail [FirebaseImage] from the copy of this provider.
+  /// Thumbnail [FirebaseImage] from the copy of this provider, unless it's already a thumbnail.
   FirebaseImage get thumbnail {
-    assert(type != FirebaseImageType.thumbnail);
-    return FirebaseImage.thumbnail(path, scale: scale, blur: blur);
+    switch (type) {
+      case FirebaseImageType.thumbnail:
+        return this;
+      case FirebaseImageType.regular:
+        return FirebaseImage.thumbnail(path, size, scale: scale, blur: blur, cacheSize: cacheSize);
+    }
+    throw UnimplementedError();
+  }
+
+  /// Regular [FirebaseImage] from the copy of this provider, unless it's already a regular.
+  FirebaseImage get regular {
+    switch (type) {
+      case FirebaseImageType.thumbnail:
+        return FirebaseImage(path, size, showLarge: showLarge, scale: scale, blur: blur, cacheSize: cacheSize);
+      case FirebaseImageType.regular:
+        return this;
+    }
+    throw UnimplementedError();
   }
 
   /// [BlurHashImage] from this provider, if the photo had blur.
@@ -157,6 +186,24 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
+  /// Gets cache size of the [FirebasePhoto] for the current
+  ///
+  /// [photo] can be null.
+  static Size getCacheSize(FirebasePhotoReference photo, Size constraints, [double devicePixelRatio = 1]) {
+    if (photo?.size == null) return null;
+
+    double width = constraints.width;
+    double height = constraints.height;
+
+    if (photo.size.aspectRatio > constraints.aspectRatio) {
+      height = constraints.width / photo.size.aspectRatio;
+    } else if (photo.size.aspectRatio < constraints.aspectRatio) {
+      width = constraints.height * photo.size.aspectRatio;
+    }
+
+    return Size(width, height) * devicePixelRatio;
+  }
+
   Future<ui.Codec> _loadAsync(
     FirebaseImage key,
     DecoderCallback decode,
@@ -166,21 +213,37 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       assert(key == this);
       if (isEmpty(this.path)) return null;
 
-      final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
-      developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
+      // final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
+      // developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
 
-      // First attempt to fetch the largest size.
-      var bytes = await _getPhoto(path);
+      // // First attempt to fetch the largest size.
+      // var bytes = await _getPhoto(path);
 
-      // Attempt to fetch regular size image.
-      if (size && _pixelRatio > _kLargeDpiBreakPoint && bytes == null) {
-        final path = _buildPathWithScale(1);
-        developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
-        bytes = await _getPhoto(path);
-      }
+      // // Attempt to fetch regular size image.
+      // if (showLarge && _pixelRatio > _kLargeDpiBreakPoint && bytes == null) {
+      //   final path = _buildPathWithScale(1);
+      //   developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
+      //   bytes = await _getPhoto(path);
+      // }
+
+      final path = _buildPathWithScale(1);
+      developer.log('Getting image from $path, scale: 1', name: 'firebase_image');
+      final bytes = await _getPhoto(path);
 
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');
-      return decode(bytes);
+      if (cacheSize != null) {
+        print('Decoding a resized image from $path - $cacheSize');
+        // final displayCacheSize = cacheSize * _configuration.devicePixelRatio;
+        final displayCacheSize = cacheSize;
+        return decode(
+          bytes,
+          cacheWidth: displayCacheSize.width.toInt(),
+          cacheHeight: displayCacheSize.height.toInt(),
+        );
+      } else {
+        print('Decoding a full size image from $path');
+        return decode(bytes);
+      }
     } catch (e) {
       scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
       rethrow;
@@ -212,7 +275,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
         other.path == path &&
         other.scale == scale &&
         other.type == type &&
-        other.size == size;
+        other.size == size &&
+        other.cacheSize == cacheSize &&
+        other.showLarge == other.showLarge;
   }
 
   @override
@@ -222,17 +287,17 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 /// Scroll aware image provider of [FirebaseImage].
 class AwareFirebaseImage<T extends StatefulWidget> extends ScrollAwareImageProvider<FirebaseImage> {
   /// Creates a [AwareFirebaseImage] of a regular type [FirestoreImage].
-  AwareFirebaseImage.from(State<T> state, FirebasePhotoReference photo)
+  AwareFirebaseImage.from(State<T> state, FirebasePhotoReference photo, [Size cacheSize])
       : super(
           context: DisposableBuildContext<State<T>>(state),
-          imageProvider: FirebaseImage.from(photo),
+          imageProvider: FirebaseImage.from(photo, cacheSize),
         );
 
   /// Creates a [AwareFirebaseImage] of a thumbnail type [FirestoreImage].
-  AwareFirebaseImage.thumbnailFrom(State<T> state, FirebasePhotoReference photo)
+  AwareFirebaseImage.thumbnailFrom(State<T> state, FirebasePhotoReference photo, [Size cacheSize])
       : super(
           context: DisposableBuildContext<State<T>>(state),
-          imageProvider: FirebaseImage.thumbnailFrom(photo),
+          imageProvider: FirebaseImage.thumbnailFrom(photo, cacheSize),
         );
 
   @override

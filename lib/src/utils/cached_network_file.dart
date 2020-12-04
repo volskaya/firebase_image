@@ -24,12 +24,13 @@ class CachedNetworkFile extends BaseCacheManager {
   /// Key that serves as the cache label.
   final String key;
 
-  /// Values intended to be invalidated, when their operation completes
+  /// Values intended to be invalidated, when their operation completes.
   final _cache = MapCache<String, io.File>();
 
   Future<io.File> _getSingleFile(String url) async {
     assert(url?.isNotEmpty == true);
     developer.log('Fetching file: $url', name: 'firebase_image');
+
     try {
       return getSingleFile(url);
     } catch (e) {
@@ -56,15 +57,15 @@ class CachedNetworkFile extends BaseCacheManager {
       'Requesting cached network file from: $url',
       name: 'firebase_image',
     );
-    final file = await _cache.get(
-      url,
-      ifAbsent: (String url) async =>
-          _getSingleFile(url).whenComplete(() => _cache.invalidate(key)),
-    );
+
+    final file =
+        await _cache.get(url, ifAbsent: (url) async => _getSingleFile(url).whenComplete(() => _cache.invalidate(key)));
+
     developer.log(
       'File $url, ' + (file != null ? 'retrieved: $file' : 'not found'),
       name: 'firebase_image',
     );
+
     return file;
   }
 }

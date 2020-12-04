@@ -138,7 +138,6 @@ class FirebaseImageStorage {
             name: 'firebase_image',
           );
 
-          // FIXME: Allow decoding the image, before this write.
           selectedCache.putFile(comparableRef.path, bytes);
           return bytes;
         }

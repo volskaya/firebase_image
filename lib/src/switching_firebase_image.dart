@@ -5,7 +5,6 @@ import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 /// Wrapped [SwitchingImage] to first load thumbnail provider,
@@ -122,18 +121,19 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
       return;
     }
 
+    final containsImage = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider);
+    final containsThumbnail = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider.thumbnail);
+
     switch (widget.imageProvider.type) {
       case FirebaseImageType.thumbnail:
-        _provider = widget.imageProvider;
+        // If the regular image is already in cache, but not the thumbnail, paint the regular image instead.
+        _provider = containsImage && !containsThumbnail ? widget.imageProvider.regular : widget.imageProvider;
         break;
       case FirebaseImageType.regular:
         final path = widget.imageProvider.path.toString();
-        final thumbnail = widget.imageProvider.thumbnail;
-        final containsImage = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider);
-        final containsThumbnail = PaintingBinding.instance.imageCache.containsKey(thumbnail);
 
         if (!containsImage && containsThumbnail) {
-          _provider = thumbnail;
+          _provider = widget.imageProvider.thumbnail;
 
           // If state currently targets a thumbnail, but the widget intended
           // to show a regular image, begin the switch process.
@@ -145,12 +145,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
               widget.imageProvider.path == path &&
               mounted) {
             // Set the real imageProvider, to begin [SwitchingImage] decode process
-            AwaitRoute.of(context, postFrame: true).then(
-              (_) => SchedulerBinding.instance.scheduleTask(
-                () => setState(() => _provider = widget.imageProvider),
-                Priority.touch,
-              ),
-            );
+            AwaitRoute.of(context, postFrame: true).then((_) => setState(() => _provider = widget.imageProvider));
           }
         } else {
           _provider = widget.imageProvider;
