@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:firebase_image/src/blur_hash_image.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' show join;
 import 'package:firebase_image/src/firebase_photo.dart';
@@ -62,6 +63,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     this.showLarge = true,
     this.blur,
     this.cacheSize,
+    this.scrollAwareContext,
   }) : type = FirebaseImageType.regular;
 
   /// Creates [FirebaseImage] of type [FirebaseImageType.thumbnail].
@@ -71,6 +73,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     this.scale = 1,
     this.blur,
     this.cacheSize,
+    this.scrollAwareContext,
   })  : type = FirebaseImageType.thumbnail,
         showLarge = false;
 
@@ -102,6 +105,12 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
+  /// Default device pixel ratio.
+  ///
+  /// This can be overriden from the first app's build method.
+  /// Every call to [FirebaseImage.getCacheSize] will default to this value.
+  static double defaultPixelRatio = 1;
+
   /// Optional global storage bucket override for [FirebaseImageStorage].
   ///
   /// Leave this null to fallback to the default storage bucket of this project.
@@ -129,10 +138,18 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   ///
   /// NOTE: Don't apply pixel density ratio to this,
   /// [FirebaseImage] does it automatically, [ResizeImage] does not.
-  final Size cacheSize;
+  Size cacheSize;
 
   /// Filenames for firebase image sizes.
   static FirebaseImageNames names = const FirebaseImageNames();
+
+  /// Scroll aware context. If this is defined, image will wait till upper scrollable stops scrolling
+  /// fast, before begining a decode.
+  ///
+  /// Once [DisposableBuildContext.dispose] is called on this context,
+  /// the provider will stop trying to resolve the image if it has not already
+  /// been resolved.
+  DisposableBuildContext scrollAwareContext;
 
   /// Thumbnail [FirebaseImage] from the copy of this provider, unless it's already a thumbnail.
   FirebaseImage get thumbnail {
@@ -140,7 +157,8 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       case FirebaseImageType.thumbnail:
         return this;
       case FirebaseImageType.regular:
-        return FirebaseImage.thumbnail(path, size, scale: scale, blur: blur, cacheSize: cacheSize);
+        return FirebaseImage.thumbnail(path, size,
+            scale: scale, blur: blur, cacheSize: cacheSize, scrollAwareContext: scrollAwareContext);
     }
     throw UnimplementedError();
   }
@@ -148,10 +166,18 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Regular [FirebaseImage] from the copy of this provider, unless it's already a regular.
   FirebaseImage get regular {
     switch (type) {
-      case FirebaseImageType.thumbnail:
-        return FirebaseImage(path, size, showLarge: showLarge, scale: scale, blur: blur, cacheSize: cacheSize);
       case FirebaseImageType.regular:
         return this;
+      case FirebaseImageType.thumbnail:
+        return FirebaseImage(
+          path,
+          size,
+          showLarge: showLarge,
+          scale: scale,
+          blur: blur,
+          cacheSize: cacheSize,
+          scrollAwareContext: scrollAwareContext,
+        );
     }
     throw UnimplementedError();
   }
@@ -189,19 +215,20 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Gets cache size of the [FirebasePhoto] for the current
   ///
   /// [photo] can be null.
-  static Size getCacheSize(FirebasePhotoReference photo, Size constraints, [double devicePixelRatio = 1]) {
-    if (photo?.size == null) return null;
+  static Size getCacheSize(Size photoSize, Size constraints, [double devicePixelRatio]) {
+    assert(photoSize != null);
+    assert(constraints != null);
 
     double width = constraints.width;
     double height = constraints.height;
 
-    if (photo.size.aspectRatio > constraints.aspectRatio) {
-      height = constraints.width / photo.size.aspectRatio;
-    } else if (photo.size.aspectRatio < constraints.aspectRatio) {
-      width = constraints.height * photo.size.aspectRatio;
+    if (photoSize.aspectRatio > constraints.aspectRatio) {
+      height = constraints.width / photoSize.aspectRatio;
+    } else if (photoSize.aspectRatio < constraints.aspectRatio) {
+      width = constraints.height * photoSize.aspectRatio;
     }
 
-    return Size(width, height) * devicePixelRatio;
+    return Size(width, height) * (devicePixelRatio ?? FirebaseImage.defaultPixelRatio);
   }
 
   Future<ui.Codec> _loadAsync(
@@ -213,6 +240,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       assert(key == this);
       if (isEmpty(this.path)) return null;
 
+      // FIXME: Download large image only if `cacheSize` is larger than the regular one.
       // final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
       // developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
 
@@ -267,6 +295,51 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   }
 
   @override
+  void resolveStreamForKey(
+    ImageConfiguration configuration,
+    ImageStream stream,
+    FirebaseImage key,
+    ImageErrorListener handleError,
+  ) {
+    if (scrollAwareContext == null) {
+      super.resolveStreamForKey(configuration, stream, key, handleError);
+      return; // No custom logic needed.
+    }
+
+    // Something managed to complete the stream, or it's already in the image
+    // cache. Notify the wrapped provider and expect it to behave by not
+    // reloading the image since it's already resolved.
+    // Do this even if the context has gone out of the tree, since it will
+    // update LRU information about the cache. Even though we never showed the
+    // image, it was still touched more recently.
+    // Do this before checking scrolling, so that if the bytes are available we
+    // render them even though we're scrolling fast - there's no additional
+    // allocations to do for texture memory, it's already there.
+    if (stream.completer != null || PaintingBinding.instance.imageCache.containsKey(key)) {
+      super.resolveStreamForKey(configuration, stream, key, handleError);
+      return;
+    }
+    // The context has gone out of the tree - ignore it.
+    if (scrollAwareContext.context == null) {
+      return;
+    }
+    // Something still wants this image, but check if the context is scrolling
+    // too fast before scheduling work that might never show on screen.
+    // Try to get to end of the frame callbacks of the next frame, and then
+    // check again.
+    if (Scrollable.recommendDeferredLoadingForContext(scrollAwareContext.context)) {
+      SchedulerBinding.instance.scheduleFrameCallback((_) {
+        scheduleMicrotask(() => resolveStreamForKey(configuration, stream, key, handleError));
+      });
+      return;
+    }
+
+    // We are in the tree, we're not scrolling too fast, the cache doesn't
+    // have our image, and no one has otherwise completed the stream.  Go.
+    super.resolveStreamForKey(configuration, stream, key, handleError);
+  }
+
+  @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
     return other is FirebaseImage &&
@@ -285,6 +358,17 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   @override
   int get hashCode => hashValues(path, scale, type, size, cacheSize, showLarge);
+
+  /// Mutate variables of [FirebaseImage].
+  void apply({
+    Size cacheSize,
+
+    /// Use [State] for scroll awareness [DisposableBuildContext].
+    State state,
+  }) {
+    if (cacheSize != null) this.cacheSize = cacheSize;
+    if (state != null) scrollAwareContext = DisposableBuildContext<State>(state);
+  }
 }
 
 /// Scroll aware image provider of [FirebaseImage].

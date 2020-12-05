@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 /// the regular image.
 class SwitchingFirebaseImage extends StatefulWidget {
   /// Creates [SwitchingFirebaseImage].
-  const SwitchingFirebaseImage({
+  SwitchingFirebaseImage({
     Key key,
     @required this.imageProvider,
     this.idleChild,
@@ -24,13 +24,19 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
-  })  : colorBlendMode = null,
+    this.scrollAware = false,
+    this.type = SwitchingImageType.fade,
+  })  : assert(
+          imageProvider is! FirebaseImage || (imageProvider as FirebaseImage)?.scrollAwareContext == null,
+          'Handle scroll awareness with `scrollAware`',
+        ),
+        colorBlendMode = null,
         color = null,
         filter = false,
         super(key: key);
 
   /// Creates filter variant of [SwitchingFirebaseImage].
-  const SwitchingFirebaseImage.filter({
+  SwitchingFirebaseImage.filter({
     Key key,
     @required this.imageProvider,
     @required this.color,
@@ -43,11 +49,17 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
-  })  : filter = true,
+    this.scrollAware = false,
+  })  : assert(
+          imageProvider is! FirebaseImage || (imageProvider as FirebaseImage)?.scrollAwareContext == null,
+          'Handle scroll awareness with `scrollAware`',
+        ),
+        type = SwitchingImageType.fade,
+        filter = true,
         super(key: key);
 
   /// [FirebaseImage] to switch to.
-  final FirebaseImage imageProvider;
+  final ImageProvider imageProvider;
 
   /// While [SwitchingImage.imageProvider] is not loaded an optional
   /// [idleChild] will be built instead.
@@ -68,6 +80,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Box fit of the image.
   final BoxFit fit;
 
+  /// Transition type used by the animated switcher within [SwitchingImage].
+  final SwitchingImageType type;
+
   /// Opacity override when you wish to animate the image without having to overlap
   /// multiple opacity shaders.
   final ValueListenable<double> opacity;
@@ -83,6 +98,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Whether to wrap images in a [ColorFiltered] widget.
   final bool filter;
+
+  /// Don't decode the image, if a parent scrollable is scrolling too fast.
+  final bool scrollAware;
 
   /// Convenience copy method.
   SwitchingFirebaseImage copyWith({
@@ -110,7 +128,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   FirebaseImageCacheListener _cacheListener;
-  FirebaseImage _provider;
+  ImageProvider _provider;
 
   static double _getImageArea(FirebaseImage image) {
     final size = image.cacheSize ?? image.size;
@@ -120,35 +138,46 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   static FirebaseImage _getBetterQuality(FirebaseImage a, FirebaseImage b) =>
       _getImageArea(a) > _getImageArea(b) ? a : b;
 
+  /// Sets scroll awarness, if necessary.
+  void _setProvider(FirebaseImage provider) => _provider = widget.scrollAware ? provider : provider
+    ..apply(state: this);
+
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
     await AwaitRoute.of(context, postFrame: true);
-    setState(() => _provider = image);
+    setState(() => _setProvider(image));
   }
 
   void _handleNewImage(Object key) {
-    if (key is FirebaseImage && key.path == widget.imageProvider.path) {
-      assert(_provider.path == key.path);
-      final betterQualityImage = _getBetterQuality(key, _provider);
+    assert(widget.imageProvider is FirebaseImage);
+
+    if (key is FirebaseImage && key.path == (widget.imageProvider as FirebaseImage).path) {
+      assert((_provider as FirebaseImage).path == key.path);
+
+      final betterQualityImage = _getBetterQuality(key, _provider as FirebaseImage);
       if (betterQualityImage != _provider) {
-        setState(() => _provider = betterQualityImage);
+        setState(() => _setProvider(betterQualityImage));
       }
     }
   }
 
   void _cycleThumbnail() {
-    developer.log('Cycling thumbnail: ${widget.imageProvider?.path}', name: 'firebase_image');
+    assert(widget.imageProvider is FirebaseImage);
+
+    developer.log('Cycling thumbnail: ${widget.imageProvider}', name: 'firebase_image');
 
     if (widget.imageProvider == null) {
       _provider = null;
       return; // Image removed.
     }
 
+    final widgetImage = widget.imageProvider as FirebaseImage;
+
     // If the widget targets a thumbnail, look for smallest cached image instead, to prevent tiny tiles from
     // garbage collecting big images.
     final cachedImage = _cacheListener?.getHighestCachedSize(
-      widget.imageProvider.regular,
-      lowestInstead: widget.imageProvider.type == FirebaseImageType.thumbnail,
+      widgetImage.regular,
+      lowestInstead: widgetImage.type == FirebaseImageType.thumbnail,
     );
 
     bool decodeWidgetsImageProvider = true; // If a higher res image is already cached, that one is used instead.
@@ -157,40 +186,64 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
     if (cachedImage != null) {
       // Calculate size differences between the cached and widget's selected image.
       final cachedArea = _getImageArea(cachedImage);
-      final widgetImageArea = _getImageArea(widget.imageProvider);
+      final widgetImageArea = _getImageArea(widgetImage);
 
       // Widget image should have a different resolution.
       decodeWidgetsImageProvider = widgetImageArea > cachedArea;
       delayDecode = true;
-      _provider = cachedImage; // Use the cached image for the current frame.
+      _setProvider(cachedImage); // Use the cached image for the current frame.
     }
 
     if (decodeWidgetsImageProvider) {
       if (delayDecode) {
-        _delayDecodeOf(widget.imageProvider);
+        _delayDecodeOf(widgetImage);
       } else {
-        _provider = widget.imageProvider;
+        _setProvider(widgetImage);
       }
     }
+  }
+
+  bool _listening = false;
+  void _listenForBetterImages() {
+    if (_listening) return;
+    PaintingBinding.instance.imageCache.keyAddedCallbacks.add(_handleNewImage);
+    _listening = true;
+  }
+
+  void _stopListeningForBetterImages() {
+    if (!_listening) return;
+    PaintingBinding.instance.imageCache.keyAddedCallbacks.remove(_handleNewImage);
+    _listening = false;
   }
 
   @override
   void initState() {
     _cacheListener = FirebaseImageCacheListener.of(context);
-    _cycleThumbnail();
-    PaintingBinding.instance.imageCache.keyAddedCallbacks.add(_handleNewImage);
+
+    if (widget.imageProvider != null && widget.imageProvider is FirebaseImage) {
+      _cycleThumbnail();
+      _listenForBetterImages();
+    }
     super.initState();
   }
 
   @override
   void didUpdateWidget(SwitchingFirebaseImage oldWidget) {
-    if (oldWidget.imageProvider != widget.imageProvider) _cycleThumbnail();
+    if (oldWidget.imageProvider != widget.imageProvider) {
+      if (widget.imageProvider is FirebaseImage) {
+        _cycleThumbnail();
+        _listenForBetterImages();
+      } else {
+        _stopListeningForBetterImages();
+        _provider = widget.imageProvider;
+      }
+    }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
-    PaintingBinding.instance.imageCache.keyAddedCallbacks.remove(_handleNewImage);
+    _stopListeningForBetterImages();
     super.dispose();
   }
 
@@ -219,6 +272,6 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
           filterQuality: widget.filterQuality,
           fit: widget.fit,
           layoutChildren: widget.layoutChildren,
-          type: SwitchingImageType.fade,
+          type: widget.type,
         );
 }

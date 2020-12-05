@@ -19,6 +19,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     this.elevation = 0,
     this.color,
     this.shadowColor,
+    this.scrollAware = false,
   }) : super(key: key);
 
   /// [FirebaseImage] to switch to.
@@ -40,6 +41,9 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// Box fit of the image.
   final BoxFit fit;
 
+  /// Don't decode the image, if a parent scrollable is scrolling too fast.
+  final bool scrollAware;
+
   /// Child [Widget] of the [Material].
   final Widget child;
 
@@ -60,6 +64,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         imageProvider: imageProvider,
         idleChild: idleChild,
         shape: shape,
+        scrollAware: scrollAware,
         duration: duration,
         filterQuality: filterQuality,
         fit: fit,
