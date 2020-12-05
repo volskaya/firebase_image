@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:await_route/await_route.dart';
 import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
+import 'package:firebase_image/src/firebase_image_cache_listener.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -108,63 +109,89 @@ class SwitchingFirebaseImage extends StatefulWidget {
 }
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
+  FirebaseImageCacheListener _cacheListener;
   FirebaseImage _provider;
 
+  static double _getImageArea(FirebaseImage image) {
+    final size = image.cacheSize ?? image.size;
+    return size.width * size.height;
+  }
+
+  static FirebaseImage _getBetterQuality(FirebaseImage a, FirebaseImage b) =>
+      _getImageArea(a) > _getImageArea(b) ? a : b;
+
+  Future _delayDecodeOf(FirebaseImage image) async {
+    if (!mounted || image != widget.imageProvider) return;
+    await AwaitRoute.of(context, postFrame: true);
+    setState(() => _provider = image);
+  }
+
+  void _handleNewImage(Object key) {
+    if (key is FirebaseImage && key.path == widget.imageProvider.path) {
+      assert(_provider.path == key.path);
+      final betterQualityImage = _getBetterQuality(key, _provider);
+      if (betterQualityImage != _provider) {
+        setState(() => _provider = betterQualityImage);
+      }
+    }
+  }
+
   void _cycleThumbnail() {
-    developer.log(
-      'Cycling thumbnail: ${widget.imageProvider?.path?.toString()}',
-      name: 'firebase_image',
-    );
+    developer.log('Cycling thumbnail: ${widget.imageProvider?.path}', name: 'firebase_image');
 
     if (widget.imageProvider == null) {
       _provider = null;
-      return;
+      return; // Image removed.
     }
 
-    final containsImage = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider);
-    final containsThumbnail = PaintingBinding.instance.imageCache.containsKey(widget.imageProvider.thumbnail);
+    // If the widget targets a thumbnail, look for smallest cached image instead, to prevent tiny tiles from
+    // garbage collecting big images.
+    final cachedImage = _cacheListener?.getHighestCachedSize(
+      widget.imageProvider.regular,
+      lowestInstead: widget.imageProvider.type == FirebaseImageType.thumbnail,
+    );
 
-    switch (widget.imageProvider.type) {
-      case FirebaseImageType.thumbnail:
-        // If the regular image is already in cache, but not the thumbnail, paint the regular image instead.
-        _provider = containsImage && !containsThumbnail ? widget.imageProvider.regular : widget.imageProvider;
-        break;
-      case FirebaseImageType.regular:
-        final path = widget.imageProvider.path.toString();
+    bool decodeWidgetsImageProvider = true; // If a higher res image is already cached, that one is used instead.
+    bool delayDecode = false; // To paint a cached image and later decode a different image, the frame must be delayed.
 
-        if (!containsImage && containsThumbnail) {
-          _provider = widget.imageProvider.thumbnail;
+    if (cachedImage != null) {
+      // Calculate size differences between the cached and widget's selected image.
+      final cachedArea = _getImageArea(cachedImage);
+      final widgetImageArea = _getImageArea(widget.imageProvider);
 
-          // If state currently targets a thumbnail, but the widget intended
-          // to show a regular image, begin the switch process.
-          //
-          // NOTE: Waits till the route animation is finished
-          if (_provider?.type == FirebaseImageType.thumbnail &&
-              widget.imageProvider.type == FirebaseImageType.regular &&
-              _provider?.path == path &&
-              widget.imageProvider.path == path &&
-              mounted) {
-            // Set the real imageProvider, to begin [SwitchingImage] decode process
-            AwaitRoute.of(context, postFrame: true).then((_) => setState(() => _provider = widget.imageProvider));
-          }
-        } else {
-          _provider = widget.imageProvider;
-        }
+      // Widget image should have a different resolution.
+      decodeWidgetsImageProvider = widgetImageArea > cachedArea;
+      delayDecode = true;
+      _provider = cachedImage; // Use the cached image for the current frame.
+    }
 
-        break;
+    if (decodeWidgetsImageProvider) {
+      if (delayDecode) {
+        _delayDecodeOf(widget.imageProvider);
+      } else {
+        _provider = widget.imageProvider;
+      }
     }
   }
 
   @override
   void initState() {
-    super.initState();
+    _cacheListener = FirebaseImageCacheListener.of(context);
     _cycleThumbnail();
+    PaintingBinding.instance.imageCache.keyAddedCallbacks.add(_handleNewImage);
+    super.initState();
   }
 
   @override
   void didUpdateWidget(SwitchingFirebaseImage oldWidget) {
     if (oldWidget.imageProvider != widget.imageProvider) _cycleThumbnail();
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    PaintingBinding.instance.imageCache.keyAddedCallbacks.remove(_handleNewImage);
+    super.dispose();
   }
 
   @override

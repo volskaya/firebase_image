@@ -19,6 +19,7 @@ dependencies:
   flutter_mobx: ^1.1.0+1
   mobx_codegen:
   json_annotation: ^3.0.1
+  provider: ^4.3.2+2
 
   freezed_annotation:
     path: /home/projects/forks/freezed/packages/freezed_annotation

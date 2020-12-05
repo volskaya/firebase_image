@@ -232,7 +232,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');
       if (cacheSize != null) {
-        print('Decoding a resized image from $path - $cacheSize');
         // final displayCacheSize = cacheSize * _configuration.devicePixelRatio;
         final displayCacheSize = cacheSize;
         return decode(
@@ -241,7 +240,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
           cacheHeight: displayCacheSize.height.toInt(),
         );
       } else {
-        print('Decoding a full size image from $path');
         return decode(bytes);
       }
     } catch (e) {
@@ -281,7 +279,12 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   }
 
   @override
-  int get hashCode => hashValues(path, scale, type, size);
+  String toString() {
+    return 'FirebaseImage @ $path, cacheSize: $cacheSize';
+  }
+
+  @override
+  int get hashCode => hashValues(path, scale, type, size, cacheSize, showLarge);
 }
 
 /// Scroll aware image provider of [FirebaseImage].
@@ -307,5 +310,5 @@ class AwareFirebaseImage<T extends StatefulWidget> extends ScrollAwareImageProvi
   }
 
   @override
-  int get hashCode => imageProvider.hashCode;
+  int get hashCode => hashValues(imageProvider, true);
 }
