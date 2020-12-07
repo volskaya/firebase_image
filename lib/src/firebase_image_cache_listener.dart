@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,10 +15,10 @@ class FirebaseImageCacheListener {
   final ImageCache imageCache;
 
   /// Set of currently live [FirebaseImage]s.
-  final cachedImages = <FirebaseImage>{};
+  final cachedImages = HashSet<FirebaseImage>();
 
   /// Mapped [FirebaseImage]s by their cache size and path.
-  final cachedSizes = <String, Map<Size, FirebaseImage>>{}; // Keyed by the image provider's path.
+  final cachedSizes = HashMap<String, HashMap<Size, FirebaseImage>>(); // Keyed by the image provider's path.
 
   /// Get [FirebaseImageCacheListener] from context, if it exists.
   static FirebaseImageCacheListener of(BuildContext context) {
@@ -35,7 +37,7 @@ class FirebaseImageCacheListener {
       if (key.cacheSize != null) {
         assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path].containsKey(key.cacheSize));
 
-        cachedSizes[key.path] ??= <Size, FirebaseImage>{};
+        cachedSizes[key.path] ??= HashMap<Size, FirebaseImage>();
         cachedSizes[key.path][key.cacheSize] = key;
       }
     }

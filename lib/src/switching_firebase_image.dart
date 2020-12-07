@@ -139,8 +139,11 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
       _getImageArea(a) > _getImageArea(b) ? a : b;
 
   /// Sets scroll awarness, if necessary.
-  void _setProvider(FirebaseImage provider) => _provider = widget.scrollAware ? provider : provider
-    ..apply(state: this);
+  void _setProvider(FirebaseImage provider) => _provider = provider != null
+      ? !widget.scrollAware
+          ? provider
+          : (provider..apply(state: this))
+      : null;
 
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
