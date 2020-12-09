@@ -606,7 +606,8 @@ class _$FirebasePhotoTearOff {
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
       @required @JsonKey() num width,
-      @required @JsonKey() num height}) {
+      @required @JsonKey() num height,
+      @JsonKey(defaultValue: false) bool hasLarge = false}) {
     return _FirebasePhoto(
       type: type,
       id: id,
@@ -615,6 +616,7 @@ class _$FirebasePhotoTearOff {
       palette: palette,
       width: width,
       height: height,
+      hasLarge: hasLarge,
     );
   }
 
@@ -658,6 +660,10 @@ mixin _$FirebasePhoto {
   @JsonKey()
   num get height;
 
+  /// Wether the photo also has a large version.
+  @JsonKey(defaultValue: false)
+  bool get hasLarge;
+
   Map<String, dynamic> toJson();
   $FirebasePhotoCopyWith<FirebasePhoto> get copyWith;
 }
@@ -674,7 +680,8 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
       @JsonKey() num width,
-      @JsonKey() num height});
+      @JsonKey() num height,
+      @JsonKey(defaultValue: false) bool hasLarge});
 
   $FirebasePhotoBlurDataCopyWith<$Res> get blur;
   $FirebasePhotoPaletteCopyWith<$Res> get palette;
@@ -698,6 +705,7 @@ class _$FirebasePhotoCopyWithImpl<$Res>
     Object palette = freezed,
     Object width = freezed,
     Object height = freezed,
+    Object hasLarge = freezed,
   }) {
     return _then(_value.copyWith(
       type: type == freezed ? _value.type : type as FirebasePhotoType,
@@ -708,6 +716,7 @@ class _$FirebasePhotoCopyWithImpl<$Res>
           palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
       width: width == freezed ? _value.width : width as num,
       height: height == freezed ? _value.height : height as num,
+      hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
     ));
   }
 
@@ -746,7 +755,8 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
       @JsonKey() num width,
-      @JsonKey() num height});
+      @JsonKey() num height,
+      @JsonKey(defaultValue: false) bool hasLarge});
 
   @override
   $FirebasePhotoBlurDataCopyWith<$Res> get blur;
@@ -774,6 +784,7 @@ class __$FirebasePhotoCopyWithImpl<$Res>
     Object palette = freezed,
     Object width = freezed,
     Object height = freezed,
+    Object hasLarge = freezed,
   }) {
     return _then(_FirebasePhoto(
       type: type == freezed ? _value.type : type as FirebasePhotoType,
@@ -784,6 +795,7 @@ class __$FirebasePhotoCopyWithImpl<$Res>
           palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
       width: width == freezed ? _value.width : width as num,
       height: height == freezed ? _value.height : height as num,
+      hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
     ));
   }
 }
@@ -799,12 +811,14 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       @JsonKey() this.blur,
       @JsonKey() this.palette,
       @required @JsonKey() this.width,
-      @required @JsonKey() this.height})
+      @required @JsonKey() this.height,
+      @JsonKey(defaultValue: false) this.hasLarge = false})
       : assert(type != null),
         assert(id != null),
         assert(hash != null),
         assert(width != null),
         assert(height != null),
+        assert(hasLarge != null),
         super._();
 
   factory _$_FirebasePhoto.fromJson(Map<String, dynamic> json) =>
@@ -845,6 +859,11 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   /// Height of the photo.
   @JsonKey()
   final num height;
+  @override
+
+  /// Wether the photo also has a large version.
+  @JsonKey(defaultValue: false)
+  final bool hasLarge;
 
   bool _didsize = false;
   Size _size;
@@ -860,7 +879,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, width: $width, height: $height, size: $size)';
+    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, width: $width, height: $height, hasLarge: $hasLarge, size: $size)';
   }
 
   @override
@@ -875,6 +894,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('palette', palette))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
+      ..add(DiagnosticsProperty('hasLarge', hasLarge))
       ..add(DiagnosticsProperty('size', size));
   }
 
@@ -896,7 +916,10 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
             (identical(other.width, width) ||
                 const DeepCollectionEquality().equals(other.width, width)) &&
             (identical(other.height, height) ||
-                const DeepCollectionEquality().equals(other.height, height)));
+                const DeepCollectionEquality().equals(other.height, height)) &&
+            (identical(other.hasLarge, hasLarge) ||
+                const DeepCollectionEquality()
+                    .equals(other.hasLarge, hasLarge)));
   }
 
   @override
@@ -908,7 +931,8 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(blur) ^
       const DeepCollectionEquality().hash(palette) ^
       const DeepCollectionEquality().hash(width) ^
-      const DeepCollectionEquality().hash(height);
+      const DeepCollectionEquality().hash(height) ^
+      const DeepCollectionEquality().hash(hasLarge);
 
   @override
   _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith =>
@@ -929,7 +953,8 @@ abstract class _FirebasePhoto extends FirebasePhoto {
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
       @required @JsonKey() num width,
-      @required @JsonKey() num height}) = _$_FirebasePhoto;
+      @required @JsonKey() num height,
+      @JsonKey(defaultValue: false) bool hasLarge}) = _$_FirebasePhoto;
 
   factory _FirebasePhoto.fromJson(Map<String, dynamic> json) =
       _$_FirebasePhoto.fromJson;
@@ -969,6 +994,11 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   /// Height of the photo.
   @JsonKey()
   num get height;
+  @override
+
+  /// Wether the photo also has a large version.
+  @JsonKey(defaultValue: false)
+  bool get hasLarge;
   @override
   _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith;
 }

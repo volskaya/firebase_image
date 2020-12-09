@@ -103,6 +103,9 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
 
     /// Height of the photo.
     @required @JsonKey() num height,
+
+    /// Wether the photo also has a large version.
+    @JsonKey(defaultValue: false) @Default(false) bool hasLarge,
   }) = _FirebasePhoto;
 
   FirebasePhoto._();

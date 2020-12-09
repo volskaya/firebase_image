@@ -27,8 +27,10 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.scrollAware = false,
     this.type = SwitchingImageType.fade,
   })  : assert(
-          imageProvider is! FirebaseImage || (imageProvider as FirebaseImage)?.scrollAwareContext == null,
-          'Handle scroll awareness with `scrollAware`',
+          imageProvider is! FirebaseImage ||
+              (imageProvider as FirebaseImage).scrollAwareContext == null ||
+              ((imageProvider as FirebaseImage).scrollAwareContext != null) == scrollAware,
+          '[FirebaseImage.scrollAwareContext] and [SwitchingFirebaseImage.scrollAware] must match truthy status',
         ),
         colorBlendMode = null,
         color = null,
@@ -148,11 +150,12 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
     await AwaitRoute.of(context, postFrame: true);
-    setState(() => _setProvider(image));
+    if (mounted) setState(() => _setProvider(image));
   }
 
   void _handleNewImage(Object key) {
     assert(widget.imageProvider is FirebaseImage);
+    assert(mounted);
 
     if (key is FirebaseImage && key.path == (widget.imageProvider as FirebaseImage).path) {
       assert((_provider as FirebaseImage).path == key.path);

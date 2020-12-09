@@ -67,6 +67,7 @@ _$_FirebasePhoto _$_$_FirebasePhotoFromJson(Map<String, dynamic> json) {
             json['palette'] as Map<String, dynamic>),
     width: json['width'] as num,
     height: json['height'] as num,
+    hasLarge: json['hasLarge'] as bool ?? false,
   );
 }
 
@@ -79,6 +80,7 @@ Map<String, dynamic> _$_$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
       'palette': instance.palette,
       'width': instance.width,
       'height': instance.height,
+      'hasLarge': instance.hasLarge,
     };
 
 T _$enumDecode<T>(
