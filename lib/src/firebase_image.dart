@@ -151,6 +151,18 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// been resolved.
   DisposableBuildContext scrollAwareContext;
 
+  /// Calculate image area, prioritizing [cacheSize] if defined.
+  static double getImageArea(FirebaseImage image) {
+    final size = image.cacheSize ?? image.size;
+    return size.width * size.height;
+  }
+
+  /// Return true if [a] has a bigger area than [than].
+  static bool isImageBigger(FirebaseImage a, {@required FirebaseImage than}) => getImageArea(a) > getImageArea(than);
+
+  /// Return the [FirebaseImage] with the largest area.
+  static FirebaseImage getBetterQuality(FirebaseImage a, FirebaseImage b) => isImageBigger(a, than: b) ? a : b;
+
   /// Thumbnail [FirebaseImage] from the copy of this provider, unless it's already a thumbnail.
   FirebaseImage get thumbnail {
     switch (type) {
@@ -353,7 +365,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   @override
   String toString() {
-    return 'FirebaseImage @ $path, cacheSize: $cacheSize';
+    return 'FirebaseImage @ $path, size: $size, cacheSize: $cacheSize';
   }
 
   @override

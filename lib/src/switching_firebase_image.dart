@@ -132,14 +132,6 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   FirebaseImageCacheListener _cacheListener;
   ImageProvider _provider;
 
-  static double _getImageArea(FirebaseImage image) {
-    final size = image.cacheSize ?? image.size;
-    return size.width * size.height;
-  }
-
-  static FirebaseImage _getBetterQuality(FirebaseImage a, FirebaseImage b) =>
-      _getImageArea(a) > _getImageArea(b) ? a : b;
-
   /// Sets scroll awarness, if necessary.
   void _setProvider(FirebaseImage provider) => _provider = provider != null
       ? !widget.scrollAware
@@ -160,7 +152,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
     if (key is FirebaseImage && key.path == (widget.imageProvider as FirebaseImage).path) {
       assert((_provider as FirebaseImage).path == key.path);
 
-      final betterQualityImage = _getBetterQuality(key, _provider as FirebaseImage);
+      final betterQualityImage = FirebaseImage.getBetterQuality(key, _provider as FirebaseImage);
       if (betterQualityImage != _provider) {
         setState(() => _setProvider(betterQualityImage));
       }
@@ -190,13 +182,10 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
     bool delayDecode = false; // To paint a cached image and later decode a different image, the frame must be delayed.
 
     if (cachedImage != null) {
-      // Calculate size differences between the cached and widget's selected image.
-      final cachedArea = _getImageArea(cachedImage);
-      final widgetImageArea = _getImageArea(widgetImage);
-
       // Widget image should have a different resolution.
-      decodeWidgetsImageProvider = widgetImageArea > cachedArea;
-      delayDecode = true;
+      // Delay decode only if the cached image is smaller than the requested one.
+      decodeWidgetsImageProvider = FirebaseImage.isImageBigger(widgetImage, than: cachedImage);
+      delayDecode = decodeWidgetsImageProvider;
       _setProvider(cachedImage); // Use the cached image for the current frame.
     }
 

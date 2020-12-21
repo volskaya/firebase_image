@@ -31,15 +31,14 @@ class FirebaseImageCacheListener {
 
   void _handleKeyAdded(Object key) {
     if (key is FirebaseImage) {
+      final size = key.cacheSize ?? key.size;
+
       assert(!cachedImages.contains(key));
+      assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path].containsKey(size));
+
       cachedImages.add(key);
-
-      if (key.cacheSize != null) {
-        assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path].containsKey(key.cacheSize));
-
-        cachedSizes[key.path] ??= HashMap<Size, FirebaseImage>();
-        cachedSizes[key.path][key.cacheSize] = key;
-      }
+      cachedSizes[key.path] ??= HashMap<Size, FirebaseImage>();
+      cachedSizes[key.path][size] = key;
     }
   }
 
