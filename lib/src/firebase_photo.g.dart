@@ -23,6 +23,27 @@ Map<String, dynamic> _$_$_FirebasePhotoBlurDataToJson(
       'height': instance.height,
     };
 
+_$_FirebasePhotoFaceData _$_$_FirebasePhotoFaceDataFromJson(
+    Map<String, dynamic> json) {
+  return _$_FirebasePhotoFaceData(
+    x: json['x'] as num,
+    y: json['y'] as num,
+    width: json['width'] as num,
+    height: json['height'] as num,
+    size: const SizeConverter().fromJson(json['size'] as Map),
+  );
+}
+
+Map<String, dynamic> _$_$_FirebasePhotoFaceDataToJson(
+        _$_FirebasePhotoFaceData instance) =>
+    <String, dynamic>{
+      'x': instance.x,
+      'y': instance.y,
+      'width': instance.width,
+      'height': instance.height,
+      'size': const SizeConverter().toJson(instance.size),
+    };
+
 _$_FirebasePhotoPalette _$_$_FirebasePhotoPaletteFromJson(
     Map<String, dynamic> json) {
   return _$_FirebasePhotoPalette(
@@ -65,6 +86,9 @@ _$_FirebasePhoto _$_$_FirebasePhotoFromJson(Map<String, dynamic> json) {
         ? null
         : FirebasePhotoPalette.fromJson(
             json['palette'] as Map<String, dynamic>),
+    face: json['face'] == null
+        ? null
+        : FirebasePhotoFaceData.fromJson(json['face'] as Map<String, dynamic>),
     width: json['width'] as num,
     height: json['height'] as num,
     hasLarge: json['hasLarge'] as bool ?? false,
@@ -78,6 +102,7 @@ Map<String, dynamic> _$_$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
       'hash': instance.hash,
       'blur': instance.blur,
       'palette': instance.palette,
+      'face': instance.face,
       'width': instance.width,
       'height': instance.height,
       'hasLarge': instance.hasLarge,

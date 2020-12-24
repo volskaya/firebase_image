@@ -39,3 +39,22 @@ class HexStringColorConverter implements JsonConverter<Color, String> {
   @override
   String toJson(Color object) => object.value.toRadixString(16).padLeft(8, '0').replaceFirst('ff', '#');
 }
+
+/// Converts flutter's [Size].
+class SizeConverter implements JsonConverter<Size, Map> {
+  /// Creates [SizeConverter].
+  const SizeConverter();
+
+  @override
+  Size fromJson(Map json) {
+    if (json == null) return null;
+
+    final width = json['width'] as num;
+    final height = json['height'] as num;
+
+    return width != null && height != null ? Size(width.toDouble(), height.toDouble()) : null;
+  }
+
+  @override
+  Map toJson(Size object) => object != null ? <dynamic, dynamic>{'width': object.width, 'height': object.height} : null;
+}

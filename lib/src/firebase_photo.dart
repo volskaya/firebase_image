@@ -48,6 +48,39 @@ abstract class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
   Size get size => Size(width.toDouble(), height.toDouble());
 }
 
+/// Face data of [FirebasePhoto]
+@freezed
+abstract class FirebasePhotoFaceData with _$FirebasePhotoFaceData {
+  /// Creates [FirebasePhotoFaceData].
+  factory FirebasePhotoFaceData({
+    /// Left side of the face rect.
+    @required @JsonKey() num x,
+
+    /// Top side of the face rect.
+    @required @JsonKey() num y,
+
+    /// Width of the face rect.
+    @required @JsonKey() num width,
+
+    /// Height of the face rect.
+    @required @JsonKey() num height,
+
+    /// Size of the image that overlaps this face rect.
+    @required @JsonKey() @SizeConverter() Size size,
+  }) = _FirebasePhotoFaceData;
+
+  /// Deserialie [FirebasePhotoFaceData] from json.
+  factory FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoFaceDataFromJson(json);
+
+  /// Get the [Rect] of this face rect.
+  @late
+  Rect get rect => Rect.fromLTWH(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
+
+  /// Get the image [Rect] that overlaps this face rect.
+  @late
+  Rect get imageRect => Offset.zero & size;
+}
+
 /// Palette colors of [FirebasePhoto].
 @freezed
 abstract class FirebasePhotoPalette with _$FirebasePhotoPalette {
@@ -98,6 +131,9 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
     /// Color palette of the photo.
     @JsonKey() FirebasePhotoPalette palette,
 
+    /// Face rect inside the photo.
+    @JsonKey() FirebasePhotoFaceData face,
+
     /// Width of the photo.
     @required @JsonKey() num width,
 
@@ -131,16 +167,16 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.type, this.size, [this.blur, this.palette]);
+  const FirebasePhotoReference(this.path, this.type, this.size, [this.blur, this.palette, this.face]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
   static FirebasePhotoReference from(String path, FirebasePhoto photo) =>
-      FirebasePhotoReference(path, photo.type, photo.size, photo.blur);
+      FirebasePhotoReference(path, photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
-  static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) =>
-      FirebasePhotoReference(photo.getStoragePath(model), photo.type, photo.size, photo.blur, photo.palette);
+  static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) => FirebasePhotoReference(
+      photo.getStoragePath(model), photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Path to the photo file in Firebase storage.
   final String path;
@@ -156,6 +192,9 @@ class FirebasePhotoReference {
 
   /// Color palette of the photo.
   final FirebasePhotoPalette palette;
+
+  /// Face rect inside the photo.
+  final FirebasePhotoFaceData face;
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
   FirebaseImage get thumbnail => FirebaseImage.thumbnailFrom(this);

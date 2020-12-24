@@ -244,6 +244,322 @@ abstract class _FirebasePhotoBlurData implements FirebasePhotoBlurData {
   _$FirebasePhotoBlurDataCopyWith<_FirebasePhotoBlurData> get copyWith;
 }
 
+FirebasePhotoFaceData _$FirebasePhotoFaceDataFromJson(
+    Map<String, dynamic> json) {
+  return _FirebasePhotoFaceData.fromJson(json);
+}
+
+/// @nodoc
+class _$FirebasePhotoFaceDataTearOff {
+  const _$FirebasePhotoFaceDataTearOff();
+
+// ignore: unused_element
+  _FirebasePhotoFaceData call(
+      {@required @JsonKey() num x,
+      @required @JsonKey() num y,
+      @required @JsonKey() num width,
+      @required @JsonKey() num height,
+      @required @JsonKey() @SizeConverter() Size size}) {
+    return _FirebasePhotoFaceData(
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+      size: size,
+    );
+  }
+
+// ignore: unused_element
+  FirebasePhotoFaceData fromJson(Map<String, Object> json) {
+    return FirebasePhotoFaceData.fromJson(json);
+  }
+}
+
+/// @nodoc
+// ignore: unused_element
+const $FirebasePhotoFaceData = _$FirebasePhotoFaceDataTearOff();
+
+/// @nodoc
+mixin _$FirebasePhotoFaceData {
+  /// Left side of the face rect.
+  @JsonKey()
+  num get x;
+
+  /// Top side of the face rect.
+  @JsonKey()
+  num get y;
+
+  /// Width of the face rect.
+  @JsonKey()
+  num get width;
+
+  /// Height of the face rect.
+  @JsonKey()
+  num get height;
+
+  /// Size of the image that overlaps this face rect.
+  @JsonKey()
+  @SizeConverter()
+  Size get size;
+
+  Map<String, dynamic> toJson();
+  $FirebasePhotoFaceDataCopyWith<FirebasePhotoFaceData> get copyWith;
+}
+
+/// @nodoc
+abstract class $FirebasePhotoFaceDataCopyWith<$Res> {
+  factory $FirebasePhotoFaceDataCopyWith(FirebasePhotoFaceData value,
+          $Res Function(FirebasePhotoFaceData) then) =
+      _$FirebasePhotoFaceDataCopyWithImpl<$Res>;
+  $Res call(
+      {@JsonKey() num x,
+      @JsonKey() num y,
+      @JsonKey() num width,
+      @JsonKey() num height,
+      @JsonKey() @SizeConverter() Size size});
+}
+
+/// @nodoc
+class _$FirebasePhotoFaceDataCopyWithImpl<$Res>
+    implements $FirebasePhotoFaceDataCopyWith<$Res> {
+  _$FirebasePhotoFaceDataCopyWithImpl(this._value, this._then);
+
+  final FirebasePhotoFaceData _value;
+  // ignore: unused_field
+  final $Res Function(FirebasePhotoFaceData) _then;
+
+  @override
+  $Res call({
+    Object x = freezed,
+    Object y = freezed,
+    Object width = freezed,
+    Object height = freezed,
+    Object size = freezed,
+  }) {
+    return _then(_value.copyWith(
+      x: x == freezed ? _value.x : x as num,
+      y: y == freezed ? _value.y : y as num,
+      width: width == freezed ? _value.width : width as num,
+      height: height == freezed ? _value.height : height as num,
+      size: size == freezed ? _value.size : size as Size,
+    ));
+  }
+}
+
+/// @nodoc
+abstract class _$FirebasePhotoFaceDataCopyWith<$Res>
+    implements $FirebasePhotoFaceDataCopyWith<$Res> {
+  factory _$FirebasePhotoFaceDataCopyWith(_FirebasePhotoFaceData value,
+          $Res Function(_FirebasePhotoFaceData) then) =
+      __$FirebasePhotoFaceDataCopyWithImpl<$Res>;
+  @override
+  $Res call(
+      {@JsonKey() num x,
+      @JsonKey() num y,
+      @JsonKey() num width,
+      @JsonKey() num height,
+      @JsonKey() @SizeConverter() Size size});
+}
+
+/// @nodoc
+class __$FirebasePhotoFaceDataCopyWithImpl<$Res>
+    extends _$FirebasePhotoFaceDataCopyWithImpl<$Res>
+    implements _$FirebasePhotoFaceDataCopyWith<$Res> {
+  __$FirebasePhotoFaceDataCopyWithImpl(_FirebasePhotoFaceData _value,
+      $Res Function(_FirebasePhotoFaceData) _then)
+      : super(_value, (v) => _then(v as _FirebasePhotoFaceData));
+
+  @override
+  _FirebasePhotoFaceData get _value => super._value as _FirebasePhotoFaceData;
+
+  @override
+  $Res call({
+    Object x = freezed,
+    Object y = freezed,
+    Object width = freezed,
+    Object height = freezed,
+    Object size = freezed,
+  }) {
+    return _then(_FirebasePhotoFaceData(
+      x: x == freezed ? _value.x : x as num,
+      y: y == freezed ? _value.y : y as num,
+      width: width == freezed ? _value.width : width as num,
+      height: height == freezed ? _value.height : height as num,
+      size: size == freezed ? _value.size : size as Size,
+    ));
+  }
+}
+
+@JsonSerializable()
+
+/// @nodoc
+class _$_FirebasePhotoFaceData
+    with DiagnosticableTreeMixin
+    implements _FirebasePhotoFaceData {
+  _$_FirebasePhotoFaceData(
+      {@required @JsonKey() this.x,
+      @required @JsonKey() this.y,
+      @required @JsonKey() this.width,
+      @required @JsonKey() this.height,
+      @required @JsonKey() @SizeConverter() this.size})
+      : assert(x != null),
+        assert(y != null),
+        assert(width != null),
+        assert(height != null),
+        assert(size != null);
+
+  factory _$_FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =>
+      _$_$_FirebasePhotoFaceDataFromJson(json);
+
+  @override
+
+  /// Left side of the face rect.
+  @JsonKey()
+  final num x;
+  @override
+
+  /// Top side of the face rect.
+  @JsonKey()
+  final num y;
+  @override
+
+  /// Width of the face rect.
+  @JsonKey()
+  final num width;
+  @override
+
+  /// Height of the face rect.
+  @JsonKey()
+  final num height;
+  @override
+
+  /// Size of the image that overlaps this face rect.
+  @JsonKey()
+  @SizeConverter()
+  final Size size;
+
+  bool _didrect = false;
+  Rect _rect;
+
+  @override
+  Rect get rect {
+    if (_didrect == false) {
+      _didrect = true;
+      _rect = Rect.fromLTWH(
+          x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
+    }
+    return _rect;
+  }
+
+  bool _didimageRect = false;
+  Rect _imageRect;
+
+  @override
+  Rect get imageRect {
+    if (_didimageRect == false) {
+      _didimageRect = true;
+      _imageRect = Offset.zero & size;
+    }
+    return _imageRect;
+  }
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FirebasePhotoFaceData(x: $x, y: $y, width: $width, height: $height, size: $size, rect: $rect, imageRect: $imageRect)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FirebasePhotoFaceData'))
+      ..add(DiagnosticsProperty('x', x))
+      ..add(DiagnosticsProperty('y', y))
+      ..add(DiagnosticsProperty('width', width))
+      ..add(DiagnosticsProperty('height', height))
+      ..add(DiagnosticsProperty('size', size))
+      ..add(DiagnosticsProperty('rect', rect))
+      ..add(DiagnosticsProperty('imageRect', imageRect));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _FirebasePhotoFaceData &&
+            (identical(other.x, x) ||
+                const DeepCollectionEquality().equals(other.x, x)) &&
+            (identical(other.y, y) ||
+                const DeepCollectionEquality().equals(other.y, y)) &&
+            (identical(other.width, width) ||
+                const DeepCollectionEquality().equals(other.width, width)) &&
+            (identical(other.height, height) ||
+                const DeepCollectionEquality().equals(other.height, height)) &&
+            (identical(other.size, size) ||
+                const DeepCollectionEquality().equals(other.size, size)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(x) ^
+      const DeepCollectionEquality().hash(y) ^
+      const DeepCollectionEquality().hash(width) ^
+      const DeepCollectionEquality().hash(height) ^
+      const DeepCollectionEquality().hash(size);
+
+  @override
+  _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith =>
+      __$FirebasePhotoFaceDataCopyWithImpl<_FirebasePhotoFaceData>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_FirebasePhotoFaceDataToJson(this);
+  }
+}
+
+abstract class _FirebasePhotoFaceData implements FirebasePhotoFaceData {
+  factory _FirebasePhotoFaceData(
+          {@required @JsonKey() num x,
+          @required @JsonKey() num y,
+          @required @JsonKey() num width,
+          @required @JsonKey() num height,
+          @required @JsonKey() @SizeConverter() Size size}) =
+      _$_FirebasePhotoFaceData;
+
+  factory _FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =
+      _$_FirebasePhotoFaceData.fromJson;
+
+  @override
+
+  /// Left side of the face rect.
+  @JsonKey()
+  num get x;
+  @override
+
+  /// Top side of the face rect.
+  @JsonKey()
+  num get y;
+  @override
+
+  /// Width of the face rect.
+  @JsonKey()
+  num get width;
+  @override
+
+  /// Height of the face rect.
+  @JsonKey()
+  num get height;
+  @override
+
+  /// Size of the image that overlaps this face rect.
+  @JsonKey()
+  @SizeConverter()
+  Size get size;
+  @override
+  _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith;
+}
+
 FirebasePhotoPalette _$FirebasePhotoPaletteFromJson(Map<String, dynamic> json) {
   return _FirebasePhotoPalette.fromJson(json);
 }
@@ -605,6 +921,7 @@ class _$FirebasePhotoTearOff {
       @required @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
+      @JsonKey() FirebasePhotoFaceData face,
       @required @JsonKey() num width,
       @required @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge = false}) {
@@ -614,6 +931,7 @@ class _$FirebasePhotoTearOff {
       hash: hash,
       blur: blur,
       palette: palette,
+      face: face,
       width: width,
       height: height,
       hasLarge: hasLarge,
@@ -652,6 +970,10 @@ mixin _$FirebasePhoto {
   @JsonKey()
   FirebasePhotoPalette get palette;
 
+  /// Face rect inside the photo.
+  @JsonKey()
+  FirebasePhotoFaceData get face;
+
   /// Width of the photo.
   @JsonKey()
   num get width;
@@ -679,12 +1001,14 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
+      @JsonKey() FirebasePhotoFaceData face,
       @JsonKey() num width,
       @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge});
 
   $FirebasePhotoBlurDataCopyWith<$Res> get blur;
   $FirebasePhotoPaletteCopyWith<$Res> get palette;
+  $FirebasePhotoFaceDataCopyWith<$Res> get face;
 }
 
 /// @nodoc
@@ -703,6 +1027,7 @@ class _$FirebasePhotoCopyWithImpl<$Res>
     Object hash = freezed,
     Object blur = freezed,
     Object palette = freezed,
+    Object face = freezed,
     Object width = freezed,
     Object height = freezed,
     Object hasLarge = freezed,
@@ -714,6 +1039,7 @@ class _$FirebasePhotoCopyWithImpl<$Res>
       blur: blur == freezed ? _value.blur : blur as FirebasePhotoBlurData,
       palette:
           palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
+      face: face == freezed ? _value.face : face as FirebasePhotoFaceData,
       width: width == freezed ? _value.width : width as num,
       height: height == freezed ? _value.height : height as num,
       hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
@@ -739,6 +1065,16 @@ class _$FirebasePhotoCopyWithImpl<$Res>
       return _then(_value.copyWith(palette: value));
     });
   }
+
+  @override
+  $FirebasePhotoFaceDataCopyWith<$Res> get face {
+    if (_value.face == null) {
+      return null;
+    }
+    return $FirebasePhotoFaceDataCopyWith<$Res>(_value.face, (value) {
+      return _then(_value.copyWith(face: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -754,6 +1090,7 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
+      @JsonKey() FirebasePhotoFaceData face,
       @JsonKey() num width,
       @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge});
@@ -762,6 +1099,8 @@ abstract class _$FirebasePhotoCopyWith<$Res>
   $FirebasePhotoBlurDataCopyWith<$Res> get blur;
   @override
   $FirebasePhotoPaletteCopyWith<$Res> get palette;
+  @override
+  $FirebasePhotoFaceDataCopyWith<$Res> get face;
 }
 
 /// @nodoc
@@ -782,6 +1121,7 @@ class __$FirebasePhotoCopyWithImpl<$Res>
     Object hash = freezed,
     Object blur = freezed,
     Object palette = freezed,
+    Object face = freezed,
     Object width = freezed,
     Object height = freezed,
     Object hasLarge = freezed,
@@ -793,6 +1133,7 @@ class __$FirebasePhotoCopyWithImpl<$Res>
       blur: blur == freezed ? _value.blur : blur as FirebasePhotoBlurData,
       palette:
           palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
+      face: face == freezed ? _value.face : face as FirebasePhotoFaceData,
       width: width == freezed ? _value.width : width as num,
       height: height == freezed ? _value.height : height as num,
       hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
@@ -810,6 +1151,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       @required @JsonKey() this.hash,
       @JsonKey() this.blur,
       @JsonKey() this.palette,
+      @JsonKey() this.face,
       @required @JsonKey() this.width,
       @required @JsonKey() this.height,
       @JsonKey(defaultValue: false) this.hasLarge = false})
@@ -851,6 +1193,11 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   final FirebasePhotoPalette palette;
   @override
 
+  /// Face rect inside the photo.
+  @JsonKey()
+  final FirebasePhotoFaceData face;
+  @override
+
   /// Width of the photo.
   @JsonKey()
   final num width;
@@ -879,7 +1226,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, width: $width, height: $height, hasLarge: $hasLarge, size: $size)';
+    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, face: $face, width: $width, height: $height, hasLarge: $hasLarge, size: $size)';
   }
 
   @override
@@ -892,6 +1239,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('hash', hash))
       ..add(DiagnosticsProperty('blur', blur))
       ..add(DiagnosticsProperty('palette', palette))
+      ..add(DiagnosticsProperty('face', face))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
       ..add(DiagnosticsProperty('hasLarge', hasLarge))
@@ -913,6 +1261,8 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
             (identical(other.palette, palette) ||
                 const DeepCollectionEquality()
                     .equals(other.palette, palette)) &&
+            (identical(other.face, face) ||
+                const DeepCollectionEquality().equals(other.face, face)) &&
             (identical(other.width, width) ||
                 const DeepCollectionEquality().equals(other.width, width)) &&
             (identical(other.height, height) ||
@@ -930,6 +1280,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(hash) ^
       const DeepCollectionEquality().hash(blur) ^
       const DeepCollectionEquality().hash(palette) ^
+      const DeepCollectionEquality().hash(face) ^
       const DeepCollectionEquality().hash(width) ^
       const DeepCollectionEquality().hash(height) ^
       const DeepCollectionEquality().hash(hasLarge);
@@ -952,6 +1303,7 @@ abstract class _FirebasePhoto extends FirebasePhoto {
       @required @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData blur,
       @JsonKey() FirebasePhotoPalette palette,
+      @JsonKey() FirebasePhotoFaceData face,
       @required @JsonKey() num width,
       @required @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge}) = _$_FirebasePhoto;
@@ -984,6 +1336,11 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   /// Color palette of the photo.
   @JsonKey()
   FirebasePhotoPalette get palette;
+  @override
+
+  /// Face rect inside the photo.
+  @JsonKey()
+  FirebasePhotoFaceData get face;
   @override
 
   /// Width of the photo.
