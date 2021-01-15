@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:firebase_image/src/blur_hash_image.dart';
+import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -226,7 +227,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   /// Gets cache size of the [FirebasePhoto] for the current
   ///
-  /// [photo] can be null.
+  /// [photo] can be null. This won't return original size, if it's smaller than the constraints.
   static Size getCacheSize(Size photoSize, Size constraints, [double devicePixelRatio]) {
     assert(photoSize != null);
     assert(constraints != null);
@@ -371,31 +372,26 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   @override
   int get hashCode => hashValues(path, scale, type, size, cacheSize, showLarge);
 
-  /// Mutate variables of [FirebaseImage].
-  void apply({
-    Size cacheSize,
+  /// Overwrite the [scrollAwareContext] of this [FirebaseImage].
+  void setScrollAwareContext(DisposableBuildContext<State> context) => scrollAwareContext = context;
 
-    /// Use [State] for scroll awareness [DisposableBuildContext].
-    State state,
-  }) {
-    if (cacheSize != null) this.cacheSize = cacheSize;
-    if (state != null) scrollAwareContext = DisposableBuildContext<State>(state);
-  }
+  /// Overwrite the [cacheSize] of this [FirebaseImage].
+  void setCacheSize(Size cacheSize) => cacheSize = cacheSize;
 }
 
 /// Scroll aware image provider of [FirebaseImage].
 class AwareFirebaseImage<T extends StatefulWidget> extends ScrollAwareImageProvider<FirebaseImage> {
   /// Creates a [AwareFirebaseImage] of a regular type [FirestoreImage].
-  AwareFirebaseImage.from(State<T> state, FirebasePhotoReference photo, [Size cacheSize])
+  AwareFirebaseImage.from(SwitchingFirebaseImageState<T> state, FirebasePhotoReference photo, [Size cacheSize])
       : super(
-          context: DisposableBuildContext<State<T>>(state),
+          context: state.scrollAwareContext,
           imageProvider: FirebaseImage.from(photo, cacheSize),
         );
 
   /// Creates a [AwareFirebaseImage] of a thumbnail type [FirestoreImage].
-  AwareFirebaseImage.thumbnailFrom(State<T> state, FirebasePhotoReference photo, [Size cacheSize])
+  AwareFirebaseImage.thumbnailFrom(SwitchingFirebaseImageState<T> state, FirebasePhotoReference photo, [Size cacheSize])
       : super(
-          context: DisposableBuildContext<State<T>>(state),
+          context: state.scrollAwareContext,
           imageProvider: FirebaseImage.thumbnailFrom(photo, cacheSize),
         );
 

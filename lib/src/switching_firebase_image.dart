@@ -4,6 +4,7 @@ import 'package:await_route/await_route.dart';
 import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:firebase_image/src/firebase_image_cache_listener.dart';
+import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -26,12 +27,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.type = SwitchingImageType.fade,
-  })  : assert(
-          imageProvider is! FirebaseImage ||
-              (imageProvider as FirebaseImage).scrollAwareContext == null ||
-              ((imageProvider as FirebaseImage).scrollAwareContext != null) == scrollAware,
-          '[FirebaseImage.scrollAwareContext] and [SwitchingFirebaseImage.scrollAware] must match truthy status',
-        ),
+  })  : assert(imageProvider is! FirebaseImage || (imageProvider as FirebaseImage).scrollAwareContext == null),
         colorBlendMode = null,
         color = null,
         filter = false,
@@ -52,10 +48,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
-  })  : assert(
-          imageProvider is! FirebaseImage || (imageProvider as FirebaseImage)?.scrollAwareContext == null,
-          'Handle scroll awareness with `scrollAware`',
-        ),
+  })  : assert(imageProvider is! FirebaseImage || (imageProvider as FirebaseImage).scrollAwareContext == null),
         type = SwitchingImageType.fade,
         filter = true,
         super(key: key);
@@ -128,16 +121,24 @@ class SwitchingFirebaseImage extends StatefulWidget {
   _SwitchingFirebaseImageState createState() => _SwitchingFirebaseImageState();
 }
 
-class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
+class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
+    with SwitchingFirebaseImageState<SwitchingFirebaseImage> {
   FirebaseImageCacheListener _cacheListener;
   ImageProvider _provider;
 
   /// Sets scroll awarness, if necessary.
-  void _setProvider(FirebaseImage provider) => _provider = provider != null
-      ? !widget.scrollAware
-          ? provider
-          : (provider..apply(state: this))
-      : null;
+  void _setProvider(FirebaseImage provider) {
+    // Unbind context from the previous provider, in case it's causing memory leaks.
+    if (_provider is FirebaseImage) {
+      (_provider as FirebaseImage)?.setScrollAwareContext(null);
+    }
+
+    _provider = provider != null
+        ? !widget.scrollAware
+            ? provider
+            : (provider..setScrollAwareContext(scrollAwareContext))
+        : null;
+  }
 
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
@@ -159,13 +160,13 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
     }
   }
 
-  void _cycleThumbnail() {
+  void _cycleImage() {
     assert(widget.imageProvider is FirebaseImage);
 
     developer.log('Cycling thumbnail: ${widget.imageProvider}', name: 'firebase_image');
 
     if (widget.imageProvider == null) {
-      _provider = null;
+      _setProvider(null);
       return; // Image removed.
     }
 
@@ -213,20 +214,20 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
 
   @override
   void initState() {
+    super.initState();
     _cacheListener = FirebaseImageCacheListener.of(context);
 
     if (widget.imageProvider != null && widget.imageProvider is FirebaseImage) {
-      _cycleThumbnail();
+      _cycleImage();
       _listenForBetterImages();
     }
-    super.initState();
   }
 
   @override
   void didUpdateWidget(SwitchingFirebaseImage oldWidget) {
     if (oldWidget.imageProvider != widget.imageProvider) {
       if (widget.imageProvider is FirebaseImage) {
-        _cycleThumbnail();
+        _cycleImage();
         _listenForBetterImages();
       } else {
         _stopListeningForBetterImages();
@@ -239,6 +240,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage> {
   @override
   void dispose() {
     _stopListeningForBetterImages();
+    _setProvider(null); // Unbind the build context from the current provider.
     super.dispose();
   }
 
