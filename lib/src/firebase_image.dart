@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -255,7 +254,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
       // FIXME: Download large image only if `cacheSize` is larger than the regular one.
       // final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
-      // developer.log('Getting image $path, scale: $_pixelRatio', name: 'firebase_image');
 
       // // First attempt to fetch the largest size.
       // var bytes = await _getPhoto(path);
@@ -263,12 +261,10 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       // // Attempt to fetch regular size image.
       // if (showLarge && _pixelRatio > _kLargeDpiBreakPoint && bytes == null) {
       //   final path = _buildPathWithScale(1);
-      //   developer.log('Falling back to regular image $path, scale: 1', name: 'firebase_image');
       //   bytes = await _getPhoto(path);
       // }
 
       final path = _buildPathWithScale(1);
-      developer.log('Getting image from $path, scale: 1', name: 'firebase_image');
       final bytes = await _getPhoto(path);
 
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');

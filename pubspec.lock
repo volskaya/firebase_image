@@ -293,6 +293,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.2"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.0"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -300,6 +307,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0+2"
+  flutter_riverpod:
+    dependency: transitive
+    description:
+      name: flutter_riverpod
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -313,16 +327,16 @@ packages:
   freezed:
     dependency: "direct dev"
     description:
-      path: "/home/projects/forks/freezed/packages/freezed"
-      relative: false
-    source: path
-    version: "0.12.3"
+      name: freezed
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.7"
   freezed_annotation:
     dependency: "direct main"
     description:
-      path: "/home/projects/forks/freezed/packages/freezed_annotation"
-      relative: false
-    source: path
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.12.0"
   glob:
     dependency: transitive
@@ -394,6 +408,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.5.0"
+  loader_coordinator:
+    dependency: "direct main"
+    description:
+      path: "/home/projects/packages/flutter_helpers/loader_coordinator"
+      relative: false
+    source: path
+    version: "0.0.1"
+  log:
+    dependency: "direct main"
+    description:
+      path: "/home/projects/packages/flutter_helpers/log"
+      relative: false
+    source: path
+    version: "1.0.0"
+  logger:
+    dependency: transitive
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.4"
   logging:
     dependency: transitive
     description:
@@ -432,9 +467,9 @@ packages:
   mobx_codegen:
     dependency: "direct main"
     description:
-      name: mobx_codegen
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "/home/projects/forks/mobx.dart/mobx_codegen"
+      relative: false
+    source: path
     version: "1.1.2"
   nested:
     dependency: transitive
@@ -576,6 +611,13 @@ packages:
       relative: false
     source: path
     version: "0.0.1"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.2"
   rxdart:
     dependency: transitive
     description:
@@ -602,6 +644,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: transitive
+    description:
+      name: sliver_tools
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.10+1"
+  sliver_transform:
+    dependency: transitive
+    description:
+      path: "/home/projects/packages/flutter_helpers/sliver_transform"
+      relative: false
+    source: path
+    version: "0.0.1"
   source_gen:
     dependency: transitive
     description:
@@ -637,6 +693,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0-nullsafety.6"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   stream_channel:
     dependency: transitive
     description:
@@ -751,4 +814,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-  flutter: ">=1.22.2 <2.0.0"
+  flutter: ">=1.22.2"

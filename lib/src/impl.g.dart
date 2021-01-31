@@ -38,9 +38,11 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
   @JsonKey(defaultValue: <String, FirebasePhoto>{})
   @FirebasePhotoMapConverter()
   set photos(Map<String, FirebasePhoto> value) {
-    _$photosAtom.reportWrite(value, super.photos, () {
-      super.photos = value;
-    });
+    if (super.photos != value) {
+      _$photosAtom.reportWrite(value, super.photos, () {
+        super.photos = value;
+      });
+    }
   }
 
   final _$_FirestorePhotoModelActionController =
@@ -97,9 +99,11 @@ mixin _$RealtimePhotoModel<T> on _RealtimePhotoModel<T>, Store {
   @JsonKey(defaultValue: <String, FirebasePhoto>{})
   @FirebasePhotoMapConverter()
   set photos(Map<String, FirebasePhoto> value) {
-    _$photosAtom.reportWrite(value, super.photos, () {
-      super.photos = value;
-    });
+    if (super.photos != value) {
+      _$photosAtom.reportWrite(value, super.photos, () {
+        super.photos = value;
+      });
+    }
   }
 
   final _$_RealtimePhotoModelActionController =

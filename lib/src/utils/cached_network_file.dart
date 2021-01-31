@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:io' as io;
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:log/log.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -26,19 +26,16 @@ class CachedNetworkFile extends BaseCacheManager {
 
   /// Values intended to be invalidated, when their operation completes.
   final _cache = MapCache<String, io.File>();
+  static final _log = Log.named('CachedNetworkFile');
 
   Future<io.File> _getSingleFile(String url) async {
     assert(url?.isNotEmpty == true);
-    developer.log('Fetching file: $url', name: 'firebase_image');
+    _log.v('Fetching file: $url');
 
     try {
       return getSingleFile(url);
-    } catch (e) {
-      developer.log(
-        'Couldn\'t fetch file: $url',
-        name: 'firebase_image',
-        error: e,
-      );
+    } catch (e, t) {
+      _log.e('Failed to fetch file: $url', e, t);
     }
 
     return null;
@@ -53,19 +50,12 @@ class CachedNetworkFile extends BaseCacheManager {
   /// Fetch a file from the `url` and cache it.
   Future<io.File> fromUrl(String url) async {
     assert(url?.isNotEmpty == true);
-    developer.log(
-      'Requesting cached network file from: $url',
-      name: 'firebase_image',
-    );
 
+    _log.v('Requesting cached network file from: $url');
     final file =
         await _cache.get(url, ifAbsent: (url) async => _getSingleFile(url).whenComplete(() => _cache.invalidate(key)));
 
-    developer.log(
-      'File $url, ' + (file != null ? 'retrieved: $file' : 'not found'),
-      name: 'firebase_image',
-    );
-
+    _log.v('File $url, ' + (file != null ? 'retrieved: $file' : 'not found'));
     return file;
   }
 }

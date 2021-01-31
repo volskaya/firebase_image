@@ -54,6 +54,7 @@ mixin _$FirebasePhotoBlurData {
   num get height;
 
   Map<String, dynamic> toJson();
+  @JsonKey(ignore: true)
   $FirebasePhotoBlurDataCopyWith<FirebasePhotoBlurData> get copyWith;
 }
 
@@ -205,6 +206,7 @@ class _$_FirebasePhotoBlurData
       const DeepCollectionEquality().hash(width) ^
       const DeepCollectionEquality().hash(height);
 
+  @JsonKey(ignore: true)
   @override
   _$FirebasePhotoBlurDataCopyWith<_FirebasePhotoBlurData> get copyWith =>
       __$FirebasePhotoBlurDataCopyWithImpl<_FirebasePhotoBlurData>(
@@ -241,6 +243,7 @@ abstract class _FirebasePhotoBlurData implements FirebasePhotoBlurData {
   @JsonKey()
   num get height;
   @override
+  @JsonKey(ignore: true)
   _$FirebasePhotoBlurDataCopyWith<_FirebasePhotoBlurData> get copyWith;
 }
 
@@ -303,6 +306,7 @@ mixin _$FirebasePhotoFaceData {
   Size get size;
 
   Map<String, dynamic> toJson();
+  @JsonKey(ignore: true)
   $FirebasePhotoFaceDataCopyWith<FirebasePhotoFaceData> get copyWith;
 }
 
@@ -507,6 +511,7 @@ class _$_FirebasePhotoFaceData
       const DeepCollectionEquality().hash(height) ^
       const DeepCollectionEquality().hash(size);
 
+  @JsonKey(ignore: true)
   @override
   _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith =>
       __$FirebasePhotoFaceDataCopyWithImpl<_FirebasePhotoFaceData>(
@@ -557,6 +562,7 @@ abstract class _FirebasePhotoFaceData implements FirebasePhotoFaceData {
   @SizeConverter()
   Size get size;
   @override
+  @JsonKey(ignore: true)
   _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith;
 }
 
@@ -618,6 +624,7 @@ mixin _$FirebasePhotoPalette {
   Color get darkVibrant;
 
   Map<String, dynamic> toJson();
+  @JsonKey(ignore: true)
   $FirebasePhotoPaletteCopyWith<FirebasePhotoPalette> get copyWith;
 }
 
@@ -854,6 +861,7 @@ class _$_FirebasePhotoPalette
       const DeepCollectionEquality().hash(lightVibrant) ^
       const DeepCollectionEquality().hash(darkVibrant);
 
+  @JsonKey(ignore: true)
   @override
   _$FirebasePhotoPaletteCopyWith<_FirebasePhotoPalette> get copyWith =>
       __$FirebasePhotoPaletteCopyWithImpl<_FirebasePhotoPalette>(
@@ -903,6 +911,7 @@ abstract class _FirebasePhotoPalette implements FirebasePhotoPalette {
   @HexStringColorConverter()
   Color get darkVibrant;
   @override
+  @JsonKey(ignore: true)
   _$FirebasePhotoPaletteCopyWith<_FirebasePhotoPalette> get copyWith;
 }
 
@@ -987,6 +996,7 @@ mixin _$FirebasePhoto {
   bool get hasLarge;
 
   Map<String, dynamic> toJson();
+  @JsonKey(ignore: true)
   $FirebasePhotoCopyWith<FirebasePhoto> get copyWith;
 }
 
@@ -1285,6 +1295,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(height) ^
       const DeepCollectionEquality().hash(hasLarge);
 
+  @JsonKey(ignore: true)
   @override
   _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith =>
       __$FirebasePhotoCopyWithImpl<_FirebasePhoto>(this, _$identity);
@@ -1357,5 +1368,6 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   @JsonKey(defaultValue: false)
   bool get hasLarge;
   @override
+  @JsonKey(ignore: true)
   _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith;
 }

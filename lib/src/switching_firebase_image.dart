@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:await_route/await_route.dart';
 import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
@@ -8,18 +6,20 @@ import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:log/log.dart';
 
 /// Wrapped [SwitchingImage] to first load thumbnail provider,
 /// if its cached in [WidgetsBinding] already, before resolving
 /// the regular image.
 class SwitchingFirebaseImage extends StatefulWidget {
   /// Creates [SwitchingFirebaseImage].
-  SwitchingFirebaseImage({
+  const SwitchingFirebaseImage({
     Key key,
     @required this.imageProvider,
     this.idleChild,
     this.layoutChildren = const <Widget>[],
     this.shape,
+    this.borderRadius,
     this.duration = const Duration(milliseconds: 300),
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
@@ -27,14 +27,13 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.type = SwitchingImageType.fade,
-  })  : assert(imageProvider is! FirebaseImage || (imageProvider as FirebaseImage).scrollAwareContext == null),
-        colorBlendMode = null,
+  })  : colorBlendMode = null,
         color = null,
         filter = false,
         super(key: key);
 
   /// Creates filter variant of [SwitchingFirebaseImage].
-  SwitchingFirebaseImage.filter({
+  const SwitchingFirebaseImage.filter({
     Key key,
     @required this.imageProvider,
     @required this.color,
@@ -42,14 +41,14 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.idleChild,
     this.layoutChildren = const <Widget>[],
     this.shape,
+    this.borderRadius,
     this.duration = const Duration(milliseconds: 300),
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
-  })  : assert(imageProvider is! FirebaseImage || (imageProvider as FirebaseImage).scrollAwareContext == null),
-        type = SwitchingImageType.fade,
+  })  : type = SwitchingImageType.fade,
         filter = true,
         super(key: key);
 
@@ -63,7 +62,10 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Children [Widget]'s on top of the [Material], in the switcher's layout builder.
   final Iterable<Widget> layoutChildren;
 
-  /// Clip shape of the animated switcher box.
+  /// Border radius of the animated switcher images.
+  final BorderRadius borderRadius;
+
+  /// Shape of the animated switcher images.
   final ShapeBorder shape;
 
   /// Duration of the switch transition.
@@ -101,6 +103,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
   SwitchingFirebaseImage copyWith({
     FirebaseImage imageProvider,
     Widget idleChild,
+    BorderRadius borderRadius,
     ShapeBorder shape,
     ValueListenable<double> opacity,
   }) =>
@@ -108,6 +111,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
         key: key,
         imageProvider: imageProvider ?? this.imageProvider,
         idleChild: idleChild ?? this.idleChild,
+        borderRadius: borderRadius ?? this.borderRadius,
         shape: shape ?? this.shape,
         opacity: opacity ?? this.opacity,
         alignment: alignment,
@@ -123,6 +127,8 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
     with SwitchingFirebaseImageState<SwitchingFirebaseImage> {
+  static final _log = Log.named('SwitchingFirebaseImage');
+
   FirebaseImageCacheListener _cacheListener;
   ImageProvider _provider;
 
@@ -162,8 +168,6 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
   void _cycleImage() {
     assert(widget.imageProvider is FirebaseImage);
-
-    developer.log('Cycling thumbnail: ${widget.imageProvider}', name: 'firebase_image');
 
     if (widget.imageProvider == null) {
       _setProvider(null);
@@ -249,6 +253,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
       ? SwitchingImage.filter(
           imageProvider: _provider,
           idleChild: widget.idleChild,
+          borderRadius: widget.borderRadius,
           shape: widget.shape,
           opacity: widget.opacity,
           duration: widget.duration,
@@ -262,6 +267,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
       : SwitchingImage(
           imageProvider: _provider,
           idleChild: widget.idleChild,
+          borderRadius: widget.borderRadius,
           shape: widget.shape,
           opacity: widget.opacity,
           duration: widget.duration,

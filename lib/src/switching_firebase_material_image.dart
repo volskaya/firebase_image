@@ -12,6 +12,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     @required this.child,
     this.idleChild,
     this.layoutChildren = const <Widget>[],
+    this.borderRadius,
     this.shape,
     this.duration = const Duration(milliseconds: 300),
     this.filterQuality = FilterQuality.low,
@@ -29,7 +30,10 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// [idleChild] will be built instead.
   final Widget idleChild;
 
-  /// Clip shape of the animated switcher box.
+  /// Clip rect shape of the animated switcher image.
+  final BorderRadius borderRadius;
+
+  /// Clip shape of the animated switcher image.
   final ShapeBorder shape;
 
   /// Duration of the switch transition.
@@ -63,21 +67,21 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   Widget build(BuildContext context) => SwitchingFirebaseImage(
         imageProvider: imageProvider,
         idleChild: idleChild,
+        borderRadius: borderRadius,
         shape: shape,
         scrollAware: scrollAware,
         duration: duration,
         filterQuality: filterQuality,
         fit: fit,
         layoutChildren: [
-          RepaintBoundary(
-            child: Material(
-              type: color != null ? MaterialType.canvas : MaterialType.transparency,
-              color: color,
-              elevation: elevation,
-              shape: shape,
-              child: child,
-              shadowColor: shadowColor,
-            ),
+          Material(
+            type: color != null ? MaterialType.canvas : MaterialType.transparency,
+            color: color,
+            elevation: elevation,
+            borderRadius: color != null ? borderRadius : null,
+            shape: color != null ? shape : null,
+            child: child,
+            shadowColor: shadowColor,
           ),
           ...layoutChildren,
         ],

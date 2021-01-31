@@ -17,7 +17,8 @@ mixin FirebasePhotoImpl<T> on FirebaseModel<T> {
 
   /// Computed getter of [FirebasePhotoReferences] derived from the [photos] map.
   Map<String, FirebasePhotoReference> get media =>
-      photos?.map((id, photo) => MapEntry(id, FirebasePhotoReference.fromModel(this, photo)));
+      photos?.map((id, photo) => MapEntry(id, FirebasePhotoReference.fromModel(this, photo))) ??
+      const <String, FirebasePhotoReference>{};
 
   /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
   FirebasePhotoReference get photo => media?.isNotEmpty == true ? media.values.first : null;
