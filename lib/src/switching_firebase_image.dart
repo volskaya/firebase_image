@@ -127,8 +127,6 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
     with SwitchingFirebaseImageState<SwitchingFirebaseImage> {
-  static final _log = Log.named('SwitchingFirebaseImage');
-
   FirebaseImageCacheListener _cacheListener;
   ImageProvider _provider;
 
@@ -178,10 +176,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
     // If the widget targets a thumbnail, look for smallest cached image instead, to prevent tiny tiles from
     // garbage collecting big images.
-    final cachedImage = _cacheListener?.getHighestCachedSize(
-      widgetImage.regular,
-      lowestInstead: widgetImage.type == FirebaseImageType.thumbnail,
-    );
+    final cachedImage = _cacheListener?.getHighestCachedSize(widgetImage.regular);
 
     bool decodeWidgetsImageProvider = true; // If a higher res image is already cached, that one is used instead.
     bool delayDecode = false; // To paint a cached image and later decode a different image, the frame must be delayed.

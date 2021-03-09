@@ -16,10 +16,7 @@ class CachedNetworkFile extends BaseCacheManager {
   CachedNetworkFile({
     @required this.key,
   })  : assert(key?.isNotEmpty == true),
-        super(
-          key,
-          maxAgeCacheObject: const Duration(days: 30),
-        );
+        super(key, maxAgeCacheObject: const Duration(days: 365));
 
   /// Key that serves as the cache label.
   final String key;

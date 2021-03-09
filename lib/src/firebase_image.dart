@@ -105,12 +105,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
-  /// Default device pixel ratio.
-  ///
-  /// This can be overriden from the first app's build method.
-  /// Every call to [FirebaseImage.getCacheSize] will default to this value.
-  static double defaultPixelRatio = 1;
-
   /// Optional global storage bucket override for [FirebaseImageStorage].
   ///
   /// Leave this null to fallback to the default storage bucket of this project.
@@ -240,7 +234,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       width = constraints.height * photoSize.aspectRatio;
     }
 
-    return Size(width, height) * (devicePixelRatio ?? FirebaseImage.defaultPixelRatio);
+    return Size(width, height) * (devicePixelRatio ?? WidgetsBinding.instance.window.devicePixelRatio);
   }
 
   Future<ui.Codec> _loadAsync(
