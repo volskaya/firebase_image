@@ -1,5 +1,6 @@
 import 'package:firebase_image/src/converters.dart';
 import 'package:firebase_image/src/firebase_image.dart';
+import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:firestore_model/firestore_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -27,118 +28,118 @@ enum FirebasePhotoType {
 
 /// Blurhash data of [FirebasePhoto].
 @freezed
-abstract class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
+class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
   /// Creates [FirebasePhotoBlurData].
   factory FirebasePhotoBlurData({
     /// Blurhash.
-    @required @JsonKey() String hash,
+    @JsonKey() required String hash,
 
     /// Width of the blurhash.
-    @required @JsonKey() num width,
+    @JsonKey() required num width,
 
     /// Height of the blurhash.
-    @required @JsonKey() num height,
+    @JsonKey() required num height,
   }) = _FirebasePhotoBlurData;
+
+  FirebasePhotoBlurData._();
 
   /// Deserialie [FirebasePhotoBlurData] from json.
   factory FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoBlurDataFromJson(json);
 
   /// Get the [Size] of this blur hash.
-  @late
-  Size get size => Size(width.toDouble(), height.toDouble());
+  late final size = Size(width.toDouble(), height.toDouble());
 }
 
 /// Face data of [FirebasePhoto]
 @freezed
-abstract class FirebasePhotoFaceData with _$FirebasePhotoFaceData {
+class FirebasePhotoFaceData with _$FirebasePhotoFaceData {
   /// Creates [FirebasePhotoFaceData].
   factory FirebasePhotoFaceData({
     /// Left side of the face rect.
-    @required @JsonKey() num x,
+    @JsonKey() required num x,
 
     /// Top side of the face rect.
-    @required @JsonKey() num y,
+    @JsonKey() required num y,
 
     /// Width of the face rect.
-    @required @JsonKey() num width,
+    @JsonKey() required num width,
 
     /// Height of the face rect.
-    @required @JsonKey() num height,
+    @JsonKey() required num height,
 
     /// Size of the image that overlaps this face rect.
-    @required @JsonKey() @SizeConverter() Size size,
+    @JsonKey() @SizeConverter() required Size size,
   }) = _FirebasePhotoFaceData;
+
+  FirebasePhotoFaceData._();
 
   /// Deserialie [FirebasePhotoFaceData] from json.
   factory FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoFaceDataFromJson(json);
 
   /// Get the [Rect] of this face rect.
-  @late
-  Rect get rect => Rect.fromLTWH(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
+  late final rect = Rect.fromLTWH(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
 
   /// Get the image [Rect] that overlaps this face rect.
-  @late
-  Rect get imageRect => Offset.zero & size;
+  late final imageRect = Offset.zero & size;
 }
 
 /// Palette colors of [FirebasePhoto].
 @freezed
-abstract class FirebasePhotoPalette with _$FirebasePhotoPalette {
+class FirebasePhotoPalette with _$FirebasePhotoPalette {
   /// Creates [FirebasePhotoPalette].
   factory FirebasePhotoPalette({
-    @JsonKey() @HexStringColorConverter() Color vibrant,
-    @JsonKey() @HexStringColorConverter() Color muted,
-    @JsonKey() @HexStringColorConverter() Color lightMuted,
-    @JsonKey() @HexStringColorConverter() Color darkMuted,
-    @JsonKey() @HexStringColorConverter() Color lightVibrant,
-    @JsonKey() @HexStringColorConverter() Color darkVibrant,
+    @JsonKey() @HexStringColorConverter() Color? vibrant,
+    @JsonKey() @HexStringColorConverter() Color? muted,
+    @JsonKey() @HexStringColorConverter() Color? lightMuted,
+    @JsonKey() @HexStringColorConverter() Color? darkMuted,
+    @JsonKey() @HexStringColorConverter() Color? lightVibrant,
+    @JsonKey() @HexStringColorConverter() Color? darkVibrant,
   }) = _FirebasePhotoPalette;
+
+  FirebasePhotoPalette._();
 
   /// Deserialize [FirebasePhotoPalette] from json.
   factory FirebasePhotoPalette.fromJson(Map<String, dynamic> json) => _$FirebasePhotoPaletteFromJson(json);
 
   /// Get the first available color prioritizing vibrant.
-  @late
-  Color get dominant => vibrant ?? muted ?? lightVibrant ?? lightMuted ?? darkVibrant ?? darkMuted;
+  late final Color? dominant = vibrant ?? muted ?? lightVibrant ?? lightMuted ?? darkVibrant ?? darkMuted;
 
   /// Get the first available vibrant color prioritizing light.
-  @late
-  Color get firstVibrant => vibrant ?? lightVibrant ?? darkVibrant;
+  late final Color? firstVibrant = vibrant ?? lightVibrant ?? darkVibrant;
 
   /// Get the first available muted color prioritizing light.
-  @late
-  Color get firstMuted => muted ?? lightMuted ?? darkMuted;
+  late final Color? firstMuted = muted ?? lightMuted ?? darkMuted;
 }
 
 /// Document photos map entry value that describes photo type, id, hash, size
 /// and its public download URLs.
 @freezed
-abstract class FirebasePhoto implements _$FirebasePhoto {
+class FirebasePhoto with _$FirebasePhoto {
   /// Creates [FirebasePhoto].
   factory FirebasePhoto({
     /// Type of this [FirebasePhoto].
-    @required @JsonKey() FirebasePhotoType type,
+    @JsonKey() required FirebasePhotoType type,
 
     /// Photo ID / index / slow, under which this photo is stored in Firebase storage.
-    @required @JsonKey() String id,
+    @JsonKey() required String id,
 
     /// Hash that serves as the filename of this photo.
-    @required @JsonKey() String hash,
+    @JsonKey() required String hash,
 
     /// Blurhash of the photo.
-    @JsonKey() FirebasePhotoBlurData blur,
+    @JsonKey() FirebasePhotoBlurData? blur,
 
     /// Color palette of the photo.
-    @JsonKey() FirebasePhotoPalette palette,
+    @JsonKey() FirebasePhotoPalette? palette,
 
     /// Face rect inside the photo.
-    @JsonKey() FirebasePhotoFaceData face,
+    @JsonKey() FirebasePhotoFaceData? face,
 
     /// Width of the photo.
-    @required @JsonKey() num width,
+    @JsonKey() required num width,
 
     /// Height of the photo.
-    @required @JsonKey() num height,
+    @JsonKey() required num height,
 
     /// Wether the photo also has a large version.
     @JsonKey(defaultValue: false) @Default(false) bool hasLarge,
@@ -150,8 +151,7 @@ abstract class FirebasePhoto implements _$FirebasePhoto {
   factory FirebasePhoto.fromJson(Map<String, dynamic> json) => _$FirebasePhotoFromJson(json);
 
   /// Dimensions of this [FirebasePhoto].
-  @late
-  Size get size => Size(width.toDouble(), height.toDouble());
+  late final size = Size(width.toDouble(), height.toDouble());
 
   /// Get the full Firebase storage path of this photo, relative to its
   /// [FirebaseModel] parent.
@@ -188,13 +188,13 @@ class FirebasePhotoReference {
   final Size size;
 
   /// Blurhash of the photo.
-  final FirebasePhotoBlurData blur;
+  final FirebasePhotoBlurData? blur;
 
   /// Color palette of the photo.
-  final FirebasePhotoPalette palette;
+  final FirebasePhotoPalette? palette;
 
   /// Face rect inside the photo.
-  final FirebasePhotoFaceData face;
+  final FirebasePhotoFaceData? face;
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
   FirebaseImage get thumbnail => FirebaseImage.thumbnailFrom(this);
@@ -203,17 +203,24 @@ class FirebasePhotoReference {
   FirebaseImage get image => FirebaseImage.from(this);
 
   /// Scroll aware thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
-  AwareFirebaseImage awareThumbnail(State state, [Size cacheSize]) =>
+  AwareFirebaseImage awareThumbnail<T extends StatefulWidget>(
+    SwitchingFirebaseImageState<T> state, [
+    Size? cacheSize,
+  ]) =>
       AwareFirebaseImage.thumbnailFrom(state, this, cacheSize);
 
   /// Scroll aware regular [FirebaseImage] provider of this [FirebasePhotoReference].
-  AwareFirebaseImage awareImage(State state, [Size cacheSize]) => AwareFirebaseImage.from(state, this, cacheSize);
+  AwareFirebaseImage awareImage<T extends StatefulWidget>(
+    SwitchingFirebaseImageState<T> state, [
+    Size? cacheSize,
+  ]) =>
+      AwareFirebaseImage.from(state, this, cacheSize);
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
-  FirebaseImage getThumbnail([Size cacheSize]) => FirebaseImage.thumbnailFrom(this, cacheSize);
+  FirebaseImage getThumbnail([Size? cacheSize]) => FirebaseImage.thumbnailFrom(this, cacheSize);
 
   /// Regular [FirebaseImage] provider of this [FirebasePhotoReference].
-  FirebaseImage getImage([Size cacheSize]) => FirebaseImage.from(this, cacheSize);
+  FirebaseImage getImage([Size? cacheSize]) => FirebaseImage.from(this, cacheSize);
 
   @override
   bool operator ==(Object other) {

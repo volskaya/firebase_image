@@ -17,11 +17,10 @@ mixin FirebasePhotoImpl<T> on FirebaseModel<T> {
 
   /// Computed getter of [FirebasePhotoReferences] derived from the [photos] map.
   Map<String, FirebasePhotoReference> get media =>
-      photos?.map((id, photo) => MapEntry(id, FirebasePhotoReference.fromModel(this, photo))) ??
-      const <String, FirebasePhotoReference>{};
+      photos.map((id, photo) => MapEntry(id, FirebasePhotoReference.fromModel(this, photo)));
 
   /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
-  FirebasePhotoReference get photo => media?.isNotEmpty == true ? media.values.first : null;
+  FirebasePhotoReference? get photo => media.isNotEmpty ? media.values.first : null;
 }
 
 /// Abstract class that extends [FirestoreModel] and decorates the photo fields
@@ -44,7 +43,7 @@ abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with FirebasePh
   /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
   @override
   @computed
-  FirebasePhotoReference get photo => super.photo;
+  FirebasePhotoReference? get photo => super.photo;
 
   @action
   @override
@@ -75,7 +74,7 @@ abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhot
   /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
   @override
   @computed
-  FirebasePhotoReference get photo => super.photo;
+  FirebasePhotoReference? get photo => super.photo;
 
   @action
   @override

@@ -22,7 +22,7 @@ class FirebaseImageStorage {
 
   /// Single instance of [FirebaseImageStorage].
   static const instance = FirebaseImageStorage._();
-  static FirebaseStorage get _bucket => FirebaseStorage(storageBucket: FirebaseImage.storageBucket);
+  static FirebaseStorage get _bucket => FirebaseStorage.instanceFor(bucket: FirebaseImage.storageBucket);
 
   // Do not access this field directly; use [_httpClient] instead.
   // We set `autoUncompress` to false to ensure that we can trust the value of
@@ -35,25 +35,23 @@ class FirebaseImageStorage {
   static HttpClient get _httpClient {
     HttpClient client = _sharedHttpClient;
     assert(() {
-      if (debugNetworkImageHttpClientProvider != null) client = debugNetworkImageHttpClientProvider();
+      if (debugNetworkImageHttpClientProvider != null) client = debugNetworkImageHttpClientProvider!();
       return true;
     }());
     return client;
   }
 
   /// Attempts to download and cache a file from the `url`.
-  Future<Uint8List> downloadNetworkFile({
-    @required String url,
-    StreamController<ImageChunkEvent> chunkEvents,
-    Map<String, String> headers,
-    CachedNetworkFile cache,
+  Future<Uint8List?> downloadNetworkFile({
+    required String url,
+    StreamController<ImageChunkEvent>? chunkEvents,
+    Map<String, String>? headers,
+    CachedNetworkFile? cache,
   }) async {
-    assert(url != null);
-
     final selectedCache = cache ?? _defaultCache;
     final resolved = Uri.base.resolve(url);
     final cachedFile = await selectedCache.getFileFromCache(url);
-    final isOld = cachedFile?.validTill?.isBefore(DateTime.now());
+    final isOld = cachedFile?.validTill.isBefore(DateTime.now());
 
     if (isOld != false) {
       final loader = LoaderCoordinator.instance.touch();
@@ -96,51 +94,50 @@ class FirebaseImageStorage {
           : 'No cached/new file available at $url',
     );
 
-    return cachedFile?.file?.readAsBytes();
+    return cachedFile?.file.readAsBytes();
   }
 
   /// Caches and gets the file from Firebase storage.
-  Future<Uint8List> _getFirebaseFile({
-    @required StorageReference ref,
-    @required int maxBytes,
-    CachedNetworkFile cache,
+  Future<Uint8List?> _getFirebaseFile({
+    required Reference ref,
+    required int maxBytes,
+    CachedNetworkFile? cache,
 
     /// If this is defined, `ref` is only used for the actual "getData" call.
     /// Cache conditionals will be evalued against `optionalComparableRef`.
-    StorageReference optionalComparableRef,
+    Reference? optionalComparableRef,
   }) async {
-    assert(ref != null);
     assert(maxBytes >= 0);
 
-    _log.v('Retrieving a cached file at ${ref.path}');
+    _log.v('Retrieving a cached file at ${ref.fullPath}');
 
     final comparableRef = optionalComparableRef ?? ref;
     final selectedCache = cache ?? _defaultCache;
-    final cachedFile = await selectedCache.getFileFromCache(comparableRef.path);
-    final isOld = cachedFile?.validTill?.isBefore(DateTime.now());
+    final cachedFile = await selectedCache.getFileFromCache(comparableRef.fullPath);
+    final isOld = cachedFile?.validTill.isBefore(DateTime.now());
 
     if (isOld != false) {
       final loader = LoaderCoordinator.instance.touch();
       try {
-        _log.v('Cache outdated or doesn\'t exist, fetching ${comparableRef.path}…');
+        _log.v('Cache outdated or doesn\'t exist, fetching ${comparableRef.fullPath}…');
 
         // Getting data from the `ref`, instead of `comparableRef`.
         final bytes = await ref.getData(_kPhotoMaxSize);
 
-        if (bytes.lengthInBytes > 0) {
-          _log.i('Fetched and cached a new file at ${comparableRef.path}');
-          selectedCache.putFile(comparableRef.path, bytes);
+        if (bytes != null && bytes.lengthInBytes > 0) {
+          _log.i('Fetched and cached a new file at ${comparableRef.fullPath}');
+          selectedCache.putFile(comparableRef.fullPath, bytes);
           return bytes;
         }
       } on PlatformException catch (e, t) {
         _log.e(
-          'Failed to getData for ${comparableRef.path}, ${e.message}'
+          'Failed to getData for ${comparableRef.fullPath}, ${e.message}'
           ', bucket: - $_bucket',
           e,
           t,
         );
       } catch (e, t) {
-        _log.e('Failed to retrieve a cached file at ${comparableRef.path}', e, t);
+        _log.e('Failed to retrieve a cached file at ${comparableRef.fullPath}', e, t);
       } finally {
         loader.dispose();
       }
@@ -148,12 +145,12 @@ class FirebaseImageStorage {
 
     _log.v(
       cachedFile?.file != null
-          ? 'Returning a cached file at ${comparableRef.path}'
+          ? 'Returning a cached file at ${comparableRef.fullPath}'
               ', valid till ${cachedFile?.validTill}'
-          : 'No cached/new file available at ${comparableRef.path}',
+          : 'No cached/new file available at ${comparableRef.fullPath}',
     );
 
-    return cachedFile?.file?.readAsBytes();
+    return cachedFile?.file.readAsBytes();
   }
 
   /// Cache large photos without type postfix, to avoid
@@ -163,7 +160,7 @@ class FirebaseImageStorage {
   /// entry is ceated.
   ///
   /// Only use for regular/large photos, this is not intended for thumbnails.
-  Future<Uint8List> downloadFirebasePhoto(String path) async {
+  Future<Uint8List?> downloadFirebasePhoto(String path) async {
     assert(path.isNotEmpty);
 
     final split = path.split('/');
@@ -182,9 +179,9 @@ class FirebaseImageStorage {
   }
 
   /// Downloads a cached file from `path` in [_bucket].
-  Future<Uint8List> downloadFile({
-    @required String path,
-    CachedNetworkFile cache,
+  Future<Uint8List?> downloadFile({
+    required String path,
+    CachedNetworkFile? cache,
   }) async {
     assert(path.isNotEmpty);
     _log.v('Calling `downloadFile` with $path ...');

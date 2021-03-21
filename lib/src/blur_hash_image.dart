@@ -5,7 +5,6 @@ import 'dart:ui' as ui;
 import 'package:firebase_image/src/firebase_photo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quiver/strings.dart';
 
 /// Blurhash image provider.
 class BlurHashImage extends ImageProvider<BlurHashImage> {
@@ -25,25 +24,22 @@ class BlurHashImage extends ImageProvider<BlurHashImage> {
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
 
-  ImageConfiguration _configuration = ImageConfiguration.empty;
+  // ImageConfiguration _configuration = ImageConfiguration.empty;
 
   Future<ui.Codec> _loadAsync(
     BlurHashImage key,
     DecoderCallback decode,
   ) async {
     try {
-      assert(_configuration != null);
       assert(key == this);
-
-      if (isEmpty(hash)) return null;
 
       // final bytes = await BlurHash.decode(hash, size.width.toInt(), size.height.toInt());
       // if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('Couldn\'t decode BlurHashImage: $hash, $size');
       // return decode(bytes);
 
-      return null; // NOTE: Disabled.
+      throw 'Disabled';
     } catch (e) {
-      scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
+      scheduleMicrotask(() => PaintingBinding.instance!.imageCache!.evict(key));
       rethrow;
     }
   }
@@ -61,8 +57,7 @@ class BlurHashImage extends ImageProvider<BlurHashImage> {
 
   @override
   Future<BlurHashImage> obtainKey(ImageConfiguration configuration) {
-    assert(configuration != null);
-    _configuration = configuration;
+    // _configuration = configuration;
     return SynchronousFuture<BlurHashImage>(this);
   }
 
@@ -82,14 +77,14 @@ class AwareBlurHashImage<T extends StatefulWidget> extends ScrollAwareImageProvi
   AwareBlurHashImage.from(State<T> state, FirebasePhotoReference photo)
       : super(
           context: DisposableBuildContext<State<T>>(state),
-          imageProvider: BlurHashImage(photo.image.blur.hash, photo.size),
+          imageProvider: BlurHashImage(photo.image.blur!.hash, photo.size),
         );
 
   /// Creates a [AwareBlurHashImage] of a thumbnail type [FirestoreImage].
   AwareBlurHashImage.thumbnailFrom(State<T> state, FirebasePhotoReference photo)
       : super(
           context: DisposableBuildContext<State<T>>(state),
-          imageProvider: BlurHashImage(photo.thumbnail.blur.hash, photo.size),
+          imageProvider: BlurHashImage(photo.thumbnail.blur!.hash, photo.size),
         );
 
   @override

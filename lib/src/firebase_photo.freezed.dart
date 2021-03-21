@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'firebase_photo.dart';
 
@@ -8,6 +8,10 @@ part of 'firebase_photo.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 FirebasePhotoBlurData _$FirebasePhotoBlurDataFromJson(
     Map<String, dynamic> json) {
   return _FirebasePhotoBlurData.fromJson(json);
@@ -17,11 +21,10 @@ FirebasePhotoBlurData _$FirebasePhotoBlurDataFromJson(
 class _$FirebasePhotoBlurDataTearOff {
   const _$FirebasePhotoBlurDataTearOff();
 
-// ignore: unused_element
   _FirebasePhotoBlurData call(
-      {@required @JsonKey() String hash,
-      @required @JsonKey() num width,
-      @required @JsonKey() num height}) {
+      {@JsonKey() required String hash,
+      @JsonKey() required num width,
+      @JsonKey() required num height}) {
     return _FirebasePhotoBlurData(
       hash: hash,
       width: width,
@@ -29,33 +32,32 @@ class _$FirebasePhotoBlurDataTearOff {
     );
   }
 
-// ignore: unused_element
   FirebasePhotoBlurData fromJson(Map<String, Object> json) {
     return FirebasePhotoBlurData.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $FirebasePhotoBlurData = _$FirebasePhotoBlurDataTearOff();
 
 /// @nodoc
 mixin _$FirebasePhotoBlurData {
   /// Blurhash.
   @JsonKey()
-  String get hash;
+  String get hash => throw _privateConstructorUsedError;
 
   /// Width of the blurhash.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
 
   /// Height of the blurhash.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FirebasePhotoBlurDataCopyWith<FirebasePhotoBlurData> get copyWith;
+  $FirebasePhotoBlurDataCopyWith<FirebasePhotoBlurData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -78,14 +80,23 @@ class _$FirebasePhotoBlurDataCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object hash = freezed,
-    Object width = freezed,
-    Object height = freezed,
+    Object? hash = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
   }) {
     return _then(_value.copyWith(
-      hash: hash == freezed ? _value.hash : hash as String,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
+      hash: hash == freezed
+          ? _value.hash
+          : hash // ignore: cast_nullable_to_non_nullable
+              as String,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
     ));
   }
 }
@@ -114,14 +125,23 @@ class __$FirebasePhotoBlurDataCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object hash = freezed,
-    Object width = freezed,
-    Object height = freezed,
+    Object? hash = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
   }) {
     return _then(_FirebasePhotoBlurData(
-      hash: hash == freezed ? _value.hash : hash as String,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
+      hash: hash == freezed
+          ? _value.hash
+          : hash // ignore: cast_nullable_to_non_nullable
+              as String,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
     ));
   }
 }
@@ -129,16 +149,13 @@ class __$FirebasePhotoBlurDataCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_FirebasePhotoBlurData
-    with DiagnosticableTreeMixin
-    implements _FirebasePhotoBlurData {
+class _$_FirebasePhotoBlurData extends _FirebasePhotoBlurData
+    with DiagnosticableTreeMixin {
   _$_FirebasePhotoBlurData(
-      {@required @JsonKey() this.hash,
-      @required @JsonKey() this.width,
-      @required @JsonKey() this.height})
-      : assert(hash != null),
-        assert(width != null),
-        assert(height != null);
+      {@JsonKey() required this.hash,
+      @JsonKey() required this.width,
+      @JsonKey() required this.height})
+      : super._();
 
   factory _$_FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) =>
       _$_$_FirebasePhotoBlurDataFromJson(json);
@@ -159,21 +176,9 @@ class _$_FirebasePhotoBlurData
   @JsonKey()
   final num height;
 
-  bool _didsize = false;
-  Size _size;
-
-  @override
-  Size get size {
-    if (_didsize == false) {
-      _didsize = true;
-      _size = Size(width.toDouble(), height.toDouble());
-    }
-    return _size;
-  }
-
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhotoBlurData(hash: $hash, width: $width, height: $height, size: $size)';
+    return 'FirebasePhotoBlurData(hash: $hash, width: $width, height: $height)';
   }
 
   @override
@@ -183,8 +188,7 @@ class _$_FirebasePhotoBlurData
       ..add(DiagnosticsProperty('type', 'FirebasePhotoBlurData'))
       ..add(DiagnosticsProperty('hash', hash))
       ..add(DiagnosticsProperty('width', width))
-      ..add(DiagnosticsProperty('height', height))
-      ..add(DiagnosticsProperty('size', size));
+      ..add(DiagnosticsProperty('height', height));
   }
 
   @override
@@ -218,11 +222,12 @@ class _$_FirebasePhotoBlurData
   }
 }
 
-abstract class _FirebasePhotoBlurData implements FirebasePhotoBlurData {
+abstract class _FirebasePhotoBlurData extends FirebasePhotoBlurData {
   factory _FirebasePhotoBlurData(
-      {@required @JsonKey() String hash,
-      @required @JsonKey() num width,
-      @required @JsonKey() num height}) = _$_FirebasePhotoBlurData;
+      {@JsonKey() required String hash,
+      @JsonKey() required num width,
+      @JsonKey() required num height}) = _$_FirebasePhotoBlurData;
+  _FirebasePhotoBlurData._() : super._();
 
   factory _FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) =
       _$_FirebasePhotoBlurData.fromJson;
@@ -231,20 +236,21 @@ abstract class _FirebasePhotoBlurData implements FirebasePhotoBlurData {
 
   /// Blurhash.
   @JsonKey()
-  String get hash;
+  String get hash => throw _privateConstructorUsedError;
   @override
 
   /// Width of the blurhash.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
   @override
 
   /// Height of the blurhash.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$FirebasePhotoBlurDataCopyWith<_FirebasePhotoBlurData> get copyWith;
+  _$FirebasePhotoBlurDataCopyWith<_FirebasePhotoBlurData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 FirebasePhotoFaceData _$FirebasePhotoFaceDataFromJson(
@@ -256,13 +262,12 @@ FirebasePhotoFaceData _$FirebasePhotoFaceDataFromJson(
 class _$FirebasePhotoFaceDataTearOff {
   const _$FirebasePhotoFaceDataTearOff();
 
-// ignore: unused_element
   _FirebasePhotoFaceData call(
-      {@required @JsonKey() num x,
-      @required @JsonKey() num y,
-      @required @JsonKey() num width,
-      @required @JsonKey() num height,
-      @required @JsonKey() @SizeConverter() Size size}) {
+      {@JsonKey() required num x,
+      @JsonKey() required num y,
+      @JsonKey() required num width,
+      @JsonKey() required num height,
+      @JsonKey() @SizeConverter() required Size size}) {
     return _FirebasePhotoFaceData(
       x: x,
       y: y,
@@ -272,42 +277,41 @@ class _$FirebasePhotoFaceDataTearOff {
     );
   }
 
-// ignore: unused_element
   FirebasePhotoFaceData fromJson(Map<String, Object> json) {
     return FirebasePhotoFaceData.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $FirebasePhotoFaceData = _$FirebasePhotoFaceDataTearOff();
 
 /// @nodoc
 mixin _$FirebasePhotoFaceData {
   /// Left side of the face rect.
   @JsonKey()
-  num get x;
+  num get x => throw _privateConstructorUsedError;
 
   /// Top side of the face rect.
   @JsonKey()
-  num get y;
+  num get y => throw _privateConstructorUsedError;
 
   /// Width of the face rect.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
 
   /// Height of the face rect.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
 
   /// Size of the image that overlaps this face rect.
   @JsonKey()
   @SizeConverter()
-  Size get size;
+  Size get size => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FirebasePhotoFaceDataCopyWith<FirebasePhotoFaceData> get copyWith;
+  $FirebasePhotoFaceDataCopyWith<FirebasePhotoFaceData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -334,18 +338,33 @@ class _$FirebasePhotoFaceDataCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object x = freezed,
-    Object y = freezed,
-    Object width = freezed,
-    Object height = freezed,
-    Object size = freezed,
+    Object? x = freezed,
+    Object? y = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? size = freezed,
   }) {
     return _then(_value.copyWith(
-      x: x == freezed ? _value.x : x as num,
-      y: y == freezed ? _value.y : y as num,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
-      size: size == freezed ? _value.size : size as Size,
+      x: x == freezed
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as num,
+      y: y == freezed
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as num,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
+      size: size == freezed
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as Size,
     ));
   }
 }
@@ -378,18 +397,33 @@ class __$FirebasePhotoFaceDataCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object x = freezed,
-    Object y = freezed,
-    Object width = freezed,
-    Object height = freezed,
-    Object size = freezed,
+    Object? x = freezed,
+    Object? y = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? size = freezed,
   }) {
     return _then(_FirebasePhotoFaceData(
-      x: x == freezed ? _value.x : x as num,
-      y: y == freezed ? _value.y : y as num,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
-      size: size == freezed ? _value.size : size as Size,
+      x: x == freezed
+          ? _value.x
+          : x // ignore: cast_nullable_to_non_nullable
+              as num,
+      y: y == freezed
+          ? _value.y
+          : y // ignore: cast_nullable_to_non_nullable
+              as num,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
+      size: size == freezed
+          ? _value.size
+          : size // ignore: cast_nullable_to_non_nullable
+              as Size,
     ));
   }
 }
@@ -397,20 +431,15 @@ class __$FirebasePhotoFaceDataCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_FirebasePhotoFaceData
-    with DiagnosticableTreeMixin
-    implements _FirebasePhotoFaceData {
+class _$_FirebasePhotoFaceData extends _FirebasePhotoFaceData
+    with DiagnosticableTreeMixin {
   _$_FirebasePhotoFaceData(
-      {@required @JsonKey() this.x,
-      @required @JsonKey() this.y,
-      @required @JsonKey() this.width,
-      @required @JsonKey() this.height,
-      @required @JsonKey() @SizeConverter() this.size})
-      : assert(x != null),
-        assert(y != null),
-        assert(width != null),
-        assert(height != null),
-        assert(size != null);
+      {@JsonKey() required this.x,
+      @JsonKey() required this.y,
+      @JsonKey() required this.width,
+      @JsonKey() required this.height,
+      @JsonKey() @SizeConverter() required this.size})
+      : super._();
 
   factory _$_FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =>
       _$_$_FirebasePhotoFaceDataFromJson(json);
@@ -442,34 +471,9 @@ class _$_FirebasePhotoFaceData
   @SizeConverter()
   final Size size;
 
-  bool _didrect = false;
-  Rect _rect;
-
-  @override
-  Rect get rect {
-    if (_didrect == false) {
-      _didrect = true;
-      _rect = Rect.fromLTWH(
-          x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
-    }
-    return _rect;
-  }
-
-  bool _didimageRect = false;
-  Rect _imageRect;
-
-  @override
-  Rect get imageRect {
-    if (_didimageRect == false) {
-      _didimageRect = true;
-      _imageRect = Offset.zero & size;
-    }
-    return _imageRect;
-  }
-
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhotoFaceData(x: $x, y: $y, width: $width, height: $height, size: $size, rect: $rect, imageRect: $imageRect)';
+    return 'FirebasePhotoFaceData(x: $x, y: $y, width: $width, height: $height, size: $size)';
   }
 
   @override
@@ -481,9 +485,7 @@ class _$_FirebasePhotoFaceData
       ..add(DiagnosticsProperty('y', y))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
-      ..add(DiagnosticsProperty('size', size))
-      ..add(DiagnosticsProperty('rect', rect))
-      ..add(DiagnosticsProperty('imageRect', imageRect));
+      ..add(DiagnosticsProperty('size', size));
   }
 
   @override
@@ -523,14 +525,15 @@ class _$_FirebasePhotoFaceData
   }
 }
 
-abstract class _FirebasePhotoFaceData implements FirebasePhotoFaceData {
+abstract class _FirebasePhotoFaceData extends FirebasePhotoFaceData {
   factory _FirebasePhotoFaceData(
-          {@required @JsonKey() num x,
-          @required @JsonKey() num y,
-          @required @JsonKey() num width,
-          @required @JsonKey() num height,
-          @required @JsonKey() @SizeConverter() Size size}) =
+          {@JsonKey() required num x,
+          @JsonKey() required num y,
+          @JsonKey() required num width,
+          @JsonKey() required num height,
+          @JsonKey() @SizeConverter() required Size size}) =
       _$_FirebasePhotoFaceData;
+  _FirebasePhotoFaceData._() : super._();
 
   factory _FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =
       _$_FirebasePhotoFaceData.fromJson;
@@ -539,31 +542,32 @@ abstract class _FirebasePhotoFaceData implements FirebasePhotoFaceData {
 
   /// Left side of the face rect.
   @JsonKey()
-  num get x;
+  num get x => throw _privateConstructorUsedError;
   @override
 
   /// Top side of the face rect.
   @JsonKey()
-  num get y;
+  num get y => throw _privateConstructorUsedError;
   @override
 
   /// Width of the face rect.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
   @override
 
   /// Height of the face rect.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
   @override
 
   /// Size of the image that overlaps this face rect.
   @JsonKey()
   @SizeConverter()
-  Size get size;
+  Size get size => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith;
+  _$FirebasePhotoFaceDataCopyWith<_FirebasePhotoFaceData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 FirebasePhotoPalette _$FirebasePhotoPaletteFromJson(Map<String, dynamic> json) {
@@ -574,14 +578,13 @@ FirebasePhotoPalette _$FirebasePhotoPaletteFromJson(Map<String, dynamic> json) {
 class _$FirebasePhotoPaletteTearOff {
   const _$FirebasePhotoPaletteTearOff();
 
-// ignore: unused_element
   _FirebasePhotoPalette call(
-      {@JsonKey() @HexStringColorConverter() Color vibrant,
-      @JsonKey() @HexStringColorConverter() Color muted,
-      @JsonKey() @HexStringColorConverter() Color lightMuted,
-      @JsonKey() @HexStringColorConverter() Color darkMuted,
-      @JsonKey() @HexStringColorConverter() Color lightVibrant,
-      @JsonKey() @HexStringColorConverter() Color darkVibrant}) {
+      {@JsonKey() @HexStringColorConverter() Color? vibrant,
+      @JsonKey() @HexStringColorConverter() Color? muted,
+      @JsonKey() @HexStringColorConverter() Color? lightMuted,
+      @JsonKey() @HexStringColorConverter() Color? darkMuted,
+      @JsonKey() @HexStringColorConverter() Color? lightVibrant,
+      @JsonKey() @HexStringColorConverter() Color? darkVibrant}) {
     return _FirebasePhotoPalette(
       vibrant: vibrant,
       muted: muted,
@@ -592,40 +595,39 @@ class _$FirebasePhotoPaletteTearOff {
     );
   }
 
-// ignore: unused_element
   FirebasePhotoPalette fromJson(Map<String, Object> json) {
     return FirebasePhotoPalette.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $FirebasePhotoPalette = _$FirebasePhotoPaletteTearOff();
 
 /// @nodoc
 mixin _$FirebasePhotoPalette {
   @JsonKey()
   @HexStringColorConverter()
-  Color get vibrant;
+  Color? get vibrant => throw _privateConstructorUsedError;
   @JsonKey()
   @HexStringColorConverter()
-  Color get muted;
+  Color? get muted => throw _privateConstructorUsedError;
   @JsonKey()
   @HexStringColorConverter()
-  Color get lightMuted;
+  Color? get lightMuted => throw _privateConstructorUsedError;
   @JsonKey()
   @HexStringColorConverter()
-  Color get darkMuted;
+  Color? get darkMuted => throw _privateConstructorUsedError;
   @JsonKey()
   @HexStringColorConverter()
-  Color get lightVibrant;
+  Color? get lightVibrant => throw _privateConstructorUsedError;
   @JsonKey()
   @HexStringColorConverter()
-  Color get darkVibrant;
+  Color? get darkVibrant => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FirebasePhotoPaletteCopyWith<FirebasePhotoPalette> get copyWith;
+  $FirebasePhotoPaletteCopyWith<FirebasePhotoPalette> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -634,12 +636,12 @@ abstract class $FirebasePhotoPaletteCopyWith<$Res> {
           $Res Function(FirebasePhotoPalette) then) =
       _$FirebasePhotoPaletteCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey() @HexStringColorConverter() Color vibrant,
-      @JsonKey() @HexStringColorConverter() Color muted,
-      @JsonKey() @HexStringColorConverter() Color lightMuted,
-      @JsonKey() @HexStringColorConverter() Color darkMuted,
-      @JsonKey() @HexStringColorConverter() Color lightVibrant,
-      @JsonKey() @HexStringColorConverter() Color darkVibrant});
+      {@JsonKey() @HexStringColorConverter() Color? vibrant,
+      @JsonKey() @HexStringColorConverter() Color? muted,
+      @JsonKey() @HexStringColorConverter() Color? lightMuted,
+      @JsonKey() @HexStringColorConverter() Color? darkMuted,
+      @JsonKey() @HexStringColorConverter() Color? lightVibrant,
+      @JsonKey() @HexStringColorConverter() Color? darkVibrant});
 }
 
 /// @nodoc
@@ -653,23 +655,38 @@ class _$FirebasePhotoPaletteCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object vibrant = freezed,
-    Object muted = freezed,
-    Object lightMuted = freezed,
-    Object darkMuted = freezed,
-    Object lightVibrant = freezed,
-    Object darkVibrant = freezed,
+    Object? vibrant = freezed,
+    Object? muted = freezed,
+    Object? lightMuted = freezed,
+    Object? darkMuted = freezed,
+    Object? lightVibrant = freezed,
+    Object? darkVibrant = freezed,
   }) {
     return _then(_value.copyWith(
-      vibrant: vibrant == freezed ? _value.vibrant : vibrant as Color,
-      muted: muted == freezed ? _value.muted : muted as Color,
-      lightMuted:
-          lightMuted == freezed ? _value.lightMuted : lightMuted as Color,
-      darkMuted: darkMuted == freezed ? _value.darkMuted : darkMuted as Color,
-      lightVibrant:
-          lightVibrant == freezed ? _value.lightVibrant : lightVibrant as Color,
-      darkVibrant:
-          darkVibrant == freezed ? _value.darkVibrant : darkVibrant as Color,
+      vibrant: vibrant == freezed
+          ? _value.vibrant
+          : vibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      muted: muted == freezed
+          ? _value.muted
+          : muted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      lightMuted: lightMuted == freezed
+          ? _value.lightMuted
+          : lightMuted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      darkMuted: darkMuted == freezed
+          ? _value.darkMuted
+          : darkMuted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      lightVibrant: lightVibrant == freezed
+          ? _value.lightVibrant
+          : lightVibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      darkVibrant: darkVibrant == freezed
+          ? _value.darkVibrant
+          : darkVibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
     ));
   }
 }
@@ -682,12 +699,12 @@ abstract class _$FirebasePhotoPaletteCopyWith<$Res>
       __$FirebasePhotoPaletteCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey() @HexStringColorConverter() Color vibrant,
-      @JsonKey() @HexStringColorConverter() Color muted,
-      @JsonKey() @HexStringColorConverter() Color lightMuted,
-      @JsonKey() @HexStringColorConverter() Color darkMuted,
-      @JsonKey() @HexStringColorConverter() Color lightVibrant,
-      @JsonKey() @HexStringColorConverter() Color darkVibrant});
+      {@JsonKey() @HexStringColorConverter() Color? vibrant,
+      @JsonKey() @HexStringColorConverter() Color? muted,
+      @JsonKey() @HexStringColorConverter() Color? lightMuted,
+      @JsonKey() @HexStringColorConverter() Color? darkMuted,
+      @JsonKey() @HexStringColorConverter() Color? lightVibrant,
+      @JsonKey() @HexStringColorConverter() Color? darkVibrant});
 }
 
 /// @nodoc
@@ -703,23 +720,38 @@ class __$FirebasePhotoPaletteCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object vibrant = freezed,
-    Object muted = freezed,
-    Object lightMuted = freezed,
-    Object darkMuted = freezed,
-    Object lightVibrant = freezed,
-    Object darkVibrant = freezed,
+    Object? vibrant = freezed,
+    Object? muted = freezed,
+    Object? lightMuted = freezed,
+    Object? darkMuted = freezed,
+    Object? lightVibrant = freezed,
+    Object? darkVibrant = freezed,
   }) {
     return _then(_FirebasePhotoPalette(
-      vibrant: vibrant == freezed ? _value.vibrant : vibrant as Color,
-      muted: muted == freezed ? _value.muted : muted as Color,
-      lightMuted:
-          lightMuted == freezed ? _value.lightMuted : lightMuted as Color,
-      darkMuted: darkMuted == freezed ? _value.darkMuted : darkMuted as Color,
-      lightVibrant:
-          lightVibrant == freezed ? _value.lightVibrant : lightVibrant as Color,
-      darkVibrant:
-          darkVibrant == freezed ? _value.darkVibrant : darkVibrant as Color,
+      vibrant: vibrant == freezed
+          ? _value.vibrant
+          : vibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      muted: muted == freezed
+          ? _value.muted
+          : muted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      lightMuted: lightMuted == freezed
+          ? _value.lightMuted
+          : lightMuted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      darkMuted: darkMuted == freezed
+          ? _value.darkMuted
+          : darkMuted // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      lightVibrant: lightVibrant == freezed
+          ? _value.lightVibrant
+          : lightVibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
+      darkVibrant: darkVibrant == freezed
+          ? _value.darkVibrant
+          : darkVibrant // ignore: cast_nullable_to_non_nullable
+              as Color?,
     ));
   }
 }
@@ -727,16 +759,16 @@ class __$FirebasePhotoPaletteCopyWithImpl<$Res>
 @JsonSerializable()
 
 /// @nodoc
-class _$_FirebasePhotoPalette
-    with DiagnosticableTreeMixin
-    implements _FirebasePhotoPalette {
+class _$_FirebasePhotoPalette extends _FirebasePhotoPalette
+    with DiagnosticableTreeMixin {
   _$_FirebasePhotoPalette(
       {@JsonKey() @HexStringColorConverter() this.vibrant,
       @JsonKey() @HexStringColorConverter() this.muted,
       @JsonKey() @HexStringColorConverter() this.lightMuted,
       @JsonKey() @HexStringColorConverter() this.darkMuted,
       @JsonKey() @HexStringColorConverter() this.lightVibrant,
-      @JsonKey() @HexStringColorConverter() this.darkVibrant});
+      @JsonKey() @HexStringColorConverter() this.darkVibrant})
+      : super._();
 
   factory _$_FirebasePhotoPalette.fromJson(Map<String, dynamic> json) =>
       _$_$_FirebasePhotoPaletteFromJson(json);
@@ -744,72 +776,31 @@ class _$_FirebasePhotoPalette
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color vibrant;
+  final Color? vibrant;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color muted;
+  final Color? muted;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color lightMuted;
+  final Color? lightMuted;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color darkMuted;
+  final Color? darkMuted;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color lightVibrant;
+  final Color? lightVibrant;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  final Color darkVibrant;
-
-  bool _diddominant = false;
-  Color _dominant;
-
-  @override
-  Color get dominant {
-    if (_diddominant == false) {
-      _diddominant = true;
-      _dominant = vibrant ??
-          muted ??
-          lightVibrant ??
-          lightMuted ??
-          darkVibrant ??
-          darkMuted;
-    }
-    return _dominant;
-  }
-
-  bool _didfirstVibrant = false;
-  Color _firstVibrant;
-
-  @override
-  Color get firstVibrant {
-    if (_didfirstVibrant == false) {
-      _didfirstVibrant = true;
-      _firstVibrant = vibrant ?? lightVibrant ?? darkVibrant;
-    }
-    return _firstVibrant;
-  }
-
-  bool _didfirstMuted = false;
-  Color _firstMuted;
-
-  @override
-  Color get firstMuted {
-    if (_didfirstMuted == false) {
-      _didfirstMuted = true;
-      _firstMuted = muted ?? lightMuted ?? darkMuted;
-    }
-    return _firstMuted;
-  }
+  final Color? darkVibrant;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhotoPalette(vibrant: $vibrant, muted: $muted, lightMuted: $lightMuted, darkMuted: $darkMuted, lightVibrant: $lightVibrant, darkVibrant: $darkVibrant, dominant: $dominant, firstVibrant: $firstVibrant, firstMuted: $firstMuted)';
+    return 'FirebasePhotoPalette(vibrant: $vibrant, muted: $muted, lightMuted: $lightMuted, darkMuted: $darkMuted, lightVibrant: $lightVibrant, darkVibrant: $darkVibrant)';
   }
 
   @override
@@ -822,10 +813,7 @@ class _$_FirebasePhotoPalette
       ..add(DiagnosticsProperty('lightMuted', lightMuted))
       ..add(DiagnosticsProperty('darkMuted', darkMuted))
       ..add(DiagnosticsProperty('lightVibrant', lightVibrant))
-      ..add(DiagnosticsProperty('darkVibrant', darkVibrant))
-      ..add(DiagnosticsProperty('dominant', dominant))
-      ..add(DiagnosticsProperty('firstVibrant', firstVibrant))
-      ..add(DiagnosticsProperty('firstMuted', firstMuted));
+      ..add(DiagnosticsProperty('darkVibrant', darkVibrant));
   }
 
   @override
@@ -873,15 +861,16 @@ class _$_FirebasePhotoPalette
   }
 }
 
-abstract class _FirebasePhotoPalette implements FirebasePhotoPalette {
+abstract class _FirebasePhotoPalette extends FirebasePhotoPalette {
   factory _FirebasePhotoPalette(
-          {@JsonKey() @HexStringColorConverter() Color vibrant,
-          @JsonKey() @HexStringColorConverter() Color muted,
-          @JsonKey() @HexStringColorConverter() Color lightMuted,
-          @JsonKey() @HexStringColorConverter() Color darkMuted,
-          @JsonKey() @HexStringColorConverter() Color lightVibrant,
-          @JsonKey() @HexStringColorConverter() Color darkVibrant}) =
+          {@JsonKey() @HexStringColorConverter() Color? vibrant,
+          @JsonKey() @HexStringColorConverter() Color? muted,
+          @JsonKey() @HexStringColorConverter() Color? lightMuted,
+          @JsonKey() @HexStringColorConverter() Color? darkMuted,
+          @JsonKey() @HexStringColorConverter() Color? lightVibrant,
+          @JsonKey() @HexStringColorConverter() Color? darkVibrant}) =
       _$_FirebasePhotoPalette;
+  _FirebasePhotoPalette._() : super._();
 
   factory _FirebasePhotoPalette.fromJson(Map<String, dynamic> json) =
       _$_FirebasePhotoPalette.fromJson;
@@ -889,30 +878,31 @@ abstract class _FirebasePhotoPalette implements FirebasePhotoPalette {
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get vibrant;
+  Color? get vibrant => throw _privateConstructorUsedError;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get muted;
+  Color? get muted => throw _privateConstructorUsedError;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get lightMuted;
+  Color? get lightMuted => throw _privateConstructorUsedError;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get darkMuted;
+  Color? get darkMuted => throw _privateConstructorUsedError;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get lightVibrant;
+  Color? get lightVibrant => throw _privateConstructorUsedError;
   @override
   @JsonKey()
   @HexStringColorConverter()
-  Color get darkVibrant;
+  Color? get darkVibrant => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$FirebasePhotoPaletteCopyWith<_FirebasePhotoPalette> get copyWith;
+  _$FirebasePhotoPaletteCopyWith<_FirebasePhotoPalette> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 FirebasePhoto _$FirebasePhotoFromJson(Map<String, dynamic> json) {
@@ -923,16 +913,15 @@ FirebasePhoto _$FirebasePhotoFromJson(Map<String, dynamic> json) {
 class _$FirebasePhotoTearOff {
   const _$FirebasePhotoTearOff();
 
-// ignore: unused_element
   _FirebasePhoto call(
-      {@required @JsonKey() FirebasePhotoType type,
-      @required @JsonKey() String id,
-      @required @JsonKey() String hash,
-      @JsonKey() FirebasePhotoBlurData blur,
-      @JsonKey() FirebasePhotoPalette palette,
-      @JsonKey() FirebasePhotoFaceData face,
-      @required @JsonKey() num width,
-      @required @JsonKey() num height,
+      {@JsonKey() required FirebasePhotoType type,
+      @JsonKey() required String id,
+      @JsonKey() required String hash,
+      @JsonKey() FirebasePhotoBlurData? blur,
+      @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() FirebasePhotoFaceData? face,
+      @JsonKey() required num width,
+      @JsonKey() required num height,
       @JsonKey(defaultValue: false) bool hasLarge = false}) {
     return _FirebasePhoto(
       type: type,
@@ -947,57 +936,56 @@ class _$FirebasePhotoTearOff {
     );
   }
 
-// ignore: unused_element
   FirebasePhoto fromJson(Map<String, Object> json) {
     return FirebasePhoto.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $FirebasePhoto = _$FirebasePhotoTearOff();
 
 /// @nodoc
 mixin _$FirebasePhoto {
   /// Type of this [FirebasePhoto].
   @JsonKey()
-  FirebasePhotoType get type;
+  FirebasePhotoType get type => throw _privateConstructorUsedError;
 
   /// Photo ID / index / slow, under which this photo is stored in Firebase storage.
   @JsonKey()
-  String get id;
+  String get id => throw _privateConstructorUsedError;
 
   /// Hash that serves as the filename of this photo.
   @JsonKey()
-  String get hash;
+  String get hash => throw _privateConstructorUsedError;
 
   /// Blurhash of the photo.
   @JsonKey()
-  FirebasePhotoBlurData get blur;
+  FirebasePhotoBlurData? get blur => throw _privateConstructorUsedError;
 
   /// Color palette of the photo.
   @JsonKey()
-  FirebasePhotoPalette get palette;
+  FirebasePhotoPalette? get palette => throw _privateConstructorUsedError;
 
   /// Face rect inside the photo.
   @JsonKey()
-  FirebasePhotoFaceData get face;
+  FirebasePhotoFaceData? get face => throw _privateConstructorUsedError;
 
   /// Width of the photo.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
 
   /// Height of the photo.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
 
   /// Wether the photo also has a large version.
   @JsonKey(defaultValue: false)
-  bool get hasLarge;
+  bool get hasLarge => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FirebasePhotoCopyWith<FirebasePhoto> get copyWith;
+  $FirebasePhotoCopyWith<FirebasePhoto> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1009,16 +997,16 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       {@JsonKey() FirebasePhotoType type,
       @JsonKey() String id,
       @JsonKey() String hash,
-      @JsonKey() FirebasePhotoBlurData blur,
-      @JsonKey() FirebasePhotoPalette palette,
-      @JsonKey() FirebasePhotoFaceData face,
+      @JsonKey() FirebasePhotoBlurData? blur,
+      @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge});
 
-  $FirebasePhotoBlurDataCopyWith<$Res> get blur;
-  $FirebasePhotoPaletteCopyWith<$Res> get palette;
-  $FirebasePhotoFaceDataCopyWith<$Res> get face;
+  $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
+  $FirebasePhotoPaletteCopyWith<$Res>? get palette;
+  $FirebasePhotoFaceDataCopyWith<$Res>? get face;
 }
 
 /// @nodoc
@@ -1032,56 +1020,85 @@ class _$FirebasePhotoCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object type = freezed,
-    Object id = freezed,
-    Object hash = freezed,
-    Object blur = freezed,
-    Object palette = freezed,
-    Object face = freezed,
-    Object width = freezed,
-    Object height = freezed,
-    Object hasLarge = freezed,
+    Object? type = freezed,
+    Object? id = freezed,
+    Object? hash = freezed,
+    Object? blur = freezed,
+    Object? palette = freezed,
+    Object? face = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? hasLarge = freezed,
   }) {
     return _then(_value.copyWith(
-      type: type == freezed ? _value.type : type as FirebasePhotoType,
-      id: id == freezed ? _value.id : id as String,
-      hash: hash == freezed ? _value.hash : hash as String,
-      blur: blur == freezed ? _value.blur : blur as FirebasePhotoBlurData,
-      palette:
-          palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
-      face: face == freezed ? _value.face : face as FirebasePhotoFaceData,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
-      hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoType,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      hash: hash == freezed
+          ? _value.hash
+          : hash // ignore: cast_nullable_to_non_nullable
+              as String,
+      blur: blur == freezed
+          ? _value.blur
+          : blur // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoBlurData?,
+      palette: palette == freezed
+          ? _value.palette
+          : palette // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoPalette?,
+      face: face == freezed
+          ? _value.face
+          : face // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoFaceData?,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
+      hasLarge: hasLarge == freezed
+          ? _value.hasLarge
+          : hasLarge // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 
   @override
-  $FirebasePhotoBlurDataCopyWith<$Res> get blur {
+  $FirebasePhotoBlurDataCopyWith<$Res>? get blur {
     if (_value.blur == null) {
       return null;
     }
-    return $FirebasePhotoBlurDataCopyWith<$Res>(_value.blur, (value) {
+
+    return $FirebasePhotoBlurDataCopyWith<$Res>(_value.blur!, (value) {
       return _then(_value.copyWith(blur: value));
     });
   }
 
   @override
-  $FirebasePhotoPaletteCopyWith<$Res> get palette {
+  $FirebasePhotoPaletteCopyWith<$Res>? get palette {
     if (_value.palette == null) {
       return null;
     }
-    return $FirebasePhotoPaletteCopyWith<$Res>(_value.palette, (value) {
+
+    return $FirebasePhotoPaletteCopyWith<$Res>(_value.palette!, (value) {
       return _then(_value.copyWith(palette: value));
     });
   }
 
   @override
-  $FirebasePhotoFaceDataCopyWith<$Res> get face {
+  $FirebasePhotoFaceDataCopyWith<$Res>? get face {
     if (_value.face == null) {
       return null;
     }
-    return $FirebasePhotoFaceDataCopyWith<$Res>(_value.face, (value) {
+
+    return $FirebasePhotoFaceDataCopyWith<$Res>(_value.face!, (value) {
       return _then(_value.copyWith(face: value));
     });
   }
@@ -1098,19 +1115,19 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       {@JsonKey() FirebasePhotoType type,
       @JsonKey() String id,
       @JsonKey() String hash,
-      @JsonKey() FirebasePhotoBlurData blur,
-      @JsonKey() FirebasePhotoPalette palette,
-      @JsonKey() FirebasePhotoFaceData face,
+      @JsonKey() FirebasePhotoBlurData? blur,
+      @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
       @JsonKey(defaultValue: false) bool hasLarge});
 
   @override
-  $FirebasePhotoBlurDataCopyWith<$Res> get blur;
+  $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
   @override
-  $FirebasePhotoPaletteCopyWith<$Res> get palette;
+  $FirebasePhotoPaletteCopyWith<$Res>? get palette;
   @override
-  $FirebasePhotoFaceDataCopyWith<$Res> get face;
+  $FirebasePhotoFaceDataCopyWith<$Res>? get face;
 }
 
 /// @nodoc
@@ -1126,27 +1143,53 @@ class __$FirebasePhotoCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object type = freezed,
-    Object id = freezed,
-    Object hash = freezed,
-    Object blur = freezed,
-    Object palette = freezed,
-    Object face = freezed,
-    Object width = freezed,
-    Object height = freezed,
-    Object hasLarge = freezed,
+    Object? type = freezed,
+    Object? id = freezed,
+    Object? hash = freezed,
+    Object? blur = freezed,
+    Object? palette = freezed,
+    Object? face = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
+    Object? hasLarge = freezed,
   }) {
     return _then(_FirebasePhoto(
-      type: type == freezed ? _value.type : type as FirebasePhotoType,
-      id: id == freezed ? _value.id : id as String,
-      hash: hash == freezed ? _value.hash : hash as String,
-      blur: blur == freezed ? _value.blur : blur as FirebasePhotoBlurData,
-      palette:
-          palette == freezed ? _value.palette : palette as FirebasePhotoPalette,
-      face: face == freezed ? _value.face : face as FirebasePhotoFaceData,
-      width: width == freezed ? _value.width : width as num,
-      height: height == freezed ? _value.height : height as num,
-      hasLarge: hasLarge == freezed ? _value.hasLarge : hasLarge as bool,
+      type: type == freezed
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoType,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      hash: hash == freezed
+          ? _value.hash
+          : hash // ignore: cast_nullable_to_non_nullable
+              as String,
+      blur: blur == freezed
+          ? _value.blur
+          : blur // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoBlurData?,
+      palette: palette == freezed
+          ? _value.palette
+          : palette // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoPalette?,
+      face: face == freezed
+          ? _value.face
+          : face // ignore: cast_nullable_to_non_nullable
+              as FirebasePhotoFaceData?,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as num,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as num,
+      hasLarge: hasLarge == freezed
+          ? _value.hasLarge
+          : hasLarge // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1156,22 +1199,16 @@ class __$FirebasePhotoCopyWithImpl<$Res>
 /// @nodoc
 class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   _$_FirebasePhoto(
-      {@required @JsonKey() this.type,
-      @required @JsonKey() this.id,
-      @required @JsonKey() this.hash,
+      {@JsonKey() required this.type,
+      @JsonKey() required this.id,
+      @JsonKey() required this.hash,
       @JsonKey() this.blur,
       @JsonKey() this.palette,
       @JsonKey() this.face,
-      @required @JsonKey() this.width,
-      @required @JsonKey() this.height,
+      @JsonKey() required this.width,
+      @JsonKey() required this.height,
       @JsonKey(defaultValue: false) this.hasLarge = false})
-      : assert(type != null),
-        assert(id != null),
-        assert(hash != null),
-        assert(width != null),
-        assert(height != null),
-        assert(hasLarge != null),
-        super._();
+      : super._();
 
   factory _$_FirebasePhoto.fromJson(Map<String, dynamic> json) =>
       _$_$_FirebasePhotoFromJson(json);
@@ -1195,17 +1232,17 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 
   /// Blurhash of the photo.
   @JsonKey()
-  final FirebasePhotoBlurData blur;
+  final FirebasePhotoBlurData? blur;
   @override
 
   /// Color palette of the photo.
   @JsonKey()
-  final FirebasePhotoPalette palette;
+  final FirebasePhotoPalette? palette;
   @override
 
   /// Face rect inside the photo.
   @JsonKey()
-  final FirebasePhotoFaceData face;
+  final FirebasePhotoFaceData? face;
   @override
 
   /// Width of the photo.
@@ -1222,21 +1259,9 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   @JsonKey(defaultValue: false)
   final bool hasLarge;
 
-  bool _didsize = false;
-  Size _size;
-
-  @override
-  Size get size {
-    if (_didsize == false) {
-      _didsize = true;
-      _size = Size(width.toDouble(), height.toDouble());
-    }
-    return _size;
-  }
-
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, face: $face, width: $width, height: $height, hasLarge: $hasLarge, size: $size)';
+    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, face: $face, width: $width, height: $height, hasLarge: $hasLarge)';
   }
 
   @override
@@ -1252,8 +1277,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('face', face))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
-      ..add(DiagnosticsProperty('hasLarge', hasLarge))
-      ..add(DiagnosticsProperty('size', size));
+      ..add(DiagnosticsProperty('hasLarge', hasLarge));
   }
 
   @override
@@ -1307,17 +1331,17 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 }
 
 abstract class _FirebasePhoto extends FirebasePhoto {
-  _FirebasePhoto._() : super._();
   factory _FirebasePhoto(
-      {@required @JsonKey() FirebasePhotoType type,
-      @required @JsonKey() String id,
-      @required @JsonKey() String hash,
-      @JsonKey() FirebasePhotoBlurData blur,
-      @JsonKey() FirebasePhotoPalette palette,
-      @JsonKey() FirebasePhotoFaceData face,
-      @required @JsonKey() num width,
-      @required @JsonKey() num height,
+      {@JsonKey() required FirebasePhotoType type,
+      @JsonKey() required String id,
+      @JsonKey() required String hash,
+      @JsonKey() FirebasePhotoBlurData? blur,
+      @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() FirebasePhotoFaceData? face,
+      @JsonKey() required num width,
+      @JsonKey() required num height,
       @JsonKey(defaultValue: false) bool hasLarge}) = _$_FirebasePhoto;
+  _FirebasePhoto._() : super._();
 
   factory _FirebasePhoto.fromJson(Map<String, dynamic> json) =
       _$_FirebasePhoto.fromJson;
@@ -1326,48 +1350,49 @@ abstract class _FirebasePhoto extends FirebasePhoto {
 
   /// Type of this [FirebasePhoto].
   @JsonKey()
-  FirebasePhotoType get type;
+  FirebasePhotoType get type => throw _privateConstructorUsedError;
   @override
 
   /// Photo ID / index / slow, under which this photo is stored in Firebase storage.
   @JsonKey()
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
 
   /// Hash that serves as the filename of this photo.
   @JsonKey()
-  String get hash;
+  String get hash => throw _privateConstructorUsedError;
   @override
 
   /// Blurhash of the photo.
   @JsonKey()
-  FirebasePhotoBlurData get blur;
+  FirebasePhotoBlurData? get blur => throw _privateConstructorUsedError;
   @override
 
   /// Color palette of the photo.
   @JsonKey()
-  FirebasePhotoPalette get palette;
+  FirebasePhotoPalette? get palette => throw _privateConstructorUsedError;
   @override
 
   /// Face rect inside the photo.
   @JsonKey()
-  FirebasePhotoFaceData get face;
+  FirebasePhotoFaceData? get face => throw _privateConstructorUsedError;
   @override
 
   /// Width of the photo.
   @JsonKey()
-  num get width;
+  num get width => throw _privateConstructorUsedError;
   @override
 
   /// Height of the photo.
   @JsonKey()
-  num get height;
+  num get height => throw _privateConstructorUsedError;
   @override
 
   /// Wether the photo also has a large version.
   @JsonKey(defaultValue: false)
-  bool get hasLarge;
+  bool get hasLarge => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith;
+  _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith =>
+      throw _privateConstructorUsedError;
 }

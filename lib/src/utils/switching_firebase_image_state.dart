@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// disposable build context.
 mixin SwitchingFirebaseImageState<T extends StatefulWidget> on State<T> {
   /// [DisposableBuildContext] to allow scroll aware firebase images.
-  DisposableBuildContext<SwitchingFirebaseImageState<T>> scrollAwareContext;
+  late DisposableBuildContext<SwitchingFirebaseImageState<T>> scrollAwareContext;
 
   @override
   @mustCallSuper

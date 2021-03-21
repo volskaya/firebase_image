@@ -24,7 +24,7 @@ class CachedNetworkImage extends ImageProvider<CachedNetworkImage> {
   /// The HTTP headers that will be used with [HttpClient.get] to fetch image from network.
   ///
   /// When running flutter on the web, headers are not used.
-  final Map<String, String> headers;
+  final Map<String, String>? headers;
 
   @override
   Future<CachedNetworkImage> obtainKey(ImageConfiguration configuration) => SynchronousFuture<CachedNetworkImage>(this);
@@ -64,13 +64,13 @@ class CachedNetworkImage extends ImageProvider<CachedNetworkImage> {
       );
 
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('CachedNetworkImage is an empty file: $url');
-      return decode(bytes);
+      return decode(bytes!);
     } catch (e) {
       // Depending on where the exception was thrown, the image cache may not
       // have had a chance to track the key in the cache at all.
       // Schedule a microtask to give the cache a chance to add the key.
       scheduleMicrotask(() {
-        PaintingBinding.instance.imageCache.evict(key);
+        PaintingBinding.instance!.imageCache!.evict(key);
       });
       rethrow;
     } finally {

@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// Creates [SwitchingFirebaseMaterialImage].
   const SwitchingFirebaseMaterialImage({
-    Key key,
-    @required this.imageProvider,
-    @required this.child,
+    Key? key,
+    required this.imageProvider,
+    required this.child,
     this.idleChild,
     this.layoutChildren = const <Widget>[],
     this.borderRadius,
@@ -28,13 +28,13 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
 
   /// While [SwitchingImage.imageProvider] is not loaded an optional
   /// [idleChild] will be built instead.
-  final Widget idleChild;
+  final Widget? idleChild;
 
   /// Clip rect shape of the animated switcher image.
-  final BorderRadius borderRadius;
+  final BorderRadius? borderRadius;
 
   /// Clip shape of the animated switcher image.
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   /// Duration of the switch transition.
   final Duration duration;
@@ -58,10 +58,10 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   final double elevation;
 
   /// [Material]'s color. Must be defined to draw elevation.
-  final Color color;
+  final Color? color;
 
   /// [Material]'s shadow color.
-  final Color shadowColor;
+  final Color? shadowColor;
 
   @override
   Widget build(BuildContext context) => SwitchingFirebaseImage(

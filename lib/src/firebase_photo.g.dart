@@ -30,7 +30,7 @@ _$_FirebasePhotoFaceData _$_$_FirebasePhotoFaceDataFromJson(
     y: json['y'] as num,
     width: json['width'] as num,
     height: json['height'] as num,
-    size: const SizeConverter().fromJson(json['size'] as Map),
+    size: const SizeConverter().fromJson(json['size'] as Map?),
   );
 }
 
@@ -48,16 +48,16 @@ _$_FirebasePhotoPalette _$_$_FirebasePhotoPaletteFromJson(
     Map<String, dynamic> json) {
   return _$_FirebasePhotoPalette(
     vibrant:
-        const HexStringColorConverter().fromJson(json['vibrant'] as String),
-    muted: const HexStringColorConverter().fromJson(json['muted'] as String),
+        const HexStringColorConverter().fromJson(json['vibrant'] as String?),
+    muted: const HexStringColorConverter().fromJson(json['muted'] as String?),
     lightMuted:
-        const HexStringColorConverter().fromJson(json['lightMuted'] as String),
+        const HexStringColorConverter().fromJson(json['lightMuted'] as String?),
     darkMuted:
-        const HexStringColorConverter().fromJson(json['darkMuted'] as String),
+        const HexStringColorConverter().fromJson(json['darkMuted'] as String?),
     lightVibrant: const HexStringColorConverter()
-        .fromJson(json['lightVibrant'] as String),
-    darkVibrant:
-        const HexStringColorConverter().fromJson(json['darkVibrant'] as String),
+        .fromJson(json['lightVibrant'] as String?),
+    darkVibrant: const HexStringColorConverter()
+        .fromJson(json['darkVibrant'] as String?),
   );
 }
 
@@ -76,7 +76,7 @@ Map<String, dynamic> _$_$_FirebasePhotoPaletteToJson(
 
 _$_FirebasePhoto _$_$_FirebasePhotoFromJson(Map<String, dynamic> json) {
   return _$_FirebasePhoto(
-    type: _$enumDecodeNullable(_$FirebasePhotoTypeEnumMap, json['type']),
+    type: _$enumDecode(_$FirebasePhotoTypeEnumMap, json['type']),
     id: json['id'] as String,
     hash: json['hash'] as String,
     blur: json['blur'] == null
@@ -91,7 +91,7 @@ _$_FirebasePhoto _$_$_FirebasePhotoFromJson(Map<String, dynamic> json) {
         : FirebasePhotoFaceData.fromJson(json['face'] as Map<String, dynamic>),
     width: json['width'] as num,
     height: json['height'] as num,
-    hasLarge: json['hasLarge'] as bool ?? false,
+    hasLarge: json['hasLarge'] as bool? ?? false,
   );
 }
 
@@ -108,36 +108,30 @@ Map<String, dynamic> _$_$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
       'hasLarge': instance.hasLarge,
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$FirebasePhotoTypeEnumMap = {

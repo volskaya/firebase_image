@@ -6,7 +6,6 @@ import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:log/log.dart';
 
 /// Wrapped [SwitchingImage] to first load thumbnail provider,
 /// if its cached in [WidgetsBinding] already, before resolving
@@ -14,8 +13,8 @@ import 'package:log/log.dart';
 class SwitchingFirebaseImage extends StatefulWidget {
   /// Creates [SwitchingFirebaseImage].
   const SwitchingFirebaseImage({
-    Key key,
-    @required this.imageProvider,
+    Key? key,
+    required this.imageProvider,
     this.idleChild,
     this.layoutChildren = const <Widget>[],
     this.shape,
@@ -34,9 +33,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Creates filter variant of [SwitchingFirebaseImage].
   const SwitchingFirebaseImage.filter({
-    Key key,
-    @required this.imageProvider,
-    @required this.color,
+    Key? key,
+    required this.imageProvider,
+    required this.color,
     this.colorBlendMode = BlendMode.saturation,
     this.idleChild,
     this.layoutChildren = const <Widget>[],
@@ -53,20 +52,20 @@ class SwitchingFirebaseImage extends StatefulWidget {
         super(key: key);
 
   /// [FirebaseImage] to switch to.
-  final ImageProvider imageProvider;
+  final ImageProvider? imageProvider;
 
   /// While [SwitchingImage.imageProvider] is not loaded an optional
   /// [idleChild] will be built instead.
-  final Widget idleChild;
+  final Widget? idleChild;
 
   /// Children [Widget]'s on top of the [Material], in the switcher's layout builder.
   final Iterable<Widget> layoutChildren;
 
   /// Border radius of the animated switcher images.
-  final BorderRadius borderRadius;
+  final BorderRadius? borderRadius;
 
   /// Shape of the animated switcher images.
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   /// Duration of the switch transition.
   final Duration duration;
@@ -82,16 +81,16 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Opacity override when you wish to animate the image without having to overlap
   /// multiple opacity shaders.
-  final ValueListenable<double> opacity;
+  final ValueListenable<double>? opacity;
 
   /// Alignment of the children in the switchers.
   final AlignmentGeometry alignment;
 
   /// Blend mode of the internal [ColorFiltered] filter.
-  final BlendMode colorBlendMode;
+  final BlendMode? colorBlendMode;
 
   /// Color of the internal [ColorFiltered] filter.
-  final Color color;
+  final Color? color;
 
   /// Whether to wrap images in a [ColorFiltered] widget.
   final bool filter;
@@ -101,11 +100,11 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Convenience copy method.
   SwitchingFirebaseImage copyWith({
-    FirebaseImage imageProvider,
-    Widget idleChild,
-    BorderRadius borderRadius,
-    ShapeBorder shape,
-    ValueListenable<double> opacity,
+    FirebaseImage? imageProvider,
+    Widget? idleChild,
+    BorderRadius? borderRadius,
+    ShapeBorder? shape,
+    ValueListenable<double>? opacity,
   }) =>
       SwitchingFirebaseImage(
         key: key,
@@ -127,14 +126,14 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
     with SwitchingFirebaseImageState<SwitchingFirebaseImage> {
-  FirebaseImageCacheListener _cacheListener;
-  ImageProvider _provider;
+  FirebaseImageCacheListener? _cacheListener;
+  ImageProvider? _provider;
 
   /// Sets scroll awarness, if necessary.
-  void _setProvider(FirebaseImage provider) {
+  void _setProvider(FirebaseImage? provider) {
     // Unbind context from the previous provider, in case it's causing memory leaks.
-    if (_provider is FirebaseImage) {
-      (_provider as FirebaseImage)?.setScrollAwareContext(null);
+    if (_provider != null && _provider is FirebaseImage) {
+      (_provider as FirebaseImage).setScrollAwareContext(null);
     }
 
     _provider = provider != null
@@ -201,13 +200,13 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
   bool _listening = false;
   void _listenForBetterImages() {
     if (_listening) return;
-    PaintingBinding.instance.imageCache.keyAddedCallbacks.add(_handleNewImage);
+    PaintingBinding.instance!.imageCache!.keyAddedCallbacks.add(_handleNewImage);
     _listening = true;
   }
 
   void _stopListeningForBetterImages() {
     if (!_listening) return;
-    PaintingBinding.instance.imageCache.keyAddedCallbacks.remove(_handleNewImage);
+    PaintingBinding.instance!.imageCache!.keyAddedCallbacks.remove(_handleNewImage);
     _listening = false;
   }
 
