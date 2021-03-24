@@ -31,7 +31,7 @@ abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with FirebasePh
   /// Document map of [FirebasePhoto]s, where the key refers to their "ID".
   @observable
   @override
-  @JsonKey(defaultValue: <String, FirebasePhoto>{})
+  @JsonKey()
   @FirebasePhotoMapConverter()
   Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
 
@@ -62,7 +62,7 @@ abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhot
   /// Document map of [FirebasePhoto]s, where the key refers to their "ID".
   @observable
   @override
-  @JsonKey(defaultValue: <String, FirebasePhoto>{})
+  @JsonKey()
   @FirebasePhotoMapConverter()
   Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
 
