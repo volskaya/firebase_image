@@ -24,7 +24,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   }) : super(key: key);
 
   /// [FirebaseImage] to switch to.
-  final FirebaseImage imageProvider;
+  final FirebaseImage? imageProvider;
 
   /// While [SwitchingImage.imageProvider] is not loaded an optional
   /// [idleChild] will be built instead.
