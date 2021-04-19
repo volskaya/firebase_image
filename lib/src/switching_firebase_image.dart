@@ -218,6 +218,8 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
     if (widget.imageProvider != null && widget.imageProvider is FirebaseImage) {
       _cycleImage();
       _listenForBetterImages();
+    } else {
+      _provider = widget.imageProvider;
     }
   }
 

@@ -100,6 +100,20 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     }
   }
 
+  /// Creates a copy of this [FirebaseImage].
+  FirebaseImage copyWith({
+    Size? cacheSize,
+  }) =>
+      FirebaseImage(
+        path,
+        size,
+        scale: scale,
+        showLarge: showLarge,
+        blur: blur,
+        cacheSize: cacheSize ?? this.cacheSize,
+        scrollAwareContext: scrollAwareContext,
+      );
+
   /// Optional global storage bucket override for [FirebaseImageStorage].
   ///
   /// Leave this null to fallback to the default storage bucket of this project.

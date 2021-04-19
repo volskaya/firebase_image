@@ -35,7 +35,6 @@ class FirebaseImageCacheListener {
 
       assert(!cachedImages.contains(key));
       assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path]!.containsKey(size));
-
       // FIXME: Thumbnails and regular photos clash, when they have the same cacheSize.
       // Which in turn fools widgets into prefering that thumbnail, with the bigger cacheSize.
 

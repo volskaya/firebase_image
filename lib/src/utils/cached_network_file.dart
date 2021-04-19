@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:log/log.dart';
 import 'package:quiver/cache.dart';
@@ -47,7 +48,7 @@ class CachedNetworkFile extends CacheManager {
     _log.v('Requesting cached network file from: $url');
     final file = await _cache.get(
       url,
-      ifAbsent: (url) async => _getSingleFile(url).whenComplete(() => _cache.invalidate(key)),
+      ifAbsent: (url) => _getSingleFile(url).whenComplete(() => _cache.invalidate(key)),
     );
 
     _log.v('File $url, ' + (file != null ? 'retrieved: $file' : 'not found'));
