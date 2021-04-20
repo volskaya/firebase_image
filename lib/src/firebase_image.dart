@@ -7,33 +7,32 @@ import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' show join;
 import 'package:firebase_image/src/firebase_photo.dart';
 import 'package:firebase_image/src/utils/firebase_image_storage.dart';
 
+part 'firebase_image.freezed.dart';
+
 const _kLargeDpiBreakPoint = 2;
 
 /// Filenames for firebase image sizes.
-class FirebaseImageNames {
+@freezed
+class FirebaseImageNames with _$FirebaseImageNames {
   /// Creates [FirebaseImageNames].
-  const FirebaseImageNames({
-    this.thumbnail = 'thumbnail',
-    this.regular = 'reg',
-    this.large = 'lg',
-    this.photoFolder = 'photo',
-  });
+  const factory FirebaseImageNames({
+    /// Filename of the thumbnail image.
+    @Default('thumbnail') String thumbnail,
 
-  /// Filename of the thumbnail image.
-  final String thumbnail;
+    /// Filename of the regular image.
+    @Default('reg') String regular,
 
-  /// Filename of the regular image.
-  final String regular;
+    /// Filename of the large image.
+    @Default('lg') String large,
 
-  /// Filename of the large image.
-  final String large;
-
-  /// Filename of the photo folder, where the images are placed.
-  final String photoFolder;
+    /// Filename of the photo folder, where the images are placed.
+    @Default('photo') String photoFolder,
+  }) = _FirebaseImageNames;
 }
 
 /// [FirebaseImage] provider type.
@@ -57,6 +56,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Creates [FirebaseImage] of type [FirebaseImageType.regular].
   FirebaseImage(
     this.path,
+    this.hash,
     this.size, {
     this.scale = 1,
     this.showLarge = true,
@@ -68,6 +68,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// Creates [FirebaseImage] of type [FirebaseImageType.thumbnail].
   FirebaseImage.thumbnail(
     this.path,
+    this.hash,
     this.size, {
     this.scale = 1,
     this.blur,
@@ -80,9 +81,10 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   factory FirebaseImage.from(FirebasePhotoReference photo, [Size? cacheSize]) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage(photo.path, photo.size, blur: photo.blur, cacheSize: cacheSize);
+        return FirebaseImage(photo.path, photo.hash, photo.size, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, photo.size, showLarge: false, blur: photo.blur, cacheSize: cacheSize);
+        return FirebaseImage(photo.path, photo.hash, photo.size,
+            showLarge: false, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
     }
@@ -92,9 +94,10 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   factory FirebaseImage.thumbnailFrom(FirebasePhotoReference photo, [Size? cacheSize]) {
     switch (photo.type) {
       case FirebasePhotoType.image:
-        return FirebaseImage.thumbnail(photo.path, photo.size, blur: photo.blur, cacheSize: cacheSize);
+        return FirebaseImage.thumbnail(photo.path, photo.hash, photo.size, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.animation:
-        return FirebaseImage(photo.path, photo.size, showLarge: false, blur: photo.blur, cacheSize: cacheSize);
+        return FirebaseImage(photo.path, photo.hash, photo.size,
+            showLarge: false, blur: photo.blur, cacheSize: cacheSize);
       case FirebasePhotoType.video:
         throw UnsupportedError('Theres no video image provider');
     }
@@ -106,6 +109,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   }) =>
       FirebaseImage(
         path,
+        hash,
         size,
         scale: scale,
         showLarge: showLarge,
@@ -121,6 +125,9 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   /// Firebase storage path to the image file.
   final String path;
+
+  /// Hash of the file in the Firebase storage.
+  final String hash;
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
@@ -145,6 +152,10 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
 
   /// Filenames for firebase image sizes.
   static FirebaseImageNames names = const FirebaseImageNames();
+
+  /// Version 2:
+  ///   + Ignores the old "key" from storage paths.
+  static int version = 2;
 
   /// Scroll aware context. If this is defined, image will wait till upper scrollable stops scrolling
   /// fast, before begining a decode.
@@ -172,7 +183,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       case FirebaseImageType.thumbnail:
         return this;
       case FirebaseImageType.regular:
-        return FirebaseImage.thumbnail(path, size,
+        return FirebaseImage.thumbnail(path, hash, size,
             scale: scale, blur: blur, cacheSize: cacheSize, scrollAwareContext: scrollAwareContext);
     }
   }
@@ -183,15 +194,12 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       case FirebaseImageType.regular:
         return this;
       case FirebaseImageType.thumbnail:
-        return FirebaseImage(
-          path,
-          size,
-          showLarge: showLarge,
-          scale: scale,
-          blur: blur,
-          cacheSize: cacheSize,
-          scrollAwareContext: scrollAwareContext,
-        );
+        return FirebaseImage(path, hash, size,
+            showLarge: showLarge,
+            scale: scale,
+            blur: blur,
+            cacheSize: cacheSize,
+            scrollAwareContext: scrollAwareContext);
     }
   }
 

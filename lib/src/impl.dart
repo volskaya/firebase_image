@@ -17,7 +17,7 @@ mixin FirebasePhotoImpl<T> on FirebaseModel<T> {
 
   /// Computed getter of [FirebasePhotoReferences] derived from the [photos] map.
   Map<String, FirebasePhotoReference> get media =>
-      photos.map((id, photo) => MapEntry(id, FirebasePhotoReference.fromModel(this, photo)));
+      {for (final entry in photos.entries) entry.key: FirebasePhotoReference.fromModel(this, entry.value)};
 
   /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
   FirebasePhotoReference? get photo => media.isNotEmpty ? media.values.first : null;
@@ -28,29 +28,19 @@ mixin FirebasePhotoImpl<T> on FirebaseModel<T> {
 abstract class FirestorePhotoModel<T> = _FirestorePhotoModel<T> with _$FirestorePhotoModel<T>;
 
 abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with FirebasePhotoImpl<T>, Store {
-  /// Document map of [FirebasePhoto]s, where the key refers to their "ID".
-  @observable
-  @override
-  @JsonKey()
-  @FirebasePhotoMapConverter()
-  Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
+  @override @o @JsonKey(defaultValue: <String, FirebasePhoto>{}) @PhotoMapC() Map<String, FirebasePhoto> photos =
+      const <String, FirebasePhoto>{};
 
-  /// Computed getter of [FirebasePhotoReferences] derived from the [photos] map.
-  @override
-  @computed
+  @override @c
   Map<String, FirebasePhotoReference> get media => super.media;
 
-  /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
-  @override
-  @computed
+  @override @c
   FirebasePhotoReference? get photo => super.photo;
 
-  @action
-  @override
-  @mustCallSuper
+  @override @a @mustCallSuper
   void onSnapshot(T x) {
-    final newPhotos = (x as FirestorePhotoModel).photos;
-    if (!mapsEqual(photos, newPhotos)) photos = newPhotos;
+    final _x = x as FirestorePhotoModel;
+    if (!mapsEqual(photos, _x.photos)) photos = _x.photos;
   }
 }
 
@@ -59,26 +49,16 @@ abstract class _FirestorePhotoModel<T> extends FirestoreModel<T> with FirebasePh
 abstract class RealtimePhotoModel<T> = _RealtimePhotoModel<T> with _$RealtimePhotoModel<T>;
 
 abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhotoImpl<T>, Store {
-  /// Document map of [FirebasePhoto]s, where the key refers to their "ID".
-  @observable
-  @override
-  @JsonKey()
-  @FirebasePhotoMapConverter()
-  Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
+  @override @o @JsonKey(defaultValue: <String, FirebasePhoto>{}) @PhotoMapC() Map<String, FirebasePhoto> photos =
+      const <String, FirebasePhoto>{};
 
-  /// Computed getter of [FirebasePhotoReferences] derived from the [photos] map.
-  @override
-  @computed
+  @override @c
   Map<String, FirebasePhotoReference> get media => super.media;
 
-  /// Computed [FirebasePhotoReference] of the first [FirebasePhoto] in [Photos].
-  @override
-  @computed
+  @override @c
   FirebasePhotoReference? get photo => super.photo;
 
-  @action
-  @override
-  @mustCallSuper
+  @override @a @mustCallSuper
   void onSnapshot(T x) {
     final newPhotos = (x as RealtimePhotoModel).photos;
     if (!mapsEqual(photos, newPhotos)) photos = newPhotos;

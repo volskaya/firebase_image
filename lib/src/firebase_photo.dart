@@ -14,16 +14,13 @@ part 'firebase_photo.g.dart';
 /// within Firebase storage.
 enum FirebasePhotoType {
   /// Image type, usually mime types of `image/*`.
-  @JsonValue(0)
-  image,
+  @JsonValue(0) image,
 
   /// Image type, usually mime types of `image/gif`.
-  @JsonValue(1)
-  animation,
+  @JsonValue(1) animation,
 
   /// Image type, usually mime type of 'video/mp4'.
-  @JsonValue(2)
-  video,
+  @JsonValue(2) video,
 }
 
 /// Blurhash data of [FirebasePhoto].
@@ -159,7 +156,14 @@ class FirebasePhoto with _$FirebasePhoto {
   /// Function assumes the model is a top level document in Firestore / Realtime database
   /// and that photos, used in these documents, share the same collection
   /// names.
-  String getStoragePath(covariant FirebaseModel parent) => join(parent.path, FirebaseImage.names.photoFolder, id, hash);
+  String getStoragePath(covariant FirebaseModel parent) {
+    switch (FirebaseImage.version) {
+      case 1:
+        return join(parent.path, FirebaseImage.names.photoFolder, id, hash);
+      default:
+        return join(parent.path, FirebaseImage.names.photoFolder, hash);
+    }
+  }
 }
 
 /// Firebase photo reference that points to the photo file in Firebase storage.
@@ -167,19 +171,22 @@ class FirebasePhoto with _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.type, this.size, [this.blur, this.palette, this.face]);
+  const FirebasePhotoReference(this.path, this.hash, this.type, this.size, [this.blur, this.palette, this.face]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
   static FirebasePhotoReference from(String path, FirebasePhoto photo) =>
-      FirebasePhotoReference(path, photo.type, photo.size, photo.blur, photo.palette, photo.face);
+      FirebasePhotoReference(path, photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
   static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) => FirebasePhotoReference(
-      photo.getStoragePath(model), photo.type, photo.size, photo.blur, photo.palette, photo.face);
+      photo.getStoragePath(model), photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Path to the photo file in Firebase storage.
   final String path;
+
+  /// Hash of the file in the Firebase storage.
+  final String hash;
 
   /// Type of the photo pointed by the [path] in Firebase storage.
   final FirebasePhotoType type;

@@ -2,6 +2,9 @@ import 'package:firebase_image/src/firebase_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+/// Shorthand for [FirebasePhotoMapConverter].
+class PhotoMapC = FirebasePhotoMapConverter with JsonConverter<Map<String, FirebasePhoto>, dynamic>;
+
 /// Json converter for [FirebasePhoto] maps inside Firestore documents.
 class FirebasePhotoMapConverter implements JsonConverter<Map<String, FirebasePhoto>, dynamic> {
   /// Creates [FirebasePhotoMapConverter].
