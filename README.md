@@ -1,5 +1,3 @@
-###### WIP - Needs a Flutter patch to link decoded RawImage with its image provider.
-
 # Firebase Image
 
 Handling of images stored in Firebase storage. Bundled with an extension of [Firestore Model](https://github.com/volskaya/firestore_model) to also handle `photo` fields.
@@ -37,21 +35,12 @@ class User extends _User with _$User {
 
 /// [FirestorePhotoModel] observes the fields of [FirestorePhotoImpl], see next example.
 abstract class _User extends FirestorePhotoModel<User> with Store {
-  @observable
-  @JsonKey()
-  String name;
-  @observable
-  @JsonKey()
-  @StringWithLineBreaksConverter()
-  String description;
-  @observable
-  @JsonKey(defaultValue: 0)
-  int views = 0;
-  @observable
-  @JsonKey(defaultValue: 0)
-  int followers = 0;
+  @o @JsonKey() String name;
+  @o @JsonKey() String description;
+  @o @JsonKey(defaultValue: 0) int views = 0;
+  @o @JsonKey(defaultValue: 0) int followers = 0;
 
-  @override
+  @override @a
   void onSnapshot(User x) {
     super.onSnapshot(x);
     name = x.name;
@@ -70,21 +59,12 @@ just adding **FirestorePhotoImpl** as a mixin is enough.
 Else extend **Mixin** fields and decorate them like so:
 
 ```dart
-@override
-@observable
-@JsonKey(defaultValue: <String, FirebasePhoto>{})
-@FirebasePhotoMapConverter()
-Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
-@override
-@computed
-Map<String, FirebasePhotoReference> get media => super.media;
-@override
-@computed
-FirebasePhotoReference get photo => super.photo;
+@o @override @JsonKey(defaultValue: <String, FirebasePhoto>{}) @PhotoMapC() Map<String, FirebasePhoto> photos = const <String, FirebasePhoto>{};
+@c @override Map<String, FirebasePhotoReference> get media => super.media;
+@c @override FirebasePhotoReference get photo => super.photo;
 
-@override
+@override @a
 void onSnapshot(x) {
   photos = x.photos;
 }
-
 ```
