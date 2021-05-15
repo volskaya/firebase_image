@@ -26,6 +26,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.type = SwitchingImageType.fade,
+    this.expandBox = true,
   })  : colorBlendMode = null,
         color = null,
         filter = false,
@@ -47,6 +48,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
+    this.expandBox = true,
   })  : type = SwitchingImageType.fade,
         filter = true,
         super(key: key);
@@ -98,6 +100,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Don't decode the image, if a parent scrollable is scrolling too fast.
   final bool scrollAware;
 
+  /// Whether to wrap the widget in [SizedBox.expand].
+  final bool expandBox;
+
   /// Convenience copy method.
   SwitchingFirebaseImage copyWith({
     FirebaseImage? imageProvider,
@@ -118,6 +123,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
         filterQuality: filterQuality,
         fit: fit,
         layoutChildren: layoutChildren,
+        expandBox: expandBox,
+        scrollAware: scrollAware,
+        type: type,
       );
 
   @override
@@ -259,6 +267,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           layoutChildren: widget.layoutChildren,
           color: widget.color,
           colorBlendMode: widget.colorBlendMode,
+          expandBox: widget.expandBox,
         )
       : SwitchingImage(
           imageProvider: _provider,
@@ -272,5 +281,6 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           fit: widget.fit,
           layoutChildren: widget.layoutChildren,
           type: widget.type,
+          expandBox: widget.expandBox,
         );
 }

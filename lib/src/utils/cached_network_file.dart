@@ -13,7 +13,7 @@ class CachedNetworkFile extends CacheManager {
   /// Created [CachedNetworkFile].
   CachedNetworkFile({
     required this.key,
-  })   : assert(key.isNotEmpty),
+  })  : assert(key.isNotEmpty),
         super(
           Config(
             key,

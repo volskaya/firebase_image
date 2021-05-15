@@ -21,6 +21,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     this.color,
     this.shadowColor,
     this.scrollAware = false,
+    this.expandBox = true,
   }) : super(key: key);
 
   /// [FirebaseImage] to switch to.
@@ -63,6 +64,9 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// [Material]'s shadow color.
   final Color? shadowColor;
 
+  /// Whether to wrap the widget in [SizedBox.expand].
+  final bool expandBox;
+
   @override
   Widget build(BuildContext context) => SwitchingFirebaseImage(
         imageProvider: imageProvider,
@@ -73,6 +77,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         duration: duration,
         filterQuality: filterQuality,
         fit: fit,
+        expandBox: expandBox,
         layoutChildren: [
           Material(
             type: color != null ? MaterialType.canvas : MaterialType.transparency,
