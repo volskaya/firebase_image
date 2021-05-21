@@ -1,5 +1,3 @@
-# Firebase Image
-
 Handling of images stored in Firebase storage. Bundled with an extension of [Firestore Model](https://github.com/volskaya/firestore_model) to also handle `photo` fields.
 
 The `FirebasePhoto` references both a thumbnail and a regular image. When a regular image decodes, the image provider
