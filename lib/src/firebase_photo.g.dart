@@ -6,16 +6,15 @@ part of 'firebase_photo.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_FirebasePhotoBlurData _$_$_FirebasePhotoBlurDataFromJson(
-    Map<String, dynamic> json) {
-  return _$_FirebasePhotoBlurData(
-    hash: json['hash'] as String,
-    width: json['width'] as num,
-    height: json['height'] as num,
-  );
-}
+_$_FirebasePhotoBlurData _$$_FirebasePhotoBlurDataFromJson(
+        Map<String, dynamic> json) =>
+    _$_FirebasePhotoBlurData(
+      hash: json['hash'] as String,
+      width: json['width'] as num,
+      height: json['height'] as num,
+    );
 
-Map<String, dynamic> _$_$_FirebasePhotoBlurDataToJson(
+Map<String, dynamic> _$$_FirebasePhotoBlurDataToJson(
         _$_FirebasePhotoBlurData instance) =>
     <String, dynamic>{
       'hash': instance.hash,
@@ -23,18 +22,17 @@ Map<String, dynamic> _$_$_FirebasePhotoBlurDataToJson(
       'height': instance.height,
     };
 
-_$_FirebasePhotoFaceData _$_$_FirebasePhotoFaceDataFromJson(
-    Map<String, dynamic> json) {
-  return _$_FirebasePhotoFaceData(
-    x: json['x'] as num,
-    y: json['y'] as num,
-    width: json['width'] as num,
-    height: json['height'] as num,
-    size: const SizeConverter().fromJson(json['size'] as Map?),
-  );
-}
+_$_FirebasePhotoFaceData _$$_FirebasePhotoFaceDataFromJson(
+        Map<String, dynamic> json) =>
+    _$_FirebasePhotoFaceData(
+      x: json['x'] as num,
+      y: json['y'] as num,
+      width: json['width'] as num,
+      height: json['height'] as num,
+      size: const SizeConverter().fromJson(json['size'] as Map?),
+    );
 
-Map<String, dynamic> _$_$_FirebasePhotoFaceDataToJson(
+Map<String, dynamic> _$$_FirebasePhotoFaceDataToJson(
         _$_FirebasePhotoFaceData instance) =>
     <String, dynamic>{
       'x': instance.x,
@@ -44,24 +42,23 @@ Map<String, dynamic> _$_$_FirebasePhotoFaceDataToJson(
       'size': const SizeConverter().toJson(instance.size),
     };
 
-_$_FirebasePhotoPalette _$_$_FirebasePhotoPaletteFromJson(
-    Map<String, dynamic> json) {
-  return _$_FirebasePhotoPalette(
-    vibrant:
-        const HexStringColorConverter().fromJson(json['vibrant'] as String?),
-    muted: const HexStringColorConverter().fromJson(json['muted'] as String?),
-    lightMuted:
-        const HexStringColorConverter().fromJson(json['lightMuted'] as String?),
-    darkMuted:
-        const HexStringColorConverter().fromJson(json['darkMuted'] as String?),
-    lightVibrant: const HexStringColorConverter()
-        .fromJson(json['lightVibrant'] as String?),
-    darkVibrant: const HexStringColorConverter()
-        .fromJson(json['darkVibrant'] as String?),
-  );
-}
+_$_FirebasePhotoPalette _$$_FirebasePhotoPaletteFromJson(
+        Map<String, dynamic> json) =>
+    _$_FirebasePhotoPalette(
+      vibrant:
+          const HexStringColorConverter().fromJson(json['vibrant'] as String?),
+      muted: const HexStringColorConverter().fromJson(json['muted'] as String?),
+      lightMuted: const HexStringColorConverter()
+          .fromJson(json['lightMuted'] as String?),
+      darkMuted: const HexStringColorConverter()
+          .fromJson(json['darkMuted'] as String?),
+      lightVibrant: const HexStringColorConverter()
+          .fromJson(json['lightVibrant'] as String?),
+      darkVibrant: const HexStringColorConverter()
+          .fromJson(json['darkVibrant'] as String?),
+    );
 
-Map<String, dynamic> _$_$_FirebasePhotoPaletteToJson(
+Map<String, dynamic> _$$_FirebasePhotoPaletteToJson(
         _$_FirebasePhotoPalette instance) =>
     <String, dynamic>{
       'vibrant': const HexStringColorConverter().toJson(instance.vibrant),
@@ -74,28 +71,29 @@ Map<String, dynamic> _$_$_FirebasePhotoPaletteToJson(
           const HexStringColorConverter().toJson(instance.darkVibrant),
     };
 
-_$_FirebasePhoto _$_$_FirebasePhotoFromJson(Map<String, dynamic> json) {
-  return _$_FirebasePhoto(
-    type: _$enumDecode(_$FirebasePhotoTypeEnumMap, json['type']),
-    id: json['id'] as String,
-    hash: json['hash'] as String,
-    blur: json['blur'] == null
-        ? null
-        : FirebasePhotoBlurData.fromJson(json['blur'] as Map<String, dynamic>),
-    palette: json['palette'] == null
-        ? null
-        : FirebasePhotoPalette.fromJson(
-            json['palette'] as Map<String, dynamic>),
-    face: json['face'] == null
-        ? null
-        : FirebasePhotoFaceData.fromJson(json['face'] as Map<String, dynamic>),
-    width: json['width'] as num,
-    height: json['height'] as num,
-    hasLarge: json['hasLarge'] as bool? ?? false,
-  );
-}
+_$_FirebasePhoto _$$_FirebasePhotoFromJson(Map<String, dynamic> json) =>
+    _$_FirebasePhoto(
+      type: _$enumDecode(_$FirebasePhotoTypeEnumMap, json['type']),
+      id: json['id'] as String,
+      hash: json['hash'] as String,
+      blur: json['blur'] == null
+          ? null
+          : FirebasePhotoBlurData.fromJson(
+              json['blur'] as Map<String, dynamic>),
+      palette: json['palette'] == null
+          ? null
+          : FirebasePhotoPalette.fromJson(
+              json['palette'] as Map<String, dynamic>),
+      face: json['face'] == null
+          ? null
+          : FirebasePhotoFaceData.fromJson(
+              json['face'] as Map<String, dynamic>),
+      width: json['width'] as num,
+      height: json['height'] as num,
+      hasLarge: json['hasLarge'] as bool? ?? false,
+    );
 
-Map<String, dynamic> _$_$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
+Map<String, dynamic> _$$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
     <String, dynamic>{
       'type': _$FirebasePhotoTypeEnumMap[instance.type],
       'id': instance.id,

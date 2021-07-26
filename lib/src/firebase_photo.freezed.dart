@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'firebase_photo.dart';
 
@@ -146,9 +146,8 @@ class __$FirebasePhotoBlurDataCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_FirebasePhotoBlurData extends _FirebasePhotoBlurData
     with DiagnosticableTreeMixin {
   _$_FirebasePhotoBlurData(
@@ -158,7 +157,7 @@ class _$_FirebasePhotoBlurData extends _FirebasePhotoBlurData
       : super._();
 
   factory _$_FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) =>
-      _$_$_FirebasePhotoBlurDataFromJson(json);
+      _$$_FirebasePhotoBlurDataFromJson(json);
 
   @override
 
@@ -218,7 +217,7 @@ class _$_FirebasePhotoBlurData extends _FirebasePhotoBlurData
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_FirebasePhotoBlurDataToJson(this);
+    return _$$_FirebasePhotoBlurDataToJson(this);
   }
 }
 
@@ -428,9 +427,8 @@ class __$FirebasePhotoFaceDataCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_FirebasePhotoFaceData extends _FirebasePhotoFaceData
     with DiagnosticableTreeMixin {
   _$_FirebasePhotoFaceData(
@@ -442,7 +440,7 @@ class _$_FirebasePhotoFaceData extends _FirebasePhotoFaceData
       : super._();
 
   factory _$_FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =>
-      _$_$_FirebasePhotoFaceDataFromJson(json);
+      _$$_FirebasePhotoFaceDataFromJson(json);
 
   @override
 
@@ -521,7 +519,7 @@ class _$_FirebasePhotoFaceData extends _FirebasePhotoFaceData
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_FirebasePhotoFaceDataToJson(this);
+    return _$$_FirebasePhotoFaceDataToJson(this);
   }
 }
 
@@ -756,9 +754,8 @@ class __$FirebasePhotoPaletteCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_FirebasePhotoPalette extends _FirebasePhotoPalette
     with DiagnosticableTreeMixin {
   _$_FirebasePhotoPalette(
@@ -771,7 +768,7 @@ class _$_FirebasePhotoPalette extends _FirebasePhotoPalette
       : super._();
 
   factory _$_FirebasePhotoPalette.fromJson(Map<String, dynamic> json) =>
-      _$_$_FirebasePhotoPaletteFromJson(json);
+      _$$_FirebasePhotoPaletteFromJson(json);
 
   @override
   @JsonKey()
@@ -857,7 +854,7 @@ class _$_FirebasePhotoPalette extends _FirebasePhotoPalette
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_FirebasePhotoPaletteToJson(this);
+    return _$$_FirebasePhotoPaletteToJson(this);
   }
 }
 
@@ -922,7 +919,7 @@ class _$FirebasePhotoTearOff {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
-      @JsonKey(defaultValue: false) bool hasLarge = false}) {
+      @JsonKey() bool hasLarge = false}) {
     return _FirebasePhoto(
       type: type,
       id: id,
@@ -979,7 +976,7 @@ mixin _$FirebasePhoto {
   num get height => throw _privateConstructorUsedError;
 
   /// Wether the photo also has a large version.
-  @JsonKey(defaultValue: false)
+  @JsonKey()
   bool get hasLarge => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1002,7 +999,7 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
-      @JsonKey(defaultValue: false) bool hasLarge});
+      @JsonKey() bool hasLarge});
 
   $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
   $FirebasePhotoPaletteCopyWith<$Res>? get palette;
@@ -1120,7 +1117,7 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
-      @JsonKey(defaultValue: false) bool hasLarge});
+      @JsonKey() bool hasLarge});
 
   @override
   $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
@@ -1194,9 +1191,8 @@ class __$FirebasePhotoCopyWithImpl<$Res>
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   _$_FirebasePhoto(
       {@JsonKey() required this.type,
@@ -1207,11 +1203,11 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       @JsonKey() this.face,
       @JsonKey() required this.width,
       @JsonKey() required this.height,
-      @JsonKey(defaultValue: false) this.hasLarge = false})
+      @JsonKey() this.hasLarge = false})
       : super._();
 
   factory _$_FirebasePhoto.fromJson(Map<String, dynamic> json) =>
-      _$_$_FirebasePhotoFromJson(json);
+      _$$_FirebasePhotoFromJson(json);
 
   @override
 
@@ -1256,7 +1252,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   @override
 
   /// Wether the photo also has a large version.
-  @JsonKey(defaultValue: false)
+  @JsonKey()
   final bool hasLarge;
 
   @override
@@ -1326,7 +1322,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_FirebasePhotoToJson(this);
+    return _$$_FirebasePhotoToJson(this);
   }
 }
 
@@ -1340,7 +1336,7 @@ abstract class _FirebasePhoto extends FirebasePhoto {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
-      @JsonKey(defaultValue: false) bool hasLarge}) = _$_FirebasePhoto;
+      @JsonKey() bool hasLarge}) = _$_FirebasePhoto;
   _FirebasePhoto._() : super._();
 
   factory _FirebasePhoto.fromJson(Map<String, dynamic> json) =
@@ -1389,7 +1385,7 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   @override
 
   /// Wether the photo also has a large version.
-  @JsonKey(defaultValue: false)
+  @JsonKey()
   bool get hasLarge => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)

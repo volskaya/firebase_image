@@ -26,17 +26,13 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
 
   final _$photosAtom = Atom(name: '_FirestorePhotoModel.photos');
 
-  @override
-  @FirebasePhotoMapConverter()
-  @JsonKey()
+  @override @PhotoMapC() @JsonKey()
   Map<String, FirebasePhoto> get photos {
     _$photosAtom.reportRead();
     return super.photos;
   }
 
-  @override
-  @FirebasePhotoMapConverter()
-  @JsonKey()
+  @override @PhotoMapC() @JsonKey()
   set photos(Map<String, FirebasePhoto> value) {
     if (super.photos != value) {
       _$photosAtom.reportWrite(value, super.photos, () {
@@ -87,17 +83,13 @@ mixin _$RealtimePhotoModel<T> on _RealtimePhotoModel<T>, Store {
 
   final _$photosAtom = Atom(name: '_RealtimePhotoModel.photos');
 
-  @override
-  @FirebasePhotoMapConverter()
-  @JsonKey()
+  @override @PhotoMapC() @JsonKey()
   Map<String, FirebasePhoto> get photos {
     _$photosAtom.reportRead();
     return super.photos;
   }
 
-  @override
-  @FirebasePhotoMapConverter()
-  @JsonKey()
+  @override @PhotoMapC() @JsonKey()
   set photos(Map<String, FirebasePhoto> value) {
     if (super.photos != value) {
       _$photosAtom.reportWrite(value, super.photos, () {

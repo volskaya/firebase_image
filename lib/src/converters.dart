@@ -2,18 +2,16 @@ import 'package:firebase_image/src/firebase_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-/// Shorthand for [FirebasePhotoMapConverter].
-class PhotoMapC = FirebasePhotoMapConverter with JsonConverter<Map<String, FirebasePhoto>, dynamic>;
-
 /// Json converter for [FirebasePhoto] maps inside Firestore documents.
-class FirebasePhotoMapConverter implements JsonConverter<Map<String, FirebasePhoto>, dynamic> {
-  /// Creates [FirebasePhotoMapConverter].
-  const FirebasePhotoMapConverter();
+class PhotoMapC implements JsonConverter<Map<String, FirebasePhoto>, dynamic> {
+  /// Creates [PhotoMapC].
+  const PhotoMapC();
 
   @override
   Map<String, FirebasePhoto> fromJson(dynamic json) => json != null
       ? {
-          for (final entry in (json is List) ? json.asMap().entries : (json as Map).entries)
+          for (final entry
+              in (json is List) ? json.asMap().entries : (json as Map).entries)
             entry.key.toString(): FirebasePhoto.fromJson(<String, dynamic>{
               ...Map<String, dynamic>.from(entry.value as Map),
               'id': entry.key.toString(),
@@ -35,12 +33,14 @@ class HexStringColorConverter implements JsonConverter<Color?, String?> {
   Color? fromJson(String? json) {
     if (json == null || json is! String) return null;
 
-    final colorString = json.replaceFirst('#', 'ff'); // NOTE: Add alpha to the color.
+    final colorString =
+        json.replaceFirst('#', 'ff'); // NOTE: Add alpha to the color.
     return json is String ? Color(int.parse(colorString, radix: 16)) : null;
   }
 
   @override
-  String? toJson(Color? object) => object?.value.toRadixString(16).padLeft(8, '0').replaceFirst('ff', '#');
+  String? toJson(Color? object) =>
+      object?.value.toRadixString(16).padLeft(8, '0').replaceFirst('ff', '#');
 }
 
 /// Converts flutter's [Size].
@@ -55,10 +55,13 @@ class SizeConverter implements JsonConverter<Size, Map?> {
     final width = json['width'] as num?;
     final height = json['height'] as num?;
 
-    return width != null && height != null ? Size(width.toDouble(), height.toDouble()) : const Size.square(0.0);
+    return width != null && height != null
+        ? Size(width.toDouble(), height.toDouble())
+        : const Size.square(0.0);
   }
 
   @override
-  Map? toJson(Size? object) =>
-      object != null ? <dynamic, dynamic>{'width': object.width, 'height': object.height} : null;
+  Map? toJson(Size? object) => object != null
+      ? <dynamic, dynamic>{'width': object.width, 'height': object.height}
+      : null;
 }
