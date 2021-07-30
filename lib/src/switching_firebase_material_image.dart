@@ -13,8 +13,10 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     this.idleChild,
     this.layoutChildren = const <Widget>[],
     this.borderRadius,
+    this.type,
     this.shape,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration,
+    this.curve,
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.elevation = 0,
@@ -38,13 +40,19 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   final ShapeBorder? shape;
 
   /// Duration of the switch transition.
-  final Duration duration;
+  final Duration? duration;
+
+  /// Curve of the switch transition.
+  final Curve? curve;
 
   /// Filter quality of the image.
   final FilterQuality filterQuality;
 
   /// Box fit of the image.
   final BoxFit fit;
+
+  /// Transition type used by the animated switcher within [SwitchingImage].
+  final SwitchingImageType? type;
 
   /// Don't decode the image, if a parent scrollable is scrolling too fast.
   final bool scrollAware;
@@ -75,6 +83,8 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         shape: shape,
         scrollAware: scrollAware,
         duration: duration,
+        curve: curve,
+        type: type,
         filterQuality: filterQuality,
         fit: fit,
         expandBox: expandBox,

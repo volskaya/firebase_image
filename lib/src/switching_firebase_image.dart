@@ -19,13 +19,14 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.layoutChildren = const <Widget>[],
     this.shape,
     this.borderRadius,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration,
+    this.curve,
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.opacity,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
-    this.type = SwitchingImageType.fade,
+    this.type,
     this.expandBox = true,
   })  : colorBlendMode = null,
         color = null,
@@ -42,7 +43,8 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.layoutChildren = const <Widget>[],
     this.shape,
     this.borderRadius,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration,
+    this.curve,
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.opacity,
@@ -70,7 +72,10 @@ class SwitchingFirebaseImage extends StatefulWidget {
   final ShapeBorder? shape;
 
   /// Duration of the switch transition.
-  final Duration duration;
+  final Duration? duration;
+
+  /// Curve of the switch transition.
+  final Curve? curve;
 
   /// Filter quality of the image.
   final FilterQuality filterQuality;
@@ -79,7 +84,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
   final BoxFit fit;
 
   /// Transition type used by the animated switcher within [SwitchingImage].
-  final SwitchingImageType type;
+  final SwitchingImageType? type;
 
   /// Opacity override when you wish to animate the image without having to overlap
   /// multiple opacity shaders.
@@ -103,30 +108,13 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Whether to wrap the widget in [SizedBox.expand].
   final bool expandBox;
 
-  /// Convenience copy method.
-  SwitchingFirebaseImage copyWith({
-    FirebaseImage? imageProvider,
-    Widget? idleChild,
-    BorderRadius? borderRadius,
-    ShapeBorder? shape,
-    ValueListenable<double>? opacity,
-  }) =>
-      SwitchingFirebaseImage(
-        key: key,
-        imageProvider: imageProvider ?? this.imageProvider,
-        idleChild: idleChild ?? this.idleChild,
-        borderRadius: borderRadius ?? this.borderRadius,
-        shape: shape ?? this.shape,
-        opacity: opacity ?? this.opacity,
-        alignment: alignment,
-        duration: duration,
-        filterQuality: filterQuality,
-        fit: fit,
-        layoutChildren: layoutChildren,
-        expandBox: expandBox,
-        scrollAware: scrollAware,
-        type: type,
-      );
+  /// Consider similar if a and b are 2 [FirebaseImage]s with the same path.
+  static bool similarImageCheck(ImageInfo? a, ImageInfo? b) {
+    final aProvider = a?.provider != null && a!.provider is FirebaseImage ? a.provider as FirebaseImage : null;
+    final bProvider = b?.provider != null && b!.provider is FirebaseImage ? b.provider as FirebaseImage : null;
+
+    return aProvider == null && bProvider == null ? false : aProvider?.path == bProvider?.path;
+  }
 
   @override
   _SwitchingFirebaseImageState createState() => _SwitchingFirebaseImageState();
@@ -166,7 +154,8 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
       final betterQualityImage = FirebaseImage.getBetterQuality(key, _provider as FirebaseImage);
       if (betterQualityImage != _provider) {
-        setState(() => _setProvider(betterQualityImage));
+        _setProvider(betterQualityImage);
+        markNeedsBuild();
       }
     }
   }
@@ -176,7 +165,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
     if (widget.imageProvider == null) {
       _setProvider(null);
-      return; // Image removed.
+      return; // Image removed, nothing to cycle anymore.
     }
 
     final widgetImage = widget.imageProvider as FirebaseImage;
@@ -261,6 +250,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           shape: widget.shape,
           opacity: widget.opacity,
           duration: widget.duration,
+          curve: widget.curve,
           alignment: widget.alignment,
           filterQuality: widget.filterQuality,
           fit: widget.fit,
@@ -268,6 +258,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           color: widget.color,
           colorBlendMode: widget.colorBlendMode,
           expandBox: widget.expandBox,
+          areSimilar: SwitchingFirebaseImage.similarImageCheck,
         )
       : SwitchingImage(
           imageProvider: _provider,
@@ -276,11 +267,13 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           shape: widget.shape,
           opacity: widget.opacity,
           duration: widget.duration,
+          curve: widget.curve,
           alignment: widget.alignment,
           filterQuality: widget.filterQuality,
           fit: widget.fit,
           layoutChildren: widget.layoutChildren,
           type: widget.type,
           expandBox: widget.expandBox,
+          areSimilar: SwitchingFirebaseImage.similarImageCheck,
         );
 }

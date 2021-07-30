@@ -1,7 +1,6 @@
 name: firebase_image
 description: Firebase storage photo image provider for images, gifs and videos.
 version: 0.0.3
-author: Roland Volskaya
 homepage: github.com/volskaya/firebase_image
 publish_to: none
 
@@ -16,7 +15,7 @@ dependencies:
   flutter_cache_manager: ^3.0.2
   path_provider: ^2.0.1
   quiver: ^3.0.1
-  firebase_storage: ^8.1.0
+  firebase_storage: ^10.0.1
   mobx: ^2.0.1
   flutter_mobx: ^2.0.0
   mobx_codegen: ^2.0.1+3
