@@ -41,8 +41,7 @@ class FirebasePhotoBlurData with _$FirebasePhotoBlurData {
   FirebasePhotoBlurData._();
 
   /// Deserialie [FirebasePhotoBlurData] from json.
-  factory FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) =>
-      _$FirebasePhotoBlurDataFromJson(json);
+  factory FirebasePhotoBlurData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoBlurDataFromJson(json);
 
   /// Get the [Size] of this blur hash.
   late final size = Size(width.toDouble(), height.toDouble());
@@ -72,12 +71,10 @@ class FirebasePhotoFaceData with _$FirebasePhotoFaceData {
   FirebasePhotoFaceData._();
 
   /// Deserialie [FirebasePhotoFaceData] from json.
-  factory FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) =>
-      _$FirebasePhotoFaceDataFromJson(json);
+  factory FirebasePhotoFaceData.fromJson(Map<String, dynamic> json) => _$FirebasePhotoFaceDataFromJson(json);
 
   /// Get the [Rect] of this face rect.
-  late final rect = Rect.fromLTWH(
-      x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
+  late final rect = Rect.fromLTWH(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble());
 
   /// Get the image [Rect] that overlaps this face rect.
   late final imageRect = Offset.zero & size;
@@ -99,16 +96,10 @@ class FirebasePhotoPalette with _$FirebasePhotoPalette {
   FirebasePhotoPalette._();
 
   /// Deserialize [FirebasePhotoPalette] from json.
-  factory FirebasePhotoPalette.fromJson(Map<String, dynamic> json) =>
-      _$FirebasePhotoPaletteFromJson(json);
+  factory FirebasePhotoPalette.fromJson(Map<String, dynamic> json) => _$FirebasePhotoPaletteFromJson(json);
 
   /// Get the first available color prioritizing vibrant.
-  late final Color? dominant = vibrant ??
-      muted ??
-      lightVibrant ??
-      lightMuted ??
-      darkVibrant ??
-      darkMuted;
+  late final Color? dominant = vibrant ?? muted ?? lightVibrant ?? lightMuted ?? darkVibrant ?? darkMuted;
 
   /// Get the first available vibrant color prioritizing light.
   late final Color? firstVibrant = vibrant ?? lightVibrant ?? darkVibrant;
@@ -154,8 +145,7 @@ class FirebasePhoto with _$FirebasePhoto {
   FirebasePhoto._();
 
   /// Deserialize [FirebasePhoto] from json.
-  factory FirebasePhoto.fromJson(Map<String, dynamic> json) =>
-      _$FirebasePhotoFromJson(json);
+  factory FirebasePhoto.fromJson(Map<String, dynamic> json) => _$FirebasePhotoFromJson(json);
 
   /// Dimensions of this [FirebasePhoto].
   late final size = Size(width.toDouble(), height.toDouble());
@@ -166,12 +156,22 @@ class FirebasePhoto with _$FirebasePhoto {
   /// Function assumes the model is a top level document in Firestore / Realtime database
   /// and that photos, used in these documents, share the same collection
   /// names.
-  String getStoragePath(covariant FirebaseModel parent) {
+  String getStoragePathFromModel(covariant FirebaseModel parent) {
     switch (FirebaseImage.version) {
       case 1:
         return join(parent.path, FirebaseImage.names.photoFolder, id, hash);
       default:
         return join(parent.path, FirebaseImage.names.photoFolder, hash);
+    }
+  }
+
+  /// Get the full Firebase storage path of this photo.
+  String getStoragePath(String path) {
+    switch (FirebaseImage.version) {
+      case 1:
+        return join(path, FirebaseImage.names.photoFolder, id, hash);
+      default:
+        return join(path, FirebaseImage.names.photoFolder, hash);
     }
   }
 }
@@ -181,20 +181,16 @@ class FirebasePhoto with _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.hash, this.type, this.size,
-      [this.blur, this.palette, this.face]);
+  const FirebasePhotoReference(this.path, this.hash, this.type, this.size, [this.blur, this.palette, this.face]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
   static FirebasePhotoReference from(String path, FirebasePhoto photo) =>
-      FirebasePhotoReference(path, photo.hash, photo.type, photo.size,
-          photo.blur, photo.palette, photo.face);
+      FirebasePhotoReference(path, photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
-  static FirebasePhotoReference fromModel(FirebaseModel model,
-          FirebasePhoto photo) =>
-      FirebasePhotoReference(photo.getStoragePath(model), photo.hash,
-          photo.type, photo.size, photo.blur, photo.palette, photo.face);
+  static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) => FirebasePhotoReference(
+      photo.getStoragePathFromModel(model), photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
 
   /// Path to the photo file in Firebase storage.
   final String path;
@@ -238,12 +234,10 @@ class FirebasePhotoReference {
       AwareFirebaseImage.from(state, this, cacheSize);
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
-  FirebaseImage getThumbnail([Size? cacheSize]) =>
-      FirebaseImage.thumbnailFrom(this, cacheSize);
+  FirebaseImage getThumbnail([Size? cacheSize]) => FirebaseImage.thumbnailFrom(this, cacheSize);
 
   /// Regular [FirebaseImage] provider of this [FirebasePhotoReference].
-  FirebaseImage getImage([Size? cacheSize]) =>
-      FirebaseImage.from(this, cacheSize);
+  FirebaseImage getImage([Size? cacheSize]) => FirebaseImage.from(this, cacheSize);
 
   /// Regular [FirebaseImage] provider of this [FirebasePhotoReference] with a
   /// [FirebaseImage.getCacheSize] shortcut for setting the [cacheSize].
@@ -253,10 +247,7 @@ class FirebasePhotoReference {
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;
-    return other is FirebasePhotoReference &&
-        other.path == path &&
-        other.type == type &&
-        other.size == size;
+    return other is FirebasePhotoReference && other.path == path && other.type == type && other.size == size;
   }
 
   @override
