@@ -129,6 +129,9 @@ class FirebasePhoto with _$FirebasePhoto {
     /// Color palette of the photo.
     @JsonKey() FirebasePhotoPalette? palette,
 
+    /// Most used color in the photo.
+    @JsonKey() @HexStringColorConverter() Color? color,
+
     /// Face rect inside the photo.
     @JsonKey() FirebasePhotoFaceData? face,
 
@@ -181,16 +184,24 @@ class FirebasePhoto with _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.hash, this.type, this.size, [this.blur, this.palette, this.face]);
+  const FirebasePhotoReference(this.path, this.hash, this.type, this.size,
+      [this.blur, this.palette, this.color, this.face]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
-  static FirebasePhotoReference from(String path, FirebasePhoto photo) =>
-      FirebasePhotoReference(path, photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
+  static FirebasePhotoReference from(String path, FirebasePhoto photo) => FirebasePhotoReference(
+      path, photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.color, photo.face);
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
   static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) => FirebasePhotoReference(
-      photo.getStoragePathFromModel(model), photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.face);
+      photo.getStoragePathFromModel(model),
+      photo.hash,
+      photo.type,
+      photo.size,
+      photo.blur,
+      photo.palette,
+      photo.color,
+      photo.face);
 
   /// Path to the photo file in Firebase storage.
   final String path;
@@ -209,6 +220,9 @@ class FirebasePhotoReference {
 
   /// Color palette of the photo.
   final FirebasePhotoPalette? palette;
+
+  /// Most used color in the photo.
+  final Color? color;
 
   /// Face rect inside the photo.
   final FirebasePhotoFaceData? face;

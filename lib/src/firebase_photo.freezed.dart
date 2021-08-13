@@ -916,6 +916,7 @@ class _$FirebasePhotoTearOff {
       @JsonKey() required String hash,
       @JsonKey() FirebasePhotoBlurData? blur,
       @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() @HexStringColorConverter() Color? color,
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
@@ -926,6 +927,7 @@ class _$FirebasePhotoTearOff {
       hash: hash,
       blur: blur,
       palette: palette,
+      color: color,
       face: face,
       width: width,
       height: height,
@@ -963,6 +965,11 @@ mixin _$FirebasePhoto {
   @JsonKey()
   FirebasePhotoPalette? get palette => throw _privateConstructorUsedError;
 
+  /// Most used color in the photo.
+  @JsonKey()
+  @HexStringColorConverter()
+  Color? get color => throw _privateConstructorUsedError;
+
   /// Face rect inside the photo.
   @JsonKey()
   FirebasePhotoFaceData? get face => throw _privateConstructorUsedError;
@@ -996,6 +1003,7 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData? blur,
       @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() @HexStringColorConverter() Color? color,
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
@@ -1022,6 +1030,7 @@ class _$FirebasePhotoCopyWithImpl<$Res>
     Object? hash = freezed,
     Object? blur = freezed,
     Object? palette = freezed,
+    Object? color = freezed,
     Object? face = freezed,
     Object? width = freezed,
     Object? height = freezed,
@@ -1048,6 +1057,10 @@ class _$FirebasePhotoCopyWithImpl<$Res>
           ? _value.palette
           : palette // ignore: cast_nullable_to_non_nullable
               as FirebasePhotoPalette?,
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as Color?,
       face: face == freezed
           ? _value.face
           : face // ignore: cast_nullable_to_non_nullable
@@ -1114,6 +1127,7 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       @JsonKey() String hash,
       @JsonKey() FirebasePhotoBlurData? blur,
       @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() @HexStringColorConverter() Color? color,
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
@@ -1145,6 +1159,7 @@ class __$FirebasePhotoCopyWithImpl<$Res>
     Object? hash = freezed,
     Object? blur = freezed,
     Object? palette = freezed,
+    Object? color = freezed,
     Object? face = freezed,
     Object? width = freezed,
     Object? height = freezed,
@@ -1171,6 +1186,10 @@ class __$FirebasePhotoCopyWithImpl<$Res>
           ? _value.palette
           : palette // ignore: cast_nullable_to_non_nullable
               as FirebasePhotoPalette?,
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as Color?,
       face: face == freezed
           ? _value.face
           : face // ignore: cast_nullable_to_non_nullable
@@ -1200,6 +1219,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       @JsonKey() required this.hash,
       @JsonKey() this.blur,
       @JsonKey() this.palette,
+      @JsonKey() @HexStringColorConverter() this.color,
       @JsonKey() this.face,
       @JsonKey() required this.width,
       @JsonKey() required this.height,
@@ -1236,6 +1256,12 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   final FirebasePhotoPalette? palette;
   @override
 
+  /// Most used color in the photo.
+  @JsonKey()
+  @HexStringColorConverter()
+  final Color? color;
+  @override
+
   /// Face rect inside the photo.
   @JsonKey()
   final FirebasePhotoFaceData? face;
@@ -1257,7 +1283,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, face: $face, width: $width, height: $height, hasLarge: $hasLarge)';
+    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, color: $color, face: $face, width: $width, height: $height, hasLarge: $hasLarge)';
   }
 
   @override
@@ -1270,6 +1296,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('hash', hash))
       ..add(DiagnosticsProperty('blur', blur))
       ..add(DiagnosticsProperty('palette', palette))
+      ..add(DiagnosticsProperty('color', color))
       ..add(DiagnosticsProperty('face', face))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
@@ -1291,6 +1318,8 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
             (identical(other.palette, palette) ||
                 const DeepCollectionEquality()
                     .equals(other.palette, palette)) &&
+            (identical(other.color, color) ||
+                const DeepCollectionEquality().equals(other.color, color)) &&
             (identical(other.face, face) ||
                 const DeepCollectionEquality().equals(other.face, face)) &&
             (identical(other.width, width) ||
@@ -1310,6 +1339,7 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(hash) ^
       const DeepCollectionEquality().hash(blur) ^
       const DeepCollectionEquality().hash(palette) ^
+      const DeepCollectionEquality().hash(color) ^
       const DeepCollectionEquality().hash(face) ^
       const DeepCollectionEquality().hash(width) ^
       const DeepCollectionEquality().hash(height) ^
@@ -1333,6 +1363,7 @@ abstract class _FirebasePhoto extends FirebasePhoto {
       @JsonKey() required String hash,
       @JsonKey() FirebasePhotoBlurData? blur,
       @JsonKey() FirebasePhotoPalette? palette,
+      @JsonKey() @HexStringColorConverter() Color? color,
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
@@ -1367,6 +1398,12 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   /// Color palette of the photo.
   @JsonKey()
   FirebasePhotoPalette? get palette => throw _privateConstructorUsedError;
+  @override
+
+  /// Most used color in the photo.
+  @JsonKey()
+  @HexStringColorConverter()
+  Color? get color => throw _privateConstructorUsedError;
   @override
 
   /// Face rect inside the photo.

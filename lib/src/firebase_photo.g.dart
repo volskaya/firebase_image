@@ -84,6 +84,7 @@ _$_FirebasePhoto _$$_FirebasePhotoFromJson(Map<String, dynamic> json) =>
           ? null
           : FirebasePhotoPalette.fromJson(
               json['palette'] as Map<String, dynamic>),
+      color: const HexStringColorConverter().fromJson(json['color'] as String?),
       face: json['face'] == null
           ? null
           : FirebasePhotoFaceData.fromJson(
@@ -100,6 +101,7 @@ Map<String, dynamic> _$$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
       'hash': instance.hash,
       'blur': instance.blur,
       'palette': instance.palette,
+      'color': const HexStringColorConverter().toJson(instance.color),
       'face': instance.face,
       'width': instance.width,
       'height': instance.height,
