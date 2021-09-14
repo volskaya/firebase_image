@@ -25,7 +25,7 @@ class FirebaseImageCacheListener {
     try {
       return Provider.of<FirebaseImageCacheListener>(context, listen: false);
     } catch (_) {
-      return null; //Couldn't find it.
+      return null; // Couldn't find it.
     }
   }
 

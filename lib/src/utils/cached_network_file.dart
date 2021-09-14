@@ -40,15 +40,21 @@ class CachedNetworkFile extends CacheManager {
     return null;
   }
 
+  Future<io.File?> _handleAbsent(String url) async {
+    try {
+      return await _getSingleFile(url);
+    } finally {
+      // Defer invalidate until the call above is awaited.
+      _cache.invalidate(url);
+    }
+  }
+
   /// Fetch a file from the `url` and cache it.
   Future<io.File?> fromUrl(String url) async {
     assert(url.isNotEmpty);
 
     _log.v('Requesting cached network file from: $url');
-    final file = await _cache.get(
-      url,
-      ifAbsent: (url) => _getSingleFile(url).whenComplete(() => _cache.invalidate(key)),
-    );
+    final file = await _cache.get(url, ifAbsent: _handleAbsent);
 
     _log.v('File $url, ' + (file != null ? 'retrieved: $file' : 'not found'));
     return file;

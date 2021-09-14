@@ -182,14 +182,10 @@ class FirebaseImageStorage {
   Future<Uint8List?> downloadFile({
     required String path,
     CachedNetworkFile? cache,
-  }) async {
-    assert(path.isNotEmpty);
-    _log.v('Calling `downloadFile` with $path ...');
-
-    return _getFirebaseFile(
-      ref: _bucket.ref().child(path),
-      maxBytes: _kPhotoMaxSize,
-      cache: cache ?? _defaultCache,
-    );
-  }
+  }) =>
+      _getFirebaseFile(
+        ref: _bucket.ref().child(path),
+        maxBytes: _kPhotoMaxSize,
+        cache: cache ?? _defaultCache,
+      );
 }

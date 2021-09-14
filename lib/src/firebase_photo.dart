@@ -258,6 +258,11 @@ class FirebasePhotoReference {
   FirebaseImage getImageForConstraints(Size constraints) =>
       FirebaseImage.from(this, FirebaseImage.getCacheSize(size, constraints));
 
+  /// Regular [FirebaseImage] provider of this [FirebasePhotoReference] with a
+  /// [FirebaseImage.getCacheSize] shortcut for setting the [cacheSize].
+  FirebaseImage getThumbnailForConstraints(Size constraints) =>
+      FirebaseImage.thumbnailFrom(this, FirebaseImage.getCacheSize(size, constraints));
+
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) return false;

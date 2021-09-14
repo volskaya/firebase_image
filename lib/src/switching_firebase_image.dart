@@ -28,6 +28,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.scrollAware = false,
     this.type,
     this.expandBox = true,
+    this.inherit = false,
+    this.paintInheritedAnimations = false,
+    this.wrapInheritBoundary = false,
   })  : colorBlendMode = null,
         color = null,
         filter = false,
@@ -51,6 +54,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.expandBox = true,
+    this.inherit = false,
+    this.paintInheritedAnimations = false,
+    this.wrapInheritBoundary = false,
   })  : type = SwitchingImageType.fade,
         filter = true,
         super(key: key);
@@ -88,7 +94,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Opacity override when you wish to animate the image without having to overlap
   /// multiple opacity shaders.
-  final ValueListenable<double>? opacity;
+  final Animation<double>? opacity;
 
   /// Alignment of the children in the switchers.
   final AlignmentGeometry alignment;
@@ -107,6 +113,18 @@ class SwitchingFirebaseImage extends StatefulWidget {
 
   /// Whether to wrap the widget in [SizedBox.expand].
   final bool expandBox;
+
+  /// Whether to defer the animations to [InheritedAnimationCoordinator].
+  ///
+  /// If this is toggled, you are responsible for building [InheritedAnimation]
+  /// somewhere down the widget tree.
+  final bool inherit;
+
+  /// Whether to paint any deferred animations before the child.
+  final bool paintInheritedAnimations;
+
+  /// Whether to add an [InheritedAnimationCoordinator.boundary] to avoid inheriting parent animations.
+  final bool wrapInheritBoundary;
 
   /// Consider similar if a and b are 2 [FirebaseImage]s with the same path.
   static bool similarImageCheck(ImageInfo? a, ImageInfo? b) {
@@ -258,6 +276,9 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           color: widget.color,
           colorBlendMode: widget.colorBlendMode,
           expandBox: widget.expandBox,
+          inherit: widget.inherit,
+          paintInheritedAnimations: widget.paintInheritedAnimations,
+          wrapInheritBoundary: widget.wrapInheritBoundary,
           areSimilar: SwitchingFirebaseImage.similarImageCheck,
         )
       : SwitchingImage(
@@ -274,6 +295,9 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           layoutChildren: widget.layoutChildren,
           type: widget.type,
           expandBox: widget.expandBox,
+          inherit: widget.inherit,
+          paintInheritedAnimations: widget.paintInheritedAnimations,
+          wrapInheritBoundary: widget.wrapInheritBoundary,
           areSimilar: SwitchingFirebaseImage.similarImageCheck,
         );
 }
