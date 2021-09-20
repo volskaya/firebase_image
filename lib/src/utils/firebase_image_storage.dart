@@ -3,11 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_image/src/firebase_image.dart';
+import 'package:firebase_image/src/utils/cached_network_file.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_image/src/utils/cached_network_file.dart';
 import 'package:loader_coordinator/loader_coordinator.dart';
 import 'package:log/log.dart';
 

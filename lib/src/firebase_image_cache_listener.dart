@@ -2,13 +2,22 @@ import 'dart:collection';
 
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /// Tracks live [FirebaseImage]s of [ImageCache].
 class FirebaseImageCacheListener {
   /// Constructs FirebaseImageCacheListener.
-  FirebaseImageCacheListener(this.imageCache) {
-    _attach();
+  FirebaseImageCacheListener._(this.imageCache) {
+    imageCache.keyAddedCallbacks.add(_handleKeyAdded);
+    imageCache.keyEvictedCallbacks.add(_handleKeyRemoved);
+  }
+
+  /// App wide instance of [FirebaseImageCacheListener].
+  static FirebaseImageCacheListener? instance;
+
+  /// Initializes [FirebaseImageCacheListener] and attaches it to [PaintingBinding.instance.imageCache].
+  static void initialize() {
+    assert(instance == null);
+    instance = FirebaseImageCacheListener._(PaintingBinding.instance!.imageCache!);
   }
 
   /// Target [ImageCache] from [PainterBinding].
@@ -19,15 +28,6 @@ class FirebaseImageCacheListener {
 
   /// Mapped [FirebaseImage]s by their cache size and path.
   final cachedSizes = HashMap<String, HashMap<Size, FirebaseImage>>(); // Keyed by the image provider's path.
-
-  /// Get [FirebaseImageCacheListener] from context, if it exists.
-  static FirebaseImageCacheListener? of(BuildContext context) {
-    try {
-      return Provider.of<FirebaseImageCacheListener>(context, listen: false);
-    } catch (_) {
-      return null; // Couldn't find it.
-    }
-  }
 
   void _handleKeyAdded(Object key) {
     if (key is FirebaseImage) {
@@ -57,17 +57,6 @@ class FirebaseImageCacheListener {
     }
   }
 
-  void _attach() {
-    imageCache.keyAddedCallbacks.add(_handleKeyAdded);
-    imageCache.keyEvictedCallbacks.add(_handleKeyRemoved);
-  }
-
-  /// Remove listeners.
-  void dispose() {
-    imageCache.keyAddedCallbacks.remove(_handleKeyAdded);
-    imageCache.keyEvictedCallbacks.remove(_handleKeyRemoved);
-  }
-
   /// Lookup the highest available size of [FirebaseImage] inside [FirebaseImageCacheListener]'s cache.
   FirebaseImage? getHighestCachedSize(FirebaseImage image, {bool lowestInstead = false}) {
     if (cachedSizes.containsKey(image.path)) {
@@ -84,5 +73,11 @@ class FirebaseImageCacheListener {
     }
 
     return null;
+  }
+
+  /// Remove listeners.
+  void dispose() {
+    imageCache.keyAddedCallbacks.remove(_handleKeyAdded);
+    imageCache.keyEvictedCallbacks.remove(_handleKeyRemoved);
   }
 }

@@ -3,14 +3,14 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:firebase_image/src/blur_hash_image.dart';
+import 'package:firebase_image/src/firebase_photo.dart';
+import 'package:firebase_image/src/utils/firebase_image_storage.dart';
 import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart' show join;
-import 'package:firebase_image/src/firebase_photo.dart';
-import 'package:firebase_image/src/utils/firebase_image_storage.dart';
 
 part 'firebase_image.freezed.dart';
 
@@ -363,12 +363,12 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   }
 
   @override
+  int get hashCode => hashValues(path, scale, type, size, cacheSize, showLarge);
+
+  @override
   String toString() {
     return 'FirebaseImage @ $path, size: $size, cacheSize: $cacheSize';
   }
-
-  @override
-  int get hashCode => hashValues(path, scale, type, size, cacheSize, showLarge);
 
   /// Overwrite the [scrollAwareContext] of this [FirebaseImage].
   void setScrollAwareContext(DisposableBuildContext<State>? context) => scrollAwareContext = context;

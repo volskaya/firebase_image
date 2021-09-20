@@ -22,7 +22,7 @@ class PhotoMapC implements JsonConverter<Map<String, FirebasePhoto>, dynamic> {
     } else {
       // Assume the json is a map.
       return {
-        for (final entry in Map<String, dynamic>.from(json).entries)
+        for (final entry in Map<String, dynamic>.from(json as Map).entries)
           entry.key.toString(): FirebasePhoto.fromJson(<String, dynamic>{
             ...Map<String, dynamic>.from(entry.value as Map),
             'id': entry.key.toString(),

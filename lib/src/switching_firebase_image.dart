@@ -6,6 +6,7 @@ import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:utils/utils.dart';
 
 /// Wrapped [SwitchingImage] to first load thumbnail provider,
 /// if its cached in [WidgetsBinding] already, before resolving
@@ -139,8 +140,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
 }
 
 class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
-    with SwitchingFirebaseImageState<SwitchingFirebaseImage> {
-  FirebaseImageCacheListener? _cacheListener;
+    with SwitchingFirebaseImageState<SwitchingFirebaseImage>, InitialDependencies {
+  ModalRoute? _route;
+  bool _routeAwaited = false;
   ImageProvider? _provider;
 
   /// Sets scroll awarness, if necessary.
@@ -159,8 +161,17 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
-    await AwaitRoute.of(context, postFrame: true);
-    if (mounted) setState(() => _setProvider(image));
+    if (!_routeAwaited && _route != null) {
+      await AwaitRoute.waitFor<dynamic>(_route!);
+      _routeAwaited = true;
+    } else {
+      // If the route will not be awaited, just await the postframe.
+      await Utils.awaitPostframe();
+    }
+    if (mounted) {
+      _setProvider(image);
+      markNeedsBuild();
+    }
   }
 
   void _handleNewImage(Object key) {
@@ -190,7 +201,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
     // If the widget targets a thumbnail, look for smallest cached image instead, to prevent tiny tiles from
     // garbage collecting big images.
-    final cachedImage = _cacheListener?.getHighestCachedSize(widgetImage.regular);
+    final cachedImage = FirebaseImageCacheListener.instance!.getHighestCachedSize(widgetImage.regular);
 
     bool decodeWidgetsImageProvider = true; // If a higher res image is already cached, that one is used instead.
     bool delayDecode = false; // To paint a cached image and later decode a different image, the frame must be delayed.
@@ -215,27 +226,34 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
   bool _listening = false;
   void _listenForBetterImages() {
     if (_listening) return;
-    PaintingBinding.instance!.imageCache!.keyAddedCallbacks.add(_handleNewImage);
+    assert(PaintingBinding.instance!.imageCache == FirebaseImageCacheListener.instance!.imageCache);
+    FirebaseImageCacheListener.instance!.imageCache.keyAddedCallbacks.add(_handleNewImage);
     _listening = true;
   }
 
   void _stopListeningForBetterImages() {
     if (!_listening) return;
-    PaintingBinding.instance!.imageCache!.keyAddedCallbacks.remove(_handleNewImage);
+    FirebaseImageCacheListener.instance!.imageCache.keyAddedCallbacks.remove(_handleNewImage);
     _listening = false;
   }
 
   @override
-  void initState() {
-    super.initState();
-    _cacheListener = FirebaseImageCacheListener.of(context);
+  void postInitDependencies() {
+    super.postInitDependencies();
 
+    // Make sure this is called after the `_route` is set.
     if (widget.imageProvider != null && widget.imageProvider is FirebaseImage) {
       _cycleImage();
       _listenForBetterImages();
     } else {
       _provider = widget.imageProvider;
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!_routeAwaited) _route = ModalRoute.of(context);
+    super.didChangeDependencies();
   }
 
   @override

@@ -61,6 +61,7 @@ abstract class _RealtimePhotoModel<T> extends RealtimeModel<T> with FirebasePhot
   @override @a @mustCallSuper
   void onSnapshot(T x) {
     final newPhotos = (x as RealtimePhotoModel).photos;
-    if (!mapsEqual(photos, newPhotos)) photos = newPhotos;
+    // if (!mapsEqual(photos, newPhotos)) photos = newPhotos;
+    photos = newPhotos;
   }
 }
