@@ -2,6 +2,7 @@ import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:firebase_image/src/switching_firebase_image.dart';
 import 'package:flutter/material.dart';
+import 'package:utils/utils.dart';
 
 /// [SwitchingMaterialImage], except internally using [SwitchingFirebaseImage].
 class SwitchingFirebaseMaterialImage extends StatelessWidget {
@@ -19,9 +20,6 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
     this.curve,
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
-    this.elevation = 0,
-    this.color,
-    this.shadowColor,
     this.scrollAware = false,
     this.expandBox = true,
     this.inherit = false,
@@ -66,15 +64,6 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// Children [Widget]'s on top of the [Material], in the switcher's layout builder.
   final Iterable<Widget> layoutChildren;
 
-  /// [Material]'s elevation. Must define [color] to draw elevation.
-  final double elevation;
-
-  /// [Material]'s color. Must be defined to draw elevation.
-  final Color? color;
-
-  /// [Material]'s shadow color.
-  final Color? shadowColor;
-
   /// Whether to wrap the widget in [SizedBox.expand].
   final bool expandBox;
 
@@ -107,15 +96,7 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         paintInheritedAnimations: paintInheritedAnimations,
         wrapInheritBoundary: wrapInheritBoundary,
         layoutChildren: [
-          Material(
-            type: color != null ? MaterialType.canvas : MaterialType.transparency,
-            color: color,
-            elevation: elevation,
-            borderRadius: color != null ? borderRadius : null,
-            shape: color != null ? shape : null,
-            child: child,
-            shadowColor: shadowColor,
-          ),
+          InkFeaturesWidget(child: child),
           ...layoutChildren,
         ],
       );

@@ -206,9 +206,6 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
   /// [BlurHashImage] from this provider, if the photo had blur.
   BlurHashImage? get blurImage => blur != null ? BlurHashImage(blur!.hash, blur!.size, scale: scale) : null;
 
-  // ImageConfiguration _configuration = ImageConfiguration.empty;
-  // double get _pixelRatio => scale != 1 ? scale : _configuration.devicePixelRatio ?? scale;
-
   String _buildPathWithScale(double scale, {bool disableScaling = false}) {
     final shouldScale = scale >= _kLargeDpiBreakPoint && !disableScaling;
     switch (type) {
@@ -245,7 +242,8 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       width = constraints.height * photoSize.aspectRatio;
     }
 
-    return Size(width, height) * (devicePixelRatio ?? WidgetsBinding.instance!.window.devicePixelRatio);
+    final dpr = (devicePixelRatio ?? WidgetsBinding.instance!.window.devicePixelRatio);
+    return Size(width * dpr, height * dpr);
   }
 
   Future<ui.Codec> _loadAsync(
@@ -255,33 +253,18 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     try {
       assert(key == this);
 
-      // FIXME: Download large image only if `cacheSize` is larger than the regular one.
-      // final path = _buildPathWithScale(_pixelRatio, disableScaling: !size);
-
-      // // First attempt to fetch the largest size.
-      // var bytes = await _getPhoto(path);
-
-      // // Attempt to fetch regular size image.
-      // if (showLarge && _pixelRatio > _kLargeDpiBreakPoint && bytes == null) {
-      //   final path = _buildPathWithScale(1);
-      //   bytes = await _getPhoto(path);
-      // }
-
       final path = _buildPathWithScale(1);
       final bytes = await _getPhoto(path);
 
       if ((bytes?.lengthInBytes ?? 0) == 0) throw Exception('FirebaseImage is an empty file: $path');
-      if (cacheSize != null) {
-        // final displayCacheSize = cacheSize * _configuration.devicePixelRatio;
-        final displayCacheSize = cacheSize;
-        return decode(
-          bytes!,
-          cacheWidth: displayCacheSize!.width.toInt(),
-          cacheHeight: displayCacheSize.height.toInt(),
-        );
-      } else {
-        return decode(bytes!);
-      }
+      return cacheSize == null
+          ? decode(bytes!)
+          : decode(
+              bytes!,
+              cacheWidth: cacheSize!.width.toInt(),
+              cacheHeight: cacheSize!.height.toInt(),
+              allowUpscaling: false,
+            );
     } catch (e) {
       scheduleMicrotask(() => PaintingBinding.instance!.imageCache!.evict(key));
       rethrow;
@@ -300,10 +283,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       );
 
   @override
-  Future<FirebaseImage> obtainKey(ImageConfiguration configuration) {
-    // _configuration = configuration;
-    return SynchronousFuture<FirebaseImage>(this);
-  }
+  Future<FirebaseImage> obtainKey(ImageConfiguration configuration) => SynchronousFuture<FirebaseImage>(this);
 
   @override
   void resolveStreamForKey(

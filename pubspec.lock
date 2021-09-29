@@ -335,6 +335,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1-pre"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   flutter_localizations:
     dependency: transitive
     description: flutter
@@ -362,16 +369,16 @@ packages:
   freezed:
     dependency: "direct dev"
     description:
-      path: "/home/projects/forks/freezed/packages/freezed"
-      relative: false
-    source: path
-    version: "0.14.3"
+      name: freezed
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.5"
   freezed_annotation:
     dependency: "direct main"
     description:
-      path: "/home/projects/forks/freezed/packages/freezed_annotation"
-      relative: false
-    source: path
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.14.3"
   frontend_server_client:
     dependency: transitive
@@ -464,6 +471,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   loader_coordinator:
     dependency: "direct main"
     description:
@@ -707,6 +721,13 @@ packages:
       relative: false
     source: path
     version: "0.0.1"
+  sortedmap:
+    dependency: "direct main"
+    description:
+      name: sortedmap
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1"
   source_gen:
     dependency: transitive
     description:

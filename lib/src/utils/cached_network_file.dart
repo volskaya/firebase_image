@@ -13,12 +13,9 @@ class CachedNetworkFile extends CacheManager {
   CachedNetworkFile({
     required this.key,
   })  : assert(key.isNotEmpty),
-        super(
-          Config(
-            key,
-            stalePeriod: const Duration(days: 365),
-          ),
-        );
+        super(Config(key, stalePeriod: stalePeriod));
+
+  static const stalePeriod = Duration(days: 365);
 
   /// Key that serves as the cache label.
   final String key;

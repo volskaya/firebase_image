@@ -34,11 +34,9 @@ mixin _$FirestorePhotoModel<T> on _FirestorePhotoModel<T>, Store {
 
   @override @PhotoMapC() @JsonKey()
   set photos(Map<String, FirebasePhoto> value) {
-    if (super.photos != value) {
-      _$photosAtom.reportWrite(value, super.photos, () {
-        super.photos = value;
-      });
-    }
+    _$photosAtom.reportWrite(value, super.photos, () {
+      super.photos = value;
+    });
   }
 
   final _$_FirestorePhotoModelActionController =

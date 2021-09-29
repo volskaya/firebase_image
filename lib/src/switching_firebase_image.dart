@@ -157,20 +157,26 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
             ? provider
             : (provider..setScrollAwareContext(scrollAwareContext))
         : null;
+
+    markNeedsBuild();
   }
 
   Future _delayDecodeOf(FirebaseImage image) async {
     if (!mounted || image != widget.imageProvider) return;
-    if (!_routeAwaited && _route != null) {
-      await AwaitRoute.waitFor<dynamic>(_route!);
-      _routeAwaited = true;
-    } else {
-      // If the route will not be awaited, just await the postframe.
-      await Utils.awaitPostframe();
-    }
+
+    try {
+      await Future.wait([
+        Utils.awaitPostframe(),
+        if (!_routeAwaited && _route != null)
+          (() async {
+            await AwaitRoute.waitFor<dynamic>(_route!);
+            _routeAwaited = true;
+          })(),
+      ]);
+    } catch (_) {}
+
     if (mounted) {
       _setProvider(image);
-      markNeedsBuild();
     }
   }
 
@@ -184,7 +190,6 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
       final betterQualityImage = FirebaseImage.getBetterQuality(key, _provider as FirebaseImage);
       if (betterQualityImage != _provider) {
         _setProvider(betterQualityImage);
-        markNeedsBuild();
       }
     }
   }
@@ -238,9 +243,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
   }
 
   @override
-  void postInitDependencies() {
-    super.postInitDependencies();
-
+  void initDependencies() {
     // Make sure this is called after the `_route` is set.
     if (widget.imageProvider != null && widget.imageProvider is FirebaseImage) {
       _cycleImage();
@@ -252,7 +255,12 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
 
   @override
   void didChangeDependencies() {
-    if (!_routeAwaited) _route = ModalRoute.of(context);
+    if (!_routeAwaited) {
+      final route = ModalRoute.of(context);
+      if (route?.animation?.isCompleted == false) {
+        _route = route;
+      }
+    }
     super.didChangeDependencies();
   }
 
@@ -273,7 +281,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
   @override
   void dispose() {
     _stopListeningForBetterImages();
-    _setProvider(null); // Unbind the build context from the current provider.
+    _provider = null; // Unbind the build context from the current provider.
     super.dispose();
   }
 

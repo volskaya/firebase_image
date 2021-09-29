@@ -77,7 +77,13 @@ class FirebaseImageStorage {
         );
 
         if (bytes.lengthInBytes > 0) {
-          selectedCache.putFile(url, bytes);
+          selectedCache.putFile(
+            url,
+            bytes,
+            key: url,
+            eTag: url,
+            maxAge: CachedNetworkFile.stalePeriod,
+          );
           return bytes;
         }
       } catch (e, t) {
@@ -126,7 +132,13 @@ class FirebaseImageStorage {
 
         if (bytes != null && bytes.lengthInBytes > 0) {
           _log.i('Fetched and cached a new file at ${comparableRef.fullPath}');
-          selectedCache.putFile(comparableRef.fullPath, bytes);
+          selectedCache.putFile(
+            comparableRef.fullPath,
+            bytes,
+            key: comparableRef.fullPath,
+            eTag: comparableRef.fullPath,
+            maxAge: CachedNetworkFile.stalePeriod,
+          );
           return bytes;
         }
       } on PlatformException catch (e, t) {

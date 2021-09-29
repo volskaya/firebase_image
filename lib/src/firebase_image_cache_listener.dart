@@ -1,7 +1,9 @@
 import 'dart:collection';
 
 import 'package:firebase_image/firebase_image.dart';
+import 'package:firebase_image/src/utils/comparable_size.dart';
 import 'package:flutter/material.dart';
+import 'package:sortedmap/sortedmap.dart';
 
 /// Tracks live [FirebaseImage]s of [ImageCache].
 class FirebaseImageCacheListener {
@@ -17,6 +19,7 @@ class FirebaseImageCacheListener {
   /// Initializes [FirebaseImageCacheListener] and attaches it to [PaintingBinding.instance.imageCache].
   static void initialize() {
     assert(instance == null);
+    WidgetsFlutterBinding.ensureInitialized();
     instance = FirebaseImageCacheListener._(PaintingBinding.instance!.imageCache!);
   }
 
@@ -27,47 +30,53 @@ class FirebaseImageCacheListener {
   final cachedImages = HashSet<FirebaseImage>();
 
   /// Mapped [FirebaseImage]s by their cache size and path.
-  final cachedSizes = HashMap<String, HashMap<Size, FirebaseImage>>(); // Keyed by the image provider's path.
+  ///
+  /// Keyed by the image provider's path.
+  final cachedSizes = HashMap<String, SortedMap<ComparableSize, FirebaseImage>>();
+
+  static ComparableSize _comparableSizeOf(FirebaseImage key) {
+    final size = key.cacheSize ?? key.size;
+    return ComparableSize(size.width, size.height);
+  }
 
   void _handleKeyAdded(Object key) {
     if (key is FirebaseImage) {
-      final size = key.cacheSize ?? key.size;
+      final comparableSize = _comparableSizeOf(key);
 
       assert(!cachedImages.contains(key));
-      assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path]!.containsKey(size));
+      assert(!cachedSizes.containsKey(key.path) || !cachedSizes[key.path]!.containsKey(comparableSize));
+
       // FIXME: Thumbnails and regular photos clash, when they have the same cacheSize.
       // Which in turn fools widgets into prefering that thumbnail, with the bigger cacheSize.
 
       cachedImages.add(key);
-      cachedSizes[key.path] ??= HashMap<Size, FirebaseImage>();
-      cachedSizes[key.path]![size] = key;
+      cachedSizes[key.path] ??= SortedMap<ComparableSize, FirebaseImage>();
+      cachedSizes[key.path]![comparableSize] = key;
     }
   }
 
   void _handleKeyRemoved(Object key) {
     if (key is FirebaseImage) {
-      assert(cachedImages.contains(key));
-      cachedImages.remove(key);
+      final comparableSize = _comparableSizeOf(key);
 
-      if (key.cacheSize != null) {
-        assert(cachedSizes.containsKey(key.path));
-        assert(cachedSizes[key.path]!.containsKey(key.cacheSize));
-        cachedSizes[key.path]!.remove(key.cacheSize);
-      }
+      assert(cachedImages.contains(key));
+      assert(cachedSizes.containsKey(key.path));
+      assert(cachedSizes[key.path]!.containsKey(comparableSize));
+
+      cachedImages.remove(key);
+      cachedSizes[key.path]?.remove(comparableSize);
+
+      if (cachedSizes[key.path]?.isEmpty == true) cachedSizes.remove(key.path);
     }
   }
 
   /// Lookup the highest available size of [FirebaseImage] inside [FirebaseImageCacheListener]'s cache.
-  FirebaseImage? getHighestCachedSize(FirebaseImage image, {bool lowestInstead = false}) {
+  FirebaseImage? getHighestCachedSize(FirebaseImage image) {
     if (cachedSizes.containsKey(image.path)) {
-      final keys = cachedSizes[image.path]!.keys.toList(growable: false)
-        ..sort((a, b) {
-          return (a.width * a.height).compareTo(b.width * b.height);
-        });
-
-      for (final key in lowestInstead ? keys : keys.reversed) {
+      for (final key in cachedSizes[image.path]!.keys) {
         final provider = cachedSizes[image.path]![key];
         assert(provider != null && PaintingBinding.instance!.imageCache!.containsKey(provider));
+        if (provider == null) continue; // FIXME: Shouldn't happen.
         return provider;
       }
     }
