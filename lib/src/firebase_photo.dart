@@ -143,6 +143,12 @@ class FirebasePhoto with _$FirebasePhoto {
 
     /// Wether the photo also has a large version.
     @JsonKey() @Default(false) bool hasLarge,
+
+    /// Public URL of the regular photo.
+    @JsonKey() required String regularURL,
+
+    /// Public URL of the regular photo.
+    @JsonKey() required String? thumbnailURL,
   }) = _FirebasePhoto;
 
   FirebasePhoto._();
@@ -184,18 +190,20 @@ class FirebasePhoto with _$FirebasePhoto {
 /// Simplifies building [FirebaseImage] providers.
 class FirebasePhotoReference {
   /// Creates [FirebasePhotoReference].
-  const FirebasePhotoReference(this.path, this.hash, this.type, this.size,
+  const FirebasePhotoReference(this.path, this.hash, this.regularURL, this.thumbnailURL, this.type, this.size,
       [this.blur, this.palette, this.color, this.face]);
 
   /// Creates a [FirebasePhotoReference] with a custom path and [FirebasePhoto].
-  static FirebasePhotoReference from(String path, FirebasePhoto photo) => FirebasePhotoReference(
-      path, photo.hash, photo.type, photo.size, photo.blur, photo.palette, photo.color, photo.face);
+  static FirebasePhotoReference from(String path, FirebasePhoto photo) => FirebasePhotoReference(path, photo.hash,
+      photo.regularURL, photo.thumbnailURL, photo.type, photo.size, photo.blur, photo.palette, photo.color, photo.face);
 
   /// Creates a [FirebasePhotoReference] from a [FirebasePhoto], relative to
   /// a [FirestoreModel].
   static FirebasePhotoReference fromModel(FirebaseModel model, FirebasePhoto photo) => FirebasePhotoReference(
       photo.getStoragePathFromModel(model),
       photo.hash,
+      photo.regularURL,
+      photo.thumbnailURL,
       photo.type,
       photo.size,
       photo.blur,
@@ -226,6 +234,12 @@ class FirebasePhotoReference {
 
   /// Face rect inside the photo.
   final FirebasePhotoFaceData? face;
+
+  /// Public URL of the regular photo.
+  final String regularURL;
+
+  /// Public URL of the regular photo.
+  final String? thumbnailURL;
 
   /// Thumbnail [FirebaseImage] provider of this [FirebasePhotoReference].
   FirebaseImage get thumbnail => FirebaseImage.thumbnailFrom(this);

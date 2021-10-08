@@ -92,6 +92,8 @@ _$_FirebasePhoto _$$_FirebasePhotoFromJson(Map<String, dynamic> json) =>
       width: json['width'] as num,
       height: json['height'] as num,
       hasLarge: json['hasLarge'] as bool? ?? false,
+      regularURL: json['regularURL'] as String,
+      thumbnailURL: json['thumbnailURL'] as String?,
     );
 
 Map<String, dynamic> _$$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
@@ -106,6 +108,8 @@ Map<String, dynamic> _$$_FirebasePhotoToJson(_$_FirebasePhoto instance) =>
       'width': instance.width,
       'height': instance.height,
       'hasLarge': instance.hasLarge,
+      'regularURL': instance.regularURL,
+      'thumbnailURL': instance.thumbnailURL,
     };
 
 K _$enumDecode<K, V>(

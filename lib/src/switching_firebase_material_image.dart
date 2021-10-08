@@ -96,7 +96,10 @@ class SwitchingFirebaseMaterialImage extends StatelessWidget {
         paintInheritedAnimations: paintInheritedAnimations,
         wrapInheritBoundary: wrapInheritBoundary,
         layoutChildren: [
-          InkFeaturesWidget(child: child),
+          InkFeaturesWidget(
+            key: const ValueKey(#inkFeaturesWidget),
+            child: child,
+          ),
           ...layoutChildren,
         ],
       );

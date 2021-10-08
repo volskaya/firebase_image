@@ -19,6 +19,7 @@ class FirebaseImageStorage {
   static const _kPhotoMaxSize = 5000000; // bytes
   static final _defaultCache = CachedNetworkFile(key: 'storage/firebase_images');
   static final _log = Log.named('FirebaseImageStorage');
+  static const _disableCache = false;
 
   /// Single instance of [FirebaseImageStorage].
   static const instance = FirebaseImageStorage._();
@@ -44,13 +45,15 @@ class FirebaseImageStorage {
   /// Attempts to download and cache a file from the `url`.
   Future<Uint8List?> downloadNetworkFile({
     required String url,
+    String? key,
     StreamController<ImageChunkEvent>? chunkEvents,
     Map<String, String>? headers,
     CachedNetworkFile? cache,
   }) async {
     final selectedCache = cache ?? _defaultCache;
     final resolved = Uri.base.resolve(url);
-    final cachedFile = await selectedCache.getFileFromCache(url);
+    final effectiveKey = key ?? url;
+    final cachedFile = !_disableCache ? await selectedCache.getFileFromCache(effectiveKey) : null;
     final isOld = cachedFile?.validTill.isBefore(DateTime.now());
 
     if (isOld != false) {
@@ -78,16 +81,14 @@ class FirebaseImageStorage {
 
         if (bytes.lengthInBytes > 0) {
           selectedCache.putFile(
-            url,
+            effectiveKey,
             bytes,
-            key: url,
-            eTag: url,
+            key: effectiveKey,
+            eTag: effectiveKey,
             maxAge: CachedNetworkFile.stalePeriod,
           );
           return bytes;
         }
-      } catch (e, t) {
-        _log.e('Failed to retrieve a cached network file from $url', e, t);
       } finally {
         loader.dispose();
       }
@@ -95,9 +96,9 @@ class FirebaseImageStorage {
 
     _log.v(
       cachedFile?.file != null
-          ? 'Returning a cached network file at $url'
+          ? 'Returning a cached network file at $url, ($effectiveKey)'
               ', valid till ${cachedFile?.validTill}'
-          : 'No cached/new file available at $url',
+          : 'No cached/new file available at $url, ($effectiveKey)',
     );
 
     return cachedFile?.file.readAsBytes();
@@ -107,49 +108,37 @@ class FirebaseImageStorage {
   Future<Uint8List?> _getFirebaseFile({
     required Reference ref,
     required int maxBytes,
+    String? key,
     CachedNetworkFile? cache,
-
-    /// If this is defined, `ref` is only used for the actual "getData" call.
-    /// Cache conditionals will be evalued against `optionalComparableRef`.
-    Reference? optionalComparableRef,
   }) async {
     assert(maxBytes >= 0);
 
     _log.v('Retrieving a cached file at ${ref.fullPath}');
 
-    final comparableRef = optionalComparableRef ?? ref;
     final selectedCache = cache ?? _defaultCache;
-    final cachedFile = await selectedCache.getFileFromCache(comparableRef.fullPath);
+    final effectiveKey = key ?? ref.fullPath;
+    final cachedFile = !_disableCache ? await selectedCache.getFileFromCache(effectiveKey) : null;
     final isOld = cachedFile?.validTill.isBefore(DateTime.now());
 
     if (isOld != false) {
       final loader = LoaderCoordinator.instance.touch();
       try {
-        _log.v('Cache outdated or doesn\'t exist, fetching ${comparableRef.fullPath}…');
+        _log.v('Cache outdated or doesn\'t exist, fetching ${ref.fullPath}…');
 
         // Getting data from the `ref`, instead of `comparableRef`.
         final bytes = await ref.getData(_kPhotoMaxSize);
 
         if (bytes != null && bytes.lengthInBytes > 0) {
-          _log.i('Fetched and cached a new file at ${comparableRef.fullPath}');
+          _log.i('Fetched and cached a new file at ${ref.fullPath} ($effectiveKey)');
           selectedCache.putFile(
-            comparableRef.fullPath,
+            effectiveKey,
             bytes,
-            key: comparableRef.fullPath,
-            eTag: comparableRef.fullPath,
+            key: effectiveKey,
+            eTag: effectiveKey,
             maxAge: CachedNetworkFile.stalePeriod,
           );
           return bytes;
         }
-      } on PlatformException catch (e, t) {
-        _log.e(
-          'Failed to getData for ${comparableRef.fullPath}, ${e.message}'
-          ', bucket: - $_bucket',
-          e,
-          t,
-        );
-      } catch (e, t) {
-        _log.e('Failed to retrieve a cached file at ${comparableRef.fullPath}', e, t);
       } finally {
         loader.dispose();
       }
@@ -157,9 +146,9 @@ class FirebaseImageStorage {
 
     _log.v(
       cachedFile?.file != null
-          ? 'Returning a cached file at ${comparableRef.fullPath}'
+          ? 'Returning a cached file at ${ref.fullPath} ($effectiveKey)'
               ', valid till ${cachedFile?.validTill}'
-          : 'No cached/new file available at ${comparableRef.fullPath}',
+          : 'No cached/new file available at ${ref.fullPath} ($effectiveKey)',
     );
 
     return cachedFile?.file.readAsBytes();
@@ -172,19 +161,16 @@ class FirebaseImageStorage {
   /// entry is ceated.
   ///
   /// Only use for regular/large photos, this is not intended for thumbnails.
-  Future<Uint8List?> downloadFirebasePhoto(String path) async {
+  Future<Uint8List?> downloadFirebasePhoto(String path, {String? key}) async {
     assert(path.isNotEmpty);
-
-    final split = path.split('/');
-    final adjusted = split.take(split.length - 1).join('/');
-    final ref = _bucket.ref().child(adjusted);
-    final fullRef = _bucket.ref().child(path);
-
-    assert(split.last == FirebaseImage.names.large || split.last == FirebaseImage.names.regular);
+    assert((() {
+      final split = path.split('/');
+      return split.last == FirebaseImage.names.large || split.last == FirebaseImage.names.regular;
+    })());
 
     return _getFirebaseFile(
-      ref: fullRef,
-      optionalComparableRef: ref,
+      ref: _bucket.ref().child(path),
+      key: key,
       maxBytes: _kPhotoMaxSize,
       cache: _defaultCache,
     );
@@ -193,11 +179,13 @@ class FirebaseImageStorage {
   /// Downloads a cached file from `path` in [_bucket].
   Future<Uint8List?> downloadFile({
     required String path,
+    String? key,
     CachedNetworkFile? cache,
   }) =>
       _getFirebaseFile(
         ref: _bucket.ref().child(path),
         maxBytes: _kPhotoMaxSize,
+        key: key,
         cache: cache ?? _defaultCache,
       );
 }

@@ -920,7 +920,9 @@ class _$FirebasePhotoTearOff {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
-      @JsonKey() bool hasLarge = false}) {
+      @JsonKey() bool hasLarge = false,
+      @JsonKey() required String regularURL,
+      @JsonKey() required String? thumbnailURL}) {
     return _FirebasePhoto(
       type: type,
       id: id,
@@ -932,6 +934,8 @@ class _$FirebasePhotoTearOff {
       width: width,
       height: height,
       hasLarge: hasLarge,
+      regularURL: regularURL,
+      thumbnailURL: thumbnailURL,
     );
   }
 
@@ -986,6 +990,14 @@ mixin _$FirebasePhoto {
   @JsonKey()
   bool get hasLarge => throw _privateConstructorUsedError;
 
+  /// Public URL of the regular photo.
+  @JsonKey()
+  String get regularURL => throw _privateConstructorUsedError;
+
+  /// Public URL of the regular photo.
+  @JsonKey()
+  String? get thumbnailURL => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $FirebasePhotoCopyWith<FirebasePhoto> get copyWith =>
@@ -1007,7 +1019,9 @@ abstract class $FirebasePhotoCopyWith<$Res> {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
-      @JsonKey() bool hasLarge});
+      @JsonKey() bool hasLarge,
+      @JsonKey() String regularURL,
+      @JsonKey() String? thumbnailURL});
 
   $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
   $FirebasePhotoPaletteCopyWith<$Res>? get palette;
@@ -1035,6 +1049,8 @@ class _$FirebasePhotoCopyWithImpl<$Res>
     Object? width = freezed,
     Object? height = freezed,
     Object? hasLarge = freezed,
+    Object? regularURL = freezed,
+    Object? thumbnailURL = freezed,
   }) {
     return _then(_value.copyWith(
       type: type == freezed
@@ -1077,6 +1093,14 @@ class _$FirebasePhotoCopyWithImpl<$Res>
           ? _value.hasLarge
           : hasLarge // ignore: cast_nullable_to_non_nullable
               as bool,
+      regularURL: regularURL == freezed
+          ? _value.regularURL
+          : regularURL // ignore: cast_nullable_to_non_nullable
+              as String,
+      thumbnailURL: thumbnailURL == freezed
+          ? _value.thumbnailURL
+          : thumbnailURL // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 
@@ -1131,7 +1155,9 @@ abstract class _$FirebasePhotoCopyWith<$Res>
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() num width,
       @JsonKey() num height,
-      @JsonKey() bool hasLarge});
+      @JsonKey() bool hasLarge,
+      @JsonKey() String regularURL,
+      @JsonKey() String? thumbnailURL});
 
   @override
   $FirebasePhotoBlurDataCopyWith<$Res>? get blur;
@@ -1164,6 +1190,8 @@ class __$FirebasePhotoCopyWithImpl<$Res>
     Object? width = freezed,
     Object? height = freezed,
     Object? hasLarge = freezed,
+    Object? regularURL = freezed,
+    Object? thumbnailURL = freezed,
   }) {
     return _then(_FirebasePhoto(
       type: type == freezed
@@ -1206,6 +1234,14 @@ class __$FirebasePhotoCopyWithImpl<$Res>
           ? _value.hasLarge
           : hasLarge // ignore: cast_nullable_to_non_nullable
               as bool,
+      regularURL: regularURL == freezed
+          ? _value.regularURL
+          : regularURL // ignore: cast_nullable_to_non_nullable
+              as String,
+      thumbnailURL: thumbnailURL == freezed
+          ? _value.thumbnailURL
+          : thumbnailURL // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -1223,7 +1259,9 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       @JsonKey() this.face,
       @JsonKey() required this.width,
       @JsonKey() required this.height,
-      @JsonKey() this.hasLarge = false})
+      @JsonKey() this.hasLarge = false,
+      @JsonKey() required this.regularURL,
+      @JsonKey() required this.thumbnailURL})
       : super._();
 
   factory _$_FirebasePhoto.fromJson(Map<String, dynamic> json) =>
@@ -1280,10 +1318,20 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
   /// Wether the photo also has a large version.
   @JsonKey()
   final bool hasLarge;
+  @override
+
+  /// Public URL of the regular photo.
+  @JsonKey()
+  final String regularURL;
+  @override
+
+  /// Public URL of the regular photo.
+  @JsonKey()
+  final String? thumbnailURL;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, color: $color, face: $face, width: $width, height: $height, hasLarge: $hasLarge)';
+    return 'FirebasePhoto(type: $type, id: $id, hash: $hash, blur: $blur, palette: $palette, color: $color, face: $face, width: $width, height: $height, hasLarge: $hasLarge, regularURL: $regularURL, thumbnailURL: $thumbnailURL)';
   }
 
   @override
@@ -1300,7 +1348,9 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('face', face))
       ..add(DiagnosticsProperty('width', width))
       ..add(DiagnosticsProperty('height', height))
-      ..add(DiagnosticsProperty('hasLarge', hasLarge));
+      ..add(DiagnosticsProperty('hasLarge', hasLarge))
+      ..add(DiagnosticsProperty('regularURL', regularURL))
+      ..add(DiagnosticsProperty('thumbnailURL', thumbnailURL));
   }
 
   @override
@@ -1328,7 +1378,13 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
                 const DeepCollectionEquality().equals(other.height, height)) &&
             (identical(other.hasLarge, hasLarge) ||
                 const DeepCollectionEquality()
-                    .equals(other.hasLarge, hasLarge)));
+                    .equals(other.hasLarge, hasLarge)) &&
+            (identical(other.regularURL, regularURL) ||
+                const DeepCollectionEquality()
+                    .equals(other.regularURL, regularURL)) &&
+            (identical(other.thumbnailURL, thumbnailURL) ||
+                const DeepCollectionEquality()
+                    .equals(other.thumbnailURL, thumbnailURL)));
   }
 
   @override
@@ -1343,7 +1399,9 @@ class _$_FirebasePhoto extends _FirebasePhoto with DiagnosticableTreeMixin {
       const DeepCollectionEquality().hash(face) ^
       const DeepCollectionEquality().hash(width) ^
       const DeepCollectionEquality().hash(height) ^
-      const DeepCollectionEquality().hash(hasLarge);
+      const DeepCollectionEquality().hash(hasLarge) ^
+      const DeepCollectionEquality().hash(regularURL) ^
+      const DeepCollectionEquality().hash(thumbnailURL);
 
   @JsonKey(ignore: true)
   @override
@@ -1367,7 +1425,9 @@ abstract class _FirebasePhoto extends FirebasePhoto {
       @JsonKey() FirebasePhotoFaceData? face,
       @JsonKey() required num width,
       @JsonKey() required num height,
-      @JsonKey() bool hasLarge}) = _$_FirebasePhoto;
+      @JsonKey() bool hasLarge,
+      @JsonKey() required String regularURL,
+      @JsonKey() required String? thumbnailURL}) = _$_FirebasePhoto;
   _FirebasePhoto._() : super._();
 
   factory _FirebasePhoto.fromJson(Map<String, dynamic> json) =
@@ -1424,6 +1484,16 @@ abstract class _FirebasePhoto extends FirebasePhoto {
   /// Wether the photo also has a large version.
   @JsonKey()
   bool get hasLarge => throw _privateConstructorUsedError;
+  @override
+
+  /// Public URL of the regular photo.
+  @JsonKey()
+  String get regularURL => throw _privateConstructorUsedError;
+  @override
+
+  /// Public URL of the regular photo.
+  @JsonKey()
+  String? get thumbnailURL => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$FirebasePhotoCopyWith<_FirebasePhoto> get copyWith =>
