@@ -39,7 +39,7 @@ class BlurHashImage extends ImageProvider<BlurHashImage> {
 
       throw 'Disabled';
     } catch (e) {
-      scheduleMicrotask(() => PaintingBinding.instance!.imageCache!.evict(key));
+      scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
       rethrow;
     }
   }

@@ -7,7 +7,6 @@ import 'package:firebase_image/src/blur_hash_image.dart';
 import 'package:firebase_image/src/firebase_photo.dart';
 import 'package:firebase_image/src/utils/firebase_image_storage.dart';
 import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -229,7 +228,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
       width = constraints.height * photoSize.aspectRatio;
     }
 
-    final dpr = (devicePixelRatio ?? WidgetsBinding.instance!.window.devicePixelRatio);
+    final dpr = (devicePixelRatio ?? WidgetsBinding.instance.window.devicePixelRatio);
     return Size(width * dpr, height * dpr);
   }
 
@@ -285,7 +284,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
               allowUpscaling: false,
             );
     } catch (_) {
-      scheduleMicrotask(() => PaintingBinding.instance!.imageCache!.evict(key));
+      scheduleMicrotask(() => PaintingBinding.instance.imageCache.evict(key));
       rethrow;
     }
   }
@@ -325,7 +324,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     // Do this before checking scrolling, so that if the bytes are available we
     // render them even though we're scrolling fast - there's no additional
     // allocations to do for texture memory, it's already there.
-    if (stream.completer != null || PaintingBinding.instance!.imageCache!.containsKey(key)) {
+    if (stream.completer != null || PaintingBinding.instance.imageCache.containsKey(key)) {
       super.resolveStreamForKey(configuration, stream, key, handleError);
       return;
     }
@@ -338,7 +337,7 @@ class FirebaseImage extends ImageProvider<FirebaseImage> {
     // Try to get to end of the frame callbacks of the next frame, and then
     // check again.
     if (Scrollable.recommendDeferredLoadingForContext(scrollAwareContext!.context!)) {
-      SchedulerBinding.instance!.scheduleFrameCallback((_) {
+      SchedulerBinding.instance.scheduleFrameCallback((_) {
         scheduleMicrotask(() => resolveStreamForKey(configuration, stream, key, handleError));
       });
       return;

@@ -3,9 +3,7 @@ import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/src/firebase_image.dart';
 import 'package:firebase_image/src/firebase_image_cache_listener.dart';
 import 'package:firebase_image/src/utils/switching_firebase_image_state.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:utils/utils.dart';
 
 /// Wrapped [SwitchingImage] to first load thumbnail provider,
@@ -25,6 +23,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.opacity,
+    this.wrap,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.type,
@@ -52,6 +51,7 @@ class SwitchingFirebaseImage extends StatefulWidget {
     this.filterQuality = FilterQuality.low,
     this.fit = BoxFit.cover,
     this.opacity,
+    this.wrap,
     this.alignment = AlignmentDirectional.topStart,
     this.scrollAware = false,
     this.expandBox = true,
@@ -96,6 +96,9 @@ class SwitchingFirebaseImage extends StatefulWidget {
   /// Opacity override when you wish to animate the image without having to overlap
   /// multiple opacity shaders.
   final Animation<double>? opacity;
+
+  /// Optional wrap builder.
+  final SwitchingImageWrapBuilder? wrap;
 
   /// Alignment of the children in the switchers.
   final AlignmentGeometry alignment;
@@ -231,7 +234,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
   bool _listening = false;
   void _listenForBetterImages() {
     if (_listening) return;
-    assert(PaintingBinding.instance!.imageCache == FirebaseImageCacheListener.instance!.imageCache);
+    assert(PaintingBinding.instance.imageCache == FirebaseImageCacheListener.instance!.imageCache);
     FirebaseImageCacheListener.instance!.imageCache.keyAddedCallbacks.add(_handleNewImage);
     _listening = true;
   }
@@ -293,6 +296,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           borderRadius: widget.borderRadius,
           shape: widget.shape,
           opacity: widget.opacity,
+          wrap: widget.wrap,
           duration: widget.duration,
           curve: widget.curve,
           alignment: widget.alignment,
@@ -313,6 +317,7 @@ class _SwitchingFirebaseImageState extends State<SwitchingFirebaseImage>
           borderRadius: widget.borderRadius,
           shape: widget.shape,
           opacity: widget.opacity,
+          wrap: widget.wrap,
           duration: widget.duration,
           curve: widget.curve,
           alignment: widget.alignment,

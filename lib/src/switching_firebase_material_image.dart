@@ -1,10 +1,10 @@
 import 'package:fancy_switcher/fancy_switcher.dart';
 import 'package:firebase_image/firebase_image.dart';
-import 'package:firebase_image/src/switching_firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:utils/utils.dart';
 
 /// [SwitchingMaterialImage], except internally using [SwitchingFirebaseImage].
+@Deprecated('Ink decorations now paint on the foreground. Stop using this widget.')
 class SwitchingFirebaseMaterialImage extends StatelessWidget {
   /// Creates [SwitchingFirebaseMaterialImage].
   const SwitchingFirebaseMaterialImage({

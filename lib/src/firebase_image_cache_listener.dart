@@ -20,7 +20,7 @@ class FirebaseImageCacheListener {
   static void initialize() {
     assert(instance == null);
     WidgetsFlutterBinding.ensureInitialized();
-    instance = FirebaseImageCacheListener._(PaintingBinding.instance!.imageCache!);
+    instance = FirebaseImageCacheListener._(PaintingBinding.instance.imageCache);
   }
 
   /// Target [ImageCache] from [PainterBinding].
@@ -75,7 +75,7 @@ class FirebaseImageCacheListener {
     if (cachedSizes.containsKey(image.path)) {
       for (final key in cachedSizes[image.path]!.keys) {
         final provider = cachedSizes[image.path]![key];
-        assert(provider != null && PaintingBinding.instance!.imageCache!.containsKey(provider));
+        assert(provider != null && PaintingBinding.instance.imageCache.containsKey(provider));
         if (provider == null) continue; // FIXME: Shouldn't happen.
         return provider;
       }
